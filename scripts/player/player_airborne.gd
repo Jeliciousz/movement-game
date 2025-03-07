@@ -9,18 +9,27 @@ func enter() -> void:
 		transition.emit(&"PlayerGrounded")
 
 
+func exit() -> void:
+	player.airborne_timer = 0
+
+
 func physics_update(delta: float) -> void:
 	player.airborne_timer += delta
 	player.crouch_timer -= delta
 	player.slide_end_timer += delta
 	
+	var top_speed: float = player.top_speed * player.airborne_speed_multiplier
+	var acceleration: float = player.acceleration * player.airborne_acceleration_multiplier
+	
+	var backwards_multiplier = lerpf(1, player.backwards_speed_multiplier, player.backwards_dot_product)
+	top_speed *= backwards_multiplier
+	
 	player.add_air_resistence(delta)
-	player.add_gravity(delta)
-	player.add_movement(delta, player.top_speed * player.airborne_speed_multiplier, player.acceleration * player.airborne_acceleration_multiplier)
+	player.add_gravity(delta, player.gravity)
+	player.add_movement(delta, top_speed, acceleration)
 	
 	
-	if Input.is_action_just_pressed("jump") and player.airborne_timer <= player.jump_coyote_time:
-		player.jump(true)
+	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
 		transition.emit(&"PlayerJumping")
 		return
 	

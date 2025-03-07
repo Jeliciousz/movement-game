@@ -6,7 +6,7 @@ class_name Player extends CharacterBody3D
 ## The acceleration (m/s/s) applied opposite of the player's velocity while they're not moving.
 @export var friction: float = 40
 ## The acceleration (m/s/s) always applied opposite and proportional to the player's velocity.
-@export var air_resistence: float = 0.35
+@export var air_resistence: float = 0.15
 ## The downwards acceleration (m/s/s).
 @export var gravity: float = 30
 
@@ -17,7 +17,7 @@ class_name Player extends CharacterBody3D
 ## How quickly the player accelerates (m/s/s).
 @export var acceleration: float = 80
 ## What [member top_speed] is multiplied by while moving backwards.
-@export var backwards_speed_multiplier: float = 0.7
+@export var backwards_speed_multiplier: float = 0.5
 
 @export_group("Air Control")
 
@@ -39,7 +39,7 @@ class_name Player extends CharacterBody3D
 ## What [member gravity] is multiplied by while jumping.
 @export var jumping_gravity_multiplier: float = 0.75
 ## What [member horizontal_jump_power] is multiplied by when jumping backwards.
-@export var backwards_jump_multiplier: float = 0.01
+@export var backwards_jump_multiplier: float = 0.1
 
 @export_group("Sprinting")
 
@@ -96,7 +96,7 @@ class_name Player extends CharacterBody3D
 
 var input_axis: Vector2 = Vector2.ZERO
 var move_direction: Vector3 = Vector3.ZERO
-var sprinting_action: bool = true
+var sprint_action: bool = true
 
 var jump_action_timer: float = 999
 var crouch_action_timer: float = 999
@@ -176,7 +176,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 		jump_action_timer = 0
 	
 	if Input.is_action_just_pressed("sprint"):
-		sprinting_action = not sprinting_action
+		sprint_action = not sprint_action
 	
 	if Input.is_action_just_pressed("crouch"):
 		crouch_action_timer = 0
@@ -197,7 +197,19 @@ func _physics_process(delta: float) -> void:
 		position = Vector3.ZERO
 
 
-func add_gravity(delta: float, gravity: float = gravity) -> void:
+func consume_jump_action_buffer() -> bool:
+	var buffered: bool = jump_action_timer <= action_buffer_duration
+	jump_action_timer = 999
+	return buffered
+
+
+func consume_crouch_action_buffer() -> bool:
+	var buffered: bool = crouch_action_timer <= action_buffer_duration
+	crouch_action_timer = 999
+	return buffered
+
+
+func add_gravity(delta: float, gravity: float) -> void:
 	velocity.y -= gravity * delta
 
 
@@ -205,13 +217,11 @@ func add_air_resistence(delta: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * speed * delta)
 
 
-func add_friction(delta: float, top_speed: float = top_speed, friction: float = friction) -> void:
+func add_friction(delta: float, friction: float, top_speed: float) -> void:
 	# If player is faster than the top speed they can move at, it just applies friction ignoring movement direction
 	
-	var backwards_multiplier = lerpf(1, backwards_speed_multiplier, backwards_dot_product)
-	
 	if speed > top_speed:
-		velocity = velocity.move_toward(velocity.limit_length(top_speed * backwards_multiplier), friction * delta)
+		velocity = velocity.move_toward(velocity.limit_length(top_speed), friction * delta)
 		return
 	
 	# Otherwise, it applies friction only when it doesn't go against the player's movement direction
@@ -225,7 +235,7 @@ func add_friction(delta: float, top_speed: float = top_speed, friction: float = 
 	velocity = velocity.move_toward(Vector3.ZERO, friction * friction_product * delta)
 
 
-func add_movement(delta: float, top_speed: float = top_speed, acceleration: float = acceleration) -> void:
+func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	#	This seemingly overcomplicated movement code is the result of trying to achieve movement that doesn't feel clunky or finnicky, and has good control,
 	#	while still limiting the horizontal speed that the player can reach on their own
 	#
@@ -250,16 +260,14 @@ func add_movement(delta: float, top_speed: float = top_speed, acceleration: floa
 	velocity += move_direction * acceleration * delta
 	var new_horizontal_speed = horizontal_speed
 	
-	var backwards_multiplier = lerpf(1, backwards_speed_multiplier, backwards_dot_product)
-	
 	if new_horizontal_speed < old_horizontal_speed:
 		return
 	
-	if new_horizontal_speed <= top_speed * backwards_multiplier:
+	if new_horizontal_speed <= top_speed:
 		return
 	
-	if old_horizontal_speed <= top_speed * backwards_multiplier:
-		var limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed * backwards_multiplier)
+	if old_horizontal_speed <= top_speed:
+		var limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed)
 		velocity.x = limited_velocity.x
 		velocity.z = limited_velocity.y
 		
@@ -270,10 +278,7 @@ func add_movement(delta: float, top_speed: float = top_speed, acceleration: floa
 	velocity.z = limited_velocity.y
 
 
-func jump(cancel_velocity: bool = false, jump_power: float = jump_power, horizontal_jump_power: float = horizontal_jump_power) -> void:
-	jump_timer = 0
-	jump_action_timer = 999
-	
+func jump(jump_power: float, horizontal_jump_power: float, cancel_velocity: bool) -> void:
 	if cancel_velocity:
 		velocity.y = 0
 	
@@ -288,18 +293,11 @@ func jump(cancel_velocity: bool = false, jump_power: float = jump_power, horizon
 	velocity += move_direction * horizontal_jump_power * backwards_multiplier
 
 
-func slide(slide_power: float = slide_power) -> void:
-	slide_timer = 0
-	slide_end_timer = 0
-	crouch_action_timer = 999
-	
+func slide(slide_power: float) -> void:
 	velocity += move_direction * slide_power
 
 
 func slide_jump() -> void:
-	jump_timer = 0
-	jump_action_timer = 999
-	
 	velocity.y = 0
 	
 	velocity += Vector3(horizontal_velocity_direction.x * slide_horizontal_jump_power, slide_jump_power, horizontal_velocity_direction.y * slide_horizontal_jump_power)
