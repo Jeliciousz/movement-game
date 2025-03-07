@@ -1,26 +1,36 @@
 class_name Player extends CharacterBody3D
 
 
-@export var top_speed: float = 7
-@export var acceleration: float = 80
+@export_group("Physics")
 
 @export var friction: float = 40
 @export var air_resistence: float = 0.2
 @export var gravity: float = 30
 
+@export_group("Movement")
+
+@export var top_speed: float = 4
+@export var acceleration: float = 80
+
+@export_group("Air Control")
+
 @export var airborne_speed_multiplier: float = 0.35
 @export var airborne_acceleration_multiplier: float = 0.35
+
+@export_group("Jumping")
 
 @export var jump_power: float = 8
 @export var jump_horizontal_power: float = 3
 @export var jump_standing_multiplier: float = 1.2
 @export var jump_duration: float = 1.5
 @export var jump_gravity_multiplier: float = 0.7
-
 @export var jump_coyote_time: float = 0.15
 @export var jump_buffer_duration: float = 0.1
 
+@export_group("Sprinting")
+
 @export var sprint_speed_multiplier: float = 1.5
+@export var sprint_jump_multiplier: float = 1.2
 
 
 var input_axis: Vector2 = Vector2.ZERO
@@ -69,6 +79,13 @@ func _unhandled_input(_event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	move_direction = (transform.basis * Vector3(input_axis.x, 0, input_axis.y)).normalized()
 	jump_action_timer += delta
+
+
+func _physics_process(delta: float) -> void:
+	move_and_slide()
+	
+	if position.y < -10:
+		position = Vector3.ZERO
 
 
 func add_gravity(delta: float, gravity: float = gravity) -> void:
