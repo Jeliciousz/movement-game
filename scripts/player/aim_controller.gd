@@ -1,6 +1,10 @@
 extends Node
 
 
+# Code courtesy of Yo Soy Freeman | https://yosoyfreeman.github.io/article/godot/tutorial/achieving-better-mouse-input-in-godot-4-the-perfect-camera-controller/
+# Slightly edited by Jeliciousz
+
+
 @export_group("Nodes")
 
 ## The Player.

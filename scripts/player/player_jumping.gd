@@ -9,7 +9,7 @@ func physics_update(delta: float) -> void:
 	player.jump_timer += delta
 	
 	player.add_air_resistence(delta)
-	player.add_gravity(delta, player.gravity * player.jump_gravity_multiplier)
+	player.add_gravity(delta, player.gravity * player.jumping_gravity_multiplier)
 	player.add_movement(delta, player.top_speed * player.airborne_speed_multiplier, player.acceleration * player.airborne_acceleration_multiplier)
 	
 	if player.is_on_floor():

@@ -25,7 +25,6 @@ size = Vector3(50, 1, 50)
 
 [node name="Player" parent="." instance=ExtResource("3_71j4m")]
 wall_min_slide_angle = 0.523599
-floor_constant_speed = true
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.847465, 0.401876, -0.346841, 1.06083e-08, 0.653368, 0.757041, 0.530851, -0.641566, 0.553706, 0, 0, 0)
