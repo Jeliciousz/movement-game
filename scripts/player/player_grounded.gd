@@ -11,7 +11,7 @@ func enter() -> void:
 	
 	player.airborne_timer = 0
 	
-	if player.jump_action_timer <= player.jump_buffer_duration:
+	if player.jump_action_timer <= player.action_buffer_duration:
 		if player.sprinting_action:
 			player.jump(false, player.jump_power * player.sprint_jump_multiplier, player.horizontal_jump_power * player.sprint_horizontal_jump_multiplier)
 		else:
@@ -19,6 +19,14 @@ func enter() -> void:
 		
 		transition.emit(&"PlayerJumping")
 		return
+	
+	if player.crouch_action_timer <= player.action_buffer_duration:
+		if player.sprinting_action and player.speed >= player.slide_speed_threshold:
+			player.slide()
+			transition.emit(&"PlayerSliding")
+			return
+		
+		transition.emit(&"PlayerCrouching")
 
 
 func physics_update(delta: float) -> void:
@@ -47,8 +55,10 @@ func physics_update(delta: float) -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if Input.is_action_just_pressed("crouch"):
+	if player.crouch_action_timer <= player.action_buffer_duration:
 		if player.sprinting_action and player.speed >= player.slide_speed_threshold:
-			pass
-		else:
-			transition.emit(&"PlayerCrouching")
+			player.slide()
+			transition.emit(&"PlayerSliding")
+			return
+		
+		transition.emit(&"PlayerCrouching")

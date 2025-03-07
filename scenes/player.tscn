@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=12 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dk6fkt5228gib" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/hud/fps_counter.gd" id="7_smehm"]
 [ext_resource type="Script" uid="uid://ddsvsv7u5twkw" path="res://scripts/player/player_crouching.gd" id="7_ur7pv"]
 [ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/hud/spedometer.gd" id="8_smehm"]
+[ext_resource type="Script" uid="uid://c54mkknjvn7o8" path="res://scripts/player/player_sliding.gd" id="8_y4r1p"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5uuo"]
 radius = 0.4
@@ -56,6 +57,13 @@ metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="PlayerCrouching" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head", "collision_shape")]
 script = ExtResource("7_ur7pv")
+player = NodePath("../..")
+head = NodePath("../../Head")
+collision_shape = NodePath("../../CollisionShape3D")
+metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
+
+[node name="PlayerSliding" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head", "collision_shape")]
+script = ExtResource("8_y4r1p")
 player = NodePath("../..")
 head = NodePath("../../Head")
 collision_shape = NodePath("../../CollisionShape3D")
