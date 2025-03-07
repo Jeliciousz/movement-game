@@ -7,6 +7,7 @@ class_name PlayerJumping extends State
 func physics_update(delta: float) -> void:
 	player.airborne_timer += delta
 	player.jump_timer += delta
+	player.crouch_timer -= delta
 	
 	player.add_air_resistence(delta)
 	player.add_gravity(delta, player.gravity * player.jumping_gravity_multiplier)

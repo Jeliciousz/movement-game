@@ -16,6 +16,8 @@ class_name Player extends CharacterBody3D
 @export var top_speed: float = 4
 ## How quickly the player accelerates (m/s/s).
 @export var acceleration: float = 80
+## What [member top_speed] is multiplied by while moving backwards.
+@export var backwards_speed_multiplier: float = 0.7
 
 @export_group("Air Control")
 
@@ -36,6 +38,8 @@ class_name Player extends CharacterBody3D
 @export var jump_duration: float = 1.5
 ## What [member gravity] is multiplied by while jumping.
 @export var jumping_gravity_multiplier: float = 0.85
+## What [member horizontal_jump_power] is multiplied by when jumping backwards.
+@export var backwards_jump_multiplier: float = 0.01
 
 @export_group("Sprinting")
 
@@ -64,18 +68,24 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) applied in the direction the player is moving when sliding.
 @export var slide_power: float = 8
 ## The time (in seconds) a slide lasts.
-@export var slide_duration: float = 1.2
+@export var slide_duration: float = 0.8
 ## What [member friction] is multiplied by while sliding.
-@export var slide_friction_multiplier: float = 0.2
+@export var slide_friction_multiplier: float = 0.1
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
 @export var slide_speed_threshold: float = 0.2
+## The speed (m/s) applied upwards when slide jumping.
+@export var slide_jump_power: float = 10
+## The speed (m/s) applied in the slide direction when slide jumping.
+@export var slide_horizontal_jump_power: float = -1
+## What [member acceleration] is multiplied by while sliding.
+@export var slide_acceleration_multiplier: float = 0.2
 
 @export_group("Buffers")
 
 ## The time (in seconds) after leaving the ground the player can still jump during.
 @export var jump_coyote_time: float = 0.15
 ## The time (in seconds) an action will be buffered for.
-@export var action_buffer_duration: float = 0.1
+@export var action_buffer_duration: float = 0.15
 
 
 @onready var head: Node3D = $Head
@@ -109,6 +119,14 @@ var speed: float:
 var horizontal_speed: float:
 	get:
 		return Vector2(velocity.x, velocity.z).length()
+
+var forwards_dot_product: float:
+	get:
+		return maxf(move_direction.dot(-transform.basis.z), 0)
+
+var backwards_dot_product: float:
+	get:
+		return maxf(move_direction.dot(transform.basis.z), 0)
 
 
 func _unhandled_input(_event: InputEvent) -> void:
@@ -187,8 +205,10 @@ func add_air_resistence(delta: float) -> void:
 func add_friction(delta: float, top_speed: float = top_speed, friction: float = friction) -> void:
 	# If player is faster than the top speed they can move at, it just applies friction ignoring movement direction
 	
+	var backwards_multiplier = lerpf(1, backwards_speed_multiplier, backwards_dot_product)
+	
 	if speed > top_speed:
-		velocity = velocity.move_toward(velocity.limit_length(top_speed), friction * delta)
+		velocity = velocity.move_toward(velocity.limit_length(top_speed * backwards_multiplier), friction * delta)
 		return
 	
 	# Otherwise, it applies friction only when it doesn't go against the player's movement direction
@@ -227,14 +247,16 @@ func add_movement(delta: float, top_speed: float = top_speed, acceleration: floa
 	velocity += move_direction * acceleration * delta
 	var new_horizontal_speed = horizontal_speed
 	
+	var backwards_multiplier = lerpf(1, backwards_speed_multiplier, backwards_dot_product)
+	
 	if new_horizontal_speed < old_horizontal_speed:
 		return
 	
-	if new_horizontal_speed <= top_speed:
+	if new_horizontal_speed <= top_speed * backwards_multiplier:
 		return
 	
-	if old_horizontal_speed <= top_speed:
-		var limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed)
+	if old_horizontal_speed <= top_speed * backwards_multiplier:
+		var limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed * backwards_multiplier)
 		velocity.x = limited_velocity.x
 		velocity.z = limited_velocity.y
 		
@@ -258,8 +280,9 @@ func jump(cancel_velocity: bool = false, jump_power: float = jump_power, horizon
 	
 	velocity.y += jump_power
 	
-	var move_product = maxf(move_direction.dot(-transform.basis.z), 0)
-	velocity += move_direction * horizontal_jump_power * move_product
+	var backwards_multiplier = lerpf(1, backwards_jump_multiplier, backwards_dot_product)
+	
+	velocity += move_direction * horizontal_jump_power * backwards_multiplier
 
 
 func slide(slide_power: float = slide_power) -> void:
@@ -267,3 +290,12 @@ func slide(slide_power: float = slide_power) -> void:
 	crouch_action_timer = 999
 	
 	velocity += move_direction * slide_power
+
+
+func slide_jump() -> void:
+	jump_timer = 0
+	jump_action_timer = 999
+	
+	velocity.y = 0
+	
+	velocity += Vector3(horizontal_velocity_direction.x * slide_horizontal_jump_power, slide_jump_power, horizontal_velocity_direction.y * slide_horizontal_jump_power)

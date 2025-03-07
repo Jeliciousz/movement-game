@@ -11,6 +11,7 @@ func enter() -> void:
 
 func physics_update(delta: float) -> void:
 	player.airborne_timer += delta
+	player.crouch_timer -= delta
 	
 	player.add_air_resistence(delta)
 	player.add_gravity(delta)

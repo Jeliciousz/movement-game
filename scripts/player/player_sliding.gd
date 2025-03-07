@@ -28,8 +28,13 @@ func physics_update(delta: float) -> void:
 	
 	player.add_air_resistence(delta)
 	player.add_friction(delta, 0, player.friction * player.slide_friction_multiplier)
-	#player.add_movement(delta, 0, player.acceleration * player.crouch_acceleration_multiplier)
+	player.add_movement(delta, 0, player.acceleration * player.slide_acceleration_multiplier)
 	
+	
+	if Input.is_action_just_pressed("jump"):
+		player.slide_jump()
+		transition.emit(&"PlayerJumping")
+		return
 	
 	if not player.is_on_floor():
 		transition.emit(&"PlayerAirborne")
