@@ -6,7 +6,7 @@ class_name Player extends CharacterBody3D
 ## The acceleration (m/s/s) applied opposite of the player's velocity while they're not moving.
 @export var friction: float = 40
 ## The acceleration (m/s/s) always applied opposite and proportional to the player's velocity.
-@export var air_resistence: float = 0.2
+@export var air_resistence: float = 0.15
 ## The downwards acceleration (m/s/s).
 @export var gravity: float = 30
 
@@ -35,7 +35,7 @@ class_name Player extends CharacterBody3D
 ## The time (in seconds) a jump lasts.
 @export var jump_duration: float = 1.5
 ## What [member gravity] is multiplied by while jumping.
-@export var jumping_gravity_multiplier: float = 0.7
+@export var jumping_gravity_multiplier: float = 0.85
 
 @export_group("Sprinting")
 
@@ -55,7 +55,14 @@ class_name Player extends CharacterBody3D
 ## What [member acceleration] is multiplied by while crouching.
 @export var crouch_acceleration_multiplier: float = 0.5
 ## The time (in seconds) it takes to be fully crouched.
-@export var crouch_transition_time: float = 0.35
+@export var crouch_transition_time: float = 0.1
+## What the player's collision height is multiplied by.
+@export var crouch_height_multiplier: float = 0.5
+
+@export_group("Sliding")
+
+## The speed (m/s) the player must have while sprinting to slide instead of crouch.
+@export var slide_speed_threshold: float = 0.2
 
 @export_group("Buffers")
 
@@ -65,6 +72,10 @@ class_name Player extends CharacterBody3D
 @export var jump_buffer_duration: float = 0.1
 
 
+@onready var head: Node3D = $Head
+@onready var standing_height: float = $CollisionShape3D.shape.height
+
+
 var input_axis: Vector2 = Vector2.ZERO
 var move_direction: Vector3 = Vector3.ZERO
 var sprinting_action: bool = true
@@ -72,7 +83,7 @@ var sprinting_action: bool = true
 var jump_action_timer: float = 999
 var airborne_timer: float = 999
 var jump_timer: float = 999
-var crouch_timer: float = 999
+var crouch_timer: float = 0
 
 
 var velocity_direction: Vector3:
@@ -142,7 +153,8 @@ func _unhandled_input(_event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	move_direction = (transform.basis * Vector3(input_axis.x, 0, input_axis.y)).normalized()
 	jump_action_timer += delta
-	crouch_timer += delta
+	
+	head.position.y = lerpf(1.3, 1.3 * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
 
 
 func _physics_process(delta: float) -> void:
@@ -160,7 +172,7 @@ func add_air_resistence(delta: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * speed * delta)
 
 
-func add_friction(delta: float) -> void:
+func add_friction(delta: float, top_speed: float = top_speed) -> void:
 	# If player is faster than the top speed they can move at, it just applies friction ignoring movement direction
 	
 	if speed > top_speed:

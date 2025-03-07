@@ -54,10 +54,11 @@ script = ExtResource("6_tuyoq")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
-[node name="PlayerCrouching" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head")]
+[node name="PlayerCrouching" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head", "collision_shape")]
 script = ExtResource("7_ur7pv")
 player = NodePath("../..")
 head = NodePath("../../Head")
+collision_shape = NodePath("../../CollisionShape3D")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="Hud" type="Control" parent="."]
