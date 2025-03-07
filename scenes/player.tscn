@@ -32,6 +32,7 @@ shape = SubResource("CapsuleShape3D_e5uuo")
 
 [node name="MeshInstance" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+cast_shadow = 3
 mesh = SubResource("CapsuleMesh_y4r1p")
 
 [node name="Head" type="Node3D" parent="."]
