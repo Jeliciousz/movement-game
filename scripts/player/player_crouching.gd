@@ -11,15 +11,15 @@ class_name PlayerCrouching extends State
 func enter() -> void:
 	player.crouch_timer = 0
 	
-	collision_shape.shape.height *= player.crouch_height_multiplier
-	collision_shape.position.y *= player.crouch_height_multiplier
+	collision_shape.shape.height = player.standing_collider_height * player.crouch_height_multiplier
+	collision_shape.position.y = player.standing_collider_y * player.crouch_height_multiplier
 
 
 func exit() -> void:
 	player.crouch_timer = player.crouch_transition_time
 	
-	collision_shape.shape.height /= player.crouch_height_multiplier
-	collision_shape.position.y /= player.crouch_height_multiplier
+	collision_shape.shape.height = player.standing_collider_height
+	collision_shape.position.y = player.standing_collider_y
 
 
 func physics_update(delta: float) -> void:
