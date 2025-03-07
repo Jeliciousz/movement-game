@@ -74,9 +74,9 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
 @export var slide_speed_threshold: float = 0.2
 ## The speed (m/s) applied upwards when slide jumping.
-@export var slide_jump_power: float = 14
+@export var slide_jump_power: float = 12
 ## The speed (m/s) applied in the slide direction when slide jumping.
-@export var slide_horizontal_jump_power: float = -1
+@export var slide_horizontal_jump_power: float = 1
 ## What [member acceleration] is multiplied by while sliding.
 @export var slide_acceleration_multiplier: float = 0.2
 ## The time (in seconds) that must pass between slides.
