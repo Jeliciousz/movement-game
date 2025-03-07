@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=13 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dk6fkt5228gib" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
@@ -15,6 +15,10 @@
 radius = 0.4
 height = 1.6
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y4r1p"]
+radius = 0.4
+height = 1.6
+
 [node name="Player" type="CharacterBody3D"]
 process_physics_priority = 1
 wall_min_slide_angle = 0.0872665
@@ -22,9 +26,13 @@ floor_stop_on_slope = false
 floor_constant_speed = true
 script = ExtResource("1_3vyb7")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("CapsuleShape3D_e5uuo")
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("CapsuleMesh_y4r1p")
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
@@ -59,14 +67,14 @@ metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 script = ExtResource("7_ur7pv")
 player = NodePath("../..")
 head = NodePath("../../Head")
-collision_shape = NodePath("../../CollisionShape3D")
+collision_shape = NodePath("../../CollisionShape")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="PlayerSliding" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head", "collision_shape")]
 script = ExtResource("8_y4r1p")
 player = NodePath("../..")
 head = NodePath("../../Head")
-collision_shape = NodePath("../../CollisionShape3D")
+collision_shape = NodePath("../../CollisionShape")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="Hud" type="Control" parent="."]

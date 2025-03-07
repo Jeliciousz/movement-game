@@ -91,7 +91,10 @@ class_name Player extends CharacterBody3D
 
 
 @onready var head: Node3D = $Head
-@onready var standing_height: float = $CollisionShape3D.shape.height
+@onready var mesh: Node3D = $MeshInstance
+@onready var standing_mesh_y: float = $MeshInstance.position.y
+@onready var standing_head_y: float = $Head.position.y
+@onready var standing_height: float = $CollisionShape.shape.height
 
 
 var input_axis: Vector2 = Vector2.ZERO
@@ -187,7 +190,9 @@ func _process(delta: float) -> void:
 	jump_action_timer += delta
 	crouch_action_timer += delta
 	
-	head.position.y = lerpf(1.3, 1.3 * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
+	mesh.mesh.height = lerpf(standing_height, standing_height * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
+	mesh.position.y = lerpf(standing_mesh_y, standing_mesh_y * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
+	head.position.y = lerpf(standing_head_y, standing_head_y * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
 
 
 func _physics_process(delta: float) -> void:
