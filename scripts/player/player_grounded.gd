@@ -31,6 +31,7 @@ func enter() -> void:
 
 func physics_update(delta: float) -> void:
 	player.crouch_timer -= delta
+	player.slide_end_timer += delta
 	
 	player.add_air_resistence(delta)
 	
@@ -57,8 +58,9 @@ func physics_update(delta: float) -> void:
 	
 	if player.crouch_action_timer <= player.action_buffer_duration:
 		if player.sprinting_action and player.speed >= player.slide_speed_threshold:
-			player.slide()
-			transition.emit(&"PlayerSliding")
+			if player.slide_end_timer > player.slide_cooldown_duration:
+				player.slide()
+				transition.emit(&"PlayerSliding")
 			return
 		
 		transition.emit(&"PlayerCrouching")

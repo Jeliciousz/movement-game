@@ -33,7 +33,7 @@ func physics_update(delta: float) -> void:
 	
 	if Input.is_action_just_pressed("jump"):
 		player.slide_jump()
-		transition.emit(&"PlayerJumping")
+		transition.emit(&"PlayerAirborne")
 		return
 	
 	if not player.is_on_floor():

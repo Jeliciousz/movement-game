@@ -24,6 +24,7 @@ func exit() -> void:
 
 func physics_update(delta: float) -> void:
 	player.crouch_timer += delta
+	player.slide_end_timer += delta
 	
 	player.add_air_resistence(delta)
 	player.add_friction(delta, player.top_speed * player.crouch_speed_multiplier)

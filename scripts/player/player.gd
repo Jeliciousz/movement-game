@@ -6,7 +6,7 @@ class_name Player extends CharacterBody3D
 ## The acceleration (m/s/s) applied opposite of the player's velocity while they're not moving.
 @export var friction: float = 40
 ## The acceleration (m/s/s) always applied opposite and proportional to the player's velocity.
-@export var air_resistence: float = 0.15
+@export var air_resistence: float = 0.35
 ## The downwards acceleration (m/s/s).
 @export var gravity: float = 30
 
@@ -35,9 +35,9 @@ class_name Player extends CharacterBody3D
 ## What [member jump_power] is multiplied by when jumping while not moving.
 @export var standing_jump_multiplier: float = 1.1
 ## The time (in seconds) a jump lasts.
-@export var jump_duration: float = 1.5
+@export var jump_duration: float = 1
 ## What [member gravity] is multiplied by while jumping.
-@export var jumping_gravity_multiplier: float = 0.85
+@export var jumping_gravity_multiplier: float = 0.75
 ## What [member horizontal_jump_power] is multiplied by when jumping backwards.
 @export var backwards_jump_multiplier: float = 0.01
 
@@ -66,7 +66,7 @@ class_name Player extends CharacterBody3D
 @export_group("Sliding")
 
 ## The speed (m/s) applied in the direction the player is moving when sliding.
-@export var slide_power: float = 8
+@export var slide_power: float = 6
 ## The time (in seconds) a slide lasts.
 @export var slide_duration: float = 0.8
 ## What [member friction] is multiplied by while sliding.
@@ -74,11 +74,13 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
 @export var slide_speed_threshold: float = 0.2
 ## The speed (m/s) applied upwards when slide jumping.
-@export var slide_jump_power: float = 10
+@export var slide_jump_power: float = 14
 ## The speed (m/s) applied in the slide direction when slide jumping.
 @export var slide_horizontal_jump_power: float = -1
 ## What [member acceleration] is multiplied by while sliding.
 @export var slide_acceleration_multiplier: float = 0.2
+## The time (in seconds) that must pass between slides.
+@export var slide_cooldown_duration: float = 0.5
 
 @export_group("Buffers")
 
@@ -102,6 +104,7 @@ var airborne_timer: float = 999
 var jump_timer: float = 999
 var crouch_timer: float = 0
 var slide_timer: float = 999
+var slide_end_timer: float = 999
 
 
 var velocity_direction: Vector3:
@@ -287,6 +290,7 @@ func jump(cancel_velocity: bool = false, jump_power: float = jump_power, horizon
 
 func slide(slide_power: float = slide_power) -> void:
 	slide_timer = 0
+	slide_end_timer = 0
 	crouch_action_timer = 999
 	
 	velocity += move_direction * slide_power
