@@ -8,6 +8,9 @@ func enter() -> void:
 	if not player.is_on_floor():
 		transition.emit(&"PlayerAirborne")
 	
+	player.airborne_timer = 0
+	player.air_jumps = 0
+	
 	if player.consume_jump_action_buffer():
 		transition.emit(&"PlayerJumping")
 		return
@@ -17,13 +20,15 @@ func enter() -> void:
 			transition.emit(&"PlayerCrouching")
 			return
 		
-		if player.slide_end_timer <= player.slide_cooldown_duration:
-			return
-		
-		transition.emit(&"PlayerSliding")
+		if player.slide_end_timer > player.slide_cooldown_duration:
+			transition.emit(&"PlayerSliding")
 
 
 func physics_update(delta: float) -> void:
+	if not player.is_on_floor():
+		transition.emit(&"PlayerAirborne")
+		return
+	
 	player.crouch_timer -= delta
 	player.slide_end_timer += delta
 	
@@ -46,16 +51,10 @@ func physics_update(delta: float) -> void:
 		transition.emit(&"PlayerJumping")
 		return
 	
-	if not player.is_on_floor():
-		transition.emit(&"PlayerAirborne")
-		return
-	
 	if player.consume_crouch_action_buffer():
 		if not player.sprint_action or player.speed < player.slide_speed_threshold:
 			transition.emit(&"PlayerCrouching")
 			return
 		
-		if player.slide_end_timer <= player.slide_cooldown_duration:
-			return
-		
-		transition.emit(&"PlayerSliding")
+		if player.slide_end_timer > player.slide_cooldown_duration:
+			transition.emit(&"PlayerSliding")

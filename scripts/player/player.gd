@@ -31,7 +31,7 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) applied upwards when jumping.
 @export var jump_power: float = 8
 ## The speed (m/s) applied in the movement direction when jumping.
-@export var horizontal_jump_power: float = 3
+@export var horizontal_jump_power: float = 1.5
 ## What [member jump_power] is multiplied by when jumping while not moving.
 @export var standing_jump_multiplier: float = 1.1
 ## The time (in seconds) a jump lasts.
@@ -40,6 +40,8 @@ class_name Player extends CharacterBody3D
 @export var jumping_gravity_multiplier: float = 0.75
 ## What [member horizontal_jump_power] is multiplied by when jumping backwards.
 @export var backwards_jump_multiplier: float = 0.1
+## The amount of times the player can jump while in the air.
+@export var air_jumps_limit: int = 0
 
 @export_group("Sprinting")
 
@@ -76,7 +78,7 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) applied upwards when slide jumping.
 @export var slide_jump_power: float = 12
 ## The speed (m/s) applied in the slide direction when slide jumping.
-@export var slide_horizontal_jump_power: float = 1
+@export var slide_horizontal_jump_power: float = -2
 ## What [member acceleration] is multiplied by while sliding.
 @export var slide_acceleration_multiplier: float = 0.2
 ## The time (in seconds) that must pass between slides.
@@ -85,9 +87,9 @@ class_name Player extends CharacterBody3D
 @export_group("Buffers")
 
 ## The time (in seconds) after leaving the ground the player can still jump during.
-@export var jump_coyote_time: float = 0.15
+@export var jump_coyote_time: float = 0.1
 ## The time (in seconds) an action will be buffered for.
-@export var action_buffer_duration: float = 0.15
+@export var action_buffer_duration: float = 0.05
 
 
 @onready var head: Node3D = $Head
@@ -110,6 +112,8 @@ var jump_timer: float = 999
 var crouch_timer: float = 0
 var slide_timer: float = 999
 var slide_end_timer: float = 999
+
+var air_jumps: int = 0
 
 
 var velocity_direction: Vector3:
@@ -285,13 +289,16 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	velocity.z = limited_velocity.y
 
 
-func jump(jump_power: float, horizontal_jump_power: float, cancel_velocity: bool) -> void:
-	if cancel_velocity:
+func jump(jump_power: float, horizontal_jump_power: float, cancel_gravity: bool, redirect_velocity: bool) -> void:
+	if cancel_gravity:
 		velocity.y = 0
 	
 	if move_direction.is_zero_approx():
 		velocity.y += jump_power * standing_jump_multiplier
 		return
+	
+	if redirect_velocity:
+		velocity = move_direction * speed
 	
 	velocity.y += jump_power
 	

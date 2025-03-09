@@ -9,10 +9,6 @@ func enter() -> void:
 		transition.emit(&"PlayerGrounded")
 
 
-func exit() -> void:
-	player.airborne_timer = 0
-
-
 func physics_update(delta: float) -> void:
 	player.airborne_timer += delta
 	player.crouch_timer -= delta
@@ -30,6 +26,11 @@ func physics_update(delta: float) -> void:
 	
 	
 	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
+		transition.emit(&"PlayerJumping")
+		return
+	
+	if player.air_jumps < player.air_jumps_limit and player.consume_jump_action_buffer():
+		player.air_jumps += 1
 		transition.emit(&"PlayerJumping")
 		return
 	

@@ -15,6 +15,5 @@ ambient_light_source = 3
 ambient_light_color = Color(0.477727, 0.70786, 0.999999, 1)
 reflected_light_source = 2
 tonemap_mode = 4
-ssao_intensity = 5.0
 volumetric_fog_density = 0.01
 volumetric_fog_albedo = Color(0.300667, 0.2788, 0.41, 1)
