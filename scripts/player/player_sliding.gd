@@ -11,7 +11,7 @@ class_name PlayerSliding extends State
 func slide_jump_check() -> bool:
 	if player.consume_jump_action_buffer():
 		player.coyote_possible = false
-		player.slide_jump()
+		player.jump(player.slide_jump_power, player.slide_horizontal_jump_power, player.horizontal_velocity_direction, true, false)
 		transition.emit(&"PlayerAirborne")
 		return true
 	
@@ -59,11 +59,12 @@ func physics_update(delta: float) -> void:
 	player.crouch_timer += delta
 	player.slide_timer += delta
 	
-	var friction = player.friction * player.slide_friction_multiplier
-	var acceleration = player.acceleration * player.slide_acceleration_multiplier
+	var friction: float = player.friction * player.slide_friction_multiplier
+	var acceleration: float = player.acceleration * player.slide_acceleration_multiplier
 	
 	player.add_air_resistence(delta)
 	player.add_friction(delta, friction, 0)
 	player.add_movement(delta, 0, acceleration)
 	
+	player.colliding_velocity = player.velocity
 	player.move_and_slide()

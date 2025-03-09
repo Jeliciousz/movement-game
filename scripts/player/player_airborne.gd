@@ -9,11 +9,16 @@ func coyote_jump_check() -> bool:
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
-		if player.sprint_action:
+		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
+		
+		if player.move_direction.is_zero_approx():
+			jump_power *= player.standing_jump_multiplier
+			horizontal_jump_power = 0
+		elif player.sprint_action:
 			jump_power *= player.sprint_jump_multiplier
 			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
 		
-		player.jump(jump_power, horizontal_jump_power, true, false)
+		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, true, false)
 		
 		transition.emit(&"PlayerJumping")
 		return true
@@ -28,7 +33,13 @@ func air_jump_check() -> bool:
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
-		player.jump(jump_power, horizontal_jump_power, true, true)
+		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
+		
+		if player.move_direction.is_zero_approx():
+			jump_power *= player.standing_jump_multiplier
+			horizontal_jump_power = 0
+		
+		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, true, true)
 		
 		transition.emit(&"PlayerJumping")
 		return true
@@ -37,9 +48,16 @@ func air_jump_check() -> bool:
 
 
 func wallrun_check() -> bool:
-	if player.is_on_wall():
-		transition.emit(&"PlayerWallrun")
-		return true
+	if player.is_on_wall() and player.sprint_action and player.horizontal_colliding_speed >= player.wallrun_speed_threshold:
+		var wall_normal = player.get_wall_normal()
+		
+		var wall_product = player.horizontal_colliding_direction.dot(-wall_normal)
+		
+		if cos(player.wallrun_maximum_angle_threshold) < wall_product and wall_product < cos(player.wallrun_minimum_angle_threshold):
+			player.wallrun_wall_normal = wall_normal
+			player.velocity = player.horizontal_velocity_direction * player.horizontal_colliding_speed * player.wallrun_speed_conversion_multiplier
+			transition.emit(&"PlayerWallrunning")
+			return true
 	
 	return false
 
@@ -85,4 +103,5 @@ func physics_update(delta: float) -> void:
 	player.add_gravity(delta, player.gravity)
 	player.add_movement(delta, top_speed, acceleration)
 	
+	player.colliding_velocity = player.velocity
 	player.move_and_slide()

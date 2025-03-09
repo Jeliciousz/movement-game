@@ -11,7 +11,7 @@ func crouch_slide_check() -> bool:
 			return true
 		
 		if player.slide_end_timer > player.slide_cooldown_duration:
-			player.slide(player.slide_power)
+			player.add_force(player.slide_power, player.move_direction)
 			transition.emit(&"PlayerSliding")
 			return true
 	
@@ -23,11 +23,16 @@ func jump_check() -> bool:
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
-		if player.sprint_action:
+		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
+		
+		if player.move_direction.is_zero_approx():
+			jump_power *= player.standing_jump_multiplier
+			horizontal_jump_power = 0
+		elif player.sprint_action:
 			jump_power *= player.sprint_jump_multiplier
 			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
 		
-		player.jump(jump_power, horizontal_jump_power, false, false)
+		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, false, false)
 		
 		transition.emit(&"PlayerJumping")
 		return true
@@ -77,4 +82,5 @@ func physics_update(delta: float) -> void:
 	player.add_friction(delta, player.friction, top_speed)
 	player.add_movement(delta, top_speed, acceleration)
 	
+	player.colliding_velocity = player.velocity
 	player.move_and_slide()

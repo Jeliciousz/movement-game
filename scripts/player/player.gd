@@ -82,16 +82,34 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) applied upwards when slide jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 12
 ## The speed (m/s) applied in the slide direction when slide jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_horizontal_jump_power: float = -2
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_horizontal_jump_power: float = -3
 ## What [member acceleration] is multiplied by while sliding.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var slide_acceleration_multiplier: float = 0.2
 ## The time (in seconds) that must pass between slides.
 @export_range(0, 1, 0.05, "or_greater", "suffix:s") var slide_cooldown_duration: float = 0.5
 
-@export_group("Wallrunning")
+@export_group("Wall-Running")
 
-## What the angle (in radians) from the velocity direction to the wall normal needs to be to start wallrunning.
-@export_range(0, 360, 1, "radians_as_degrees") var wallrun_angle_threshold: float = deg_to_rad(45)
+## The highest speed (m/s) the player can reach while wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 7
+## How quickly the player accelerates (m/s/s) while wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
+## What the speed going into a wall gets multiplied by when wall-running.
+@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.95
+## The speed (m/s) applied perpendicular to the wall when wall-jumping.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 4
+## The time (in seconds) a wallrun lasts.
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var wallrun_duration: float = 3
+## What [member friction] is multiplied by while wall-running after duration runs out.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.25
+## What [member gravity] is multiplied by while wall-running after duration runs out.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.75
+## The speed (m/s) the player must have while sprinting to start wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_speed_threshold: float = 6
+## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
+@export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(5)
+## What the maximum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
+@export_range(0, 180, 1, "radians_as_degrees") var wallrun_maximum_angle_threshold: float = deg_to_rad(85)
 
 @export_group("Buffers")
 
@@ -121,18 +139,30 @@ var jump_timer: float = 999
 var crouch_timer: float = 0
 var slide_timer: float = 999
 var slide_end_timer: float = 999
+var wallrun_timer: float = 999
 
 var air_jumps: int = 0
 var coyote_possible: bool = false
 
+var colliding_velocity: Vector3 = Vector3.ZERO
+
+var wallrun_wall_normal: Vector3 = Vector3.ZERO
+
+var horizontal_colliding_direction: Vector3:
+	get:
+		return Vector3(colliding_velocity.x, 0, colliding_velocity.z).normalized()
+
+var horizontal_colliding_speed: float:
+	get:
+		return Vector3(colliding_velocity.x, 0, colliding_velocity.z).length()
 
 var velocity_direction: Vector3:
 	get:
 		return velocity.normalized()
 
-var horizontal_velocity_direction: Vector2:
+var horizontal_velocity_direction: Vector3:
 	get:
-		return Vector2(velocity.x, velocity.z).normalized()
+		return Vector3(velocity.x, 0, velocity.z).normalized()
 
 var speed: float:
 	get:
@@ -294,29 +324,21 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	velocity.z = limited_velocity.y
 
 
-func jump(jump_power: float, horizontal_jump_power: float, cancel_gravity: bool, redirect_velocity: bool) -> void:
+func jump(power: float, horizontal_power: float, direction: Vector3, cancel_gravity: bool, redirect_velocity: bool) -> void:
 	if cancel_gravity:
 		velocity.y = 0
 	
-	if move_direction.is_zero_approx():
-		velocity.y += jump_power * standing_jump_multiplier
+	if direction.is_zero_approx():
+		velocity.y += power * standing_jump_multiplier
 		return
 	
 	if redirect_velocity:
-		velocity = move_direction * speed
+		velocity = direction * speed
 	
-	velocity.y += jump_power
+	velocity.y += power
 	
-	var backwards_multiplier = lerpf(1, backwards_jump_multiplier, backwards_dot_product)
-	
-	velocity += move_direction * horizontal_jump_power * backwards_multiplier
+	velocity += direction * horizontal_power
 
 
-func slide(slide_power: float) -> void:
-	velocity += move_direction * slide_power
-
-
-func slide_jump() -> void:
-	velocity.y = 0
-	
-	velocity += Vector3(horizontal_velocity_direction.x * slide_horizontal_jump_power, slide_jump_power, horizontal_velocity_direction.y * slide_horizontal_jump_power)
+func add_force(power: float, direction: Vector3) -> void:
+	velocity += direction * power
