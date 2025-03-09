@@ -9,6 +9,19 @@ class_name PlayerCrouching extends State
 
 
 func enter() -> void:
+	if player.consume_jump_action_buffer():
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		if player.sprint_action:
+			jump_power *= player.sprint_jump_multiplier
+			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
+		
+		player.jump(jump_power, horizontal_jump_power, false, false)
+		
+		transition.emit(&"PlayerJumping")
+		return
+	
 	player.crouch_timer = 0
 	
 	collision_shape.shape.height = player.standing_collider_height * player.crouch_height_multiplier
@@ -20,6 +33,28 @@ func exit() -> void:
 	
 	collision_shape.shape.height = player.standing_collider_height
 	collision_shape.position.y = player.standing_collider_y
+
+
+func update_physics_state() -> void:
+	if not player.is_on_floor():
+		transition.emit(&"PlayerAirborne")
+		return
+	
+	if player.crouch_timer < player.crouch_transition_time and player.consume_jump_action_buffer():
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		if player.sprint_action:
+			jump_power *= player.sprint_jump_multiplier
+			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
+		
+		player.jump(jump_power, horizontal_jump_power, false, false)
+		
+		transition.emit(&"PlayerJumping")
+		return
+	
+	if not Input.is_action_pressed("crouch"):
+		transition.emit(&"PlayerGrounded")
 
 
 func physics_update(delta: float) -> void:
@@ -36,14 +71,4 @@ func physics_update(delta: float) -> void:
 	player.add_friction(delta, player.friction, top_speed)
 	player.add_movement(delta, top_speed, acceleration)
 	
-	
-	if player.crouch_timer < player.crouch_transition_time and player.consume_jump_action_buffer():
-		transition.emit(&"PlayerJumping")
-		return
-	
-	if not player.is_on_floor():
-		transition.emit(&"PlayerAirborne")
-		return
-	
-	if Input.is_action_just_released("crouch"):
-		transition.emit(&"PlayerGrounded")
+	player.move_and_slide()

@@ -14,8 +14,11 @@ func enter() -> void:
 	collision_shape.shape.height *= player.crouch_height_multiplier
 	collision_shape.position.y *= player.crouch_height_multiplier
 	
-	player.slide(player.slide_power)
 	player.slide_timer = 0
+	
+	if player.consume_jump_action_buffer():
+		player.slide_jump()
+		transition.emit(&"PlayerAirborne")
 
 
 func exit() -> void:
@@ -25,6 +28,24 @@ func exit() -> void:
 	collision_shape.position.y /= player.crouch_height_multiplier
 	
 	player.slide_end_timer = 0
+
+
+func update_physics_state() -> void:
+	if not player.is_on_floor():
+		transition.emit(&"PlayerAirborne")
+		return
+	
+	if player.slide_timer > player.slide_duration:
+		transition.emit(&"PlayerGrounded")
+		return
+	
+	if player.consume_jump_action_buffer():
+		player.slide_jump()
+		transition.emit(&"PlayerAirborne")
+		return
+	
+	if player.consume_crouch_action_buffer():
+		transition.emit(&"PlayerGrounded")
 
 
 func physics_update(delta: float) -> void:
@@ -38,19 +59,4 @@ func physics_update(delta: float) -> void:
 	player.add_friction(delta, friction, 0)
 	player.add_movement(delta, 0, acceleration)
 	
-	
-	if player.consume_jump_action_buffer():
-		player.slide_jump()
-		transition.emit(&"PlayerAirborne")
-		return
-	
-	if not player.is_on_floor():
-		transition.emit(&"PlayerAirborne")
-		return
-	
-	if player.slide_timer > player.slide_duration:
-		transition.emit(&"PlayerGrounded")
-		return
-	
-	if player.consume_crouch_action_buffer():
-		transition.emit(&"PlayerGrounded")
+	player.move_and_slide()

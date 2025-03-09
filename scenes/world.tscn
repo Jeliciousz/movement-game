@@ -56,7 +56,8 @@ _surfaces = [{
 
 [node name="World" type="Node3D"]
 
-[node name="Player" parent="." instance=ExtResource("3_71j4m")]
+[node name="Player" parent="." node_paths=PackedStringArray("spawn_position") instance=ExtResource("3_71j4m")]
+spawn_position = NodePath("../Level/PlayerSpawnPosition")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("2_71j4m")
@@ -71,6 +72,8 @@ shadow_enabled = true
 light_data = ExtResource("3_qfnet")
 
 [node name="Level" type="Node3D" parent="."]
+
+[node name="PlayerSpawnPosition" type="Node3D" parent="Level"]
 
 [node name="Floor" type="StaticBody3D" parent="Level"]
 

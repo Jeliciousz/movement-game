@@ -1,6 +1,10 @@
 class_name Player extends CharacterBody3D
 
 
+@export_group("Spawn")
+
+@export var spawn_position: Node3D
+
 @export_group("Physics")
 
 ## The acceleration (m/s/s) applied opposite of the player's velocity while they're not moving.
@@ -191,21 +195,16 @@ func _unhandled_input(_event: InputEvent) -> void:
 		crouch_action_timer = 0
 
 
-func _process(delta: float) -> void:
-	move_direction = (transform.basis * Vector3(input_axis.x, 0, input_axis.y)).normalized()
-	jump_action_timer += delta
-	crouch_action_timer += delta
-	
+func _process(_delta: float) -> void:
 	mesh.scale.y = lerpf(1.0, crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
 	mesh.position.y = lerpf(standing_mesh_y, standing_mesh_y * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
 	head.position.y = lerpf(standing_head_y, standing_head_y * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
 
 
 func _physics_process(delta: float) -> void:
-	move_and_slide()
-	
-	if position.y < -10:
-		position = Vector3.ZERO
+	move_direction = (transform.basis * Vector3(input_axis.x, 0, input_axis.y)).normalized()
+	jump_action_timer += delta
+	crouch_action_timer += delta
 
 
 func consume_jump_action_buffer() -> bool:

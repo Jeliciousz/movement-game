@@ -1,8 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=15 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dk6fkt5228gib" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://byetn4r2o80jg" path="res://scripts/state_machine.gd" id="3_qhqgy"]
+[ext_resource type="Script" uid="uid://botegguhhalgt" path="res://scripts/player/player_spawn.gd" id="4_3v2ag"]
 [ext_resource type="Script" uid="uid://batpfq7ieq7du" path="res://scripts/player/player_grounded.gd" id="4_dqkch"]
 [ext_resource type="Script" uid="uid://np4wci38gpwk" path="res://scripts/player/player_airborne.gd" id="5_qlg0r"]
 [ext_resource type="Script" uid="uid://c6uoquqgdrma3" path="res://scripts/player/player_jumping.gd" id="6_tuyoq"]
@@ -51,9 +52,13 @@ player = NodePath("..")
 head = NodePath("../Head")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
-process_physics_priority = -1
 script = ExtResource("3_qhqgy")
-initial_state = NodePath("PlayerGrounded")
+initial_state = NodePath("PlayerSpawn")
+
+[node name="PlayerSpawn" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+script = ExtResource("4_3v2ag")
+player = NodePath("../..")
+metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="PlayerGrounded" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("4_dqkch")

@@ -5,15 +5,16 @@ class_name PlayerJumping extends State
 
 
 func enter() -> void:
-	var jump_power = player.jump_power
-	var horizontal_jump_power = player.horizontal_jump_power
-	
-	if player.sprint_action and player.air_jumps == 0:
-		jump_power *= player.sprint_jump_multiplier
-		horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
-	
-	player.jump(jump_power, horizontal_jump_power, not player.is_on_floor(), player.air_jumps > 0)
 	player.jump_timer = 0
+
+
+func update_physics_state() -> void:
+	if player.is_on_floor():
+		transition.emit(&"PlayerGrounded")
+		return
+	
+	if not Input.is_action_pressed("jump") or player.jump_timer >= player.jump_duration:
+		transition.emit(&"PlayerAirborne")
 
 
 func physics_update(delta: float) -> void:
@@ -33,10 +34,4 @@ func physics_update(delta: float) -> void:
 	player.add_gravity(delta, gravity)
 	player.add_movement(delta, top_speed, acceleration)
 	
-	
-	if player.is_on_floor():
-		transition.emit(&"PlayerGrounded")
-		return
-	
-	if not Input.is_action_pressed("jump") or player.jump_timer >= player.jump_duration:
-		transition.emit(&"PlayerAirborne")
+	player.move_and_slide()

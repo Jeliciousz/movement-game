@@ -5,8 +5,57 @@ class_name PlayerAirborne extends State
 
 
 func enter() -> void:
+	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		if player.sprint_action:
+			jump_power *= player.sprint_jump_multiplier
+			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
+		
+		player.jump(jump_power, horizontal_jump_power, true, false)
+		
+		transition.emit(&"PlayerJumping")
+		return
+	
+	if player.air_jumps < player.air_jumps_limit and player.consume_jump_action_buffer():
+		player.air_jumps += 1
+		
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		player.jump(jump_power, horizontal_jump_power, true, true)
+		
+		transition.emit(&"PlayerJumping")
+
+
+func update_physics_state() -> void:
 	if player.is_on_floor():
 		transition.emit(&"PlayerGrounded")
+		return
+	
+	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		if player.sprint_action:
+			jump_power *= player.sprint_jump_multiplier
+			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
+		
+		player.jump(jump_power, horizontal_jump_power, true, false)
+		
+		transition.emit(&"PlayerJumping")
+		return
+	
+	if player.air_jumps < player.air_jumps_limit and player.consume_jump_action_buffer():
+		player.air_jumps += 1
+		
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		player.jump(jump_power, horizontal_jump_power, true, true)
+		
+		transition.emit(&"PlayerJumping")
 
 
 func physics_update(delta: float) -> void:
@@ -24,15 +73,4 @@ func physics_update(delta: float) -> void:
 	player.add_gravity(delta, player.gravity)
 	player.add_movement(delta, top_speed, acceleration)
 	
-	
-	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
-		transition.emit(&"PlayerJumping")
-		return
-	
-	if player.air_jumps < player.air_jumps_limit and player.consume_jump_action_buffer():
-		player.air_jumps += 1
-		transition.emit(&"PlayerJumping")
-		return
-	
-	if player.is_on_floor():
-		transition.emit(&"PlayerGrounded")
+	player.move_and_slide()

@@ -9,6 +9,12 @@ func enter() -> void:
 func exit() -> void:
 	pass
 
+func update_state() -> void:
+	pass
+
+func update_physics_state() -> void:
+	pass
+
 func update(delta: float) -> void:
 	pass
 
