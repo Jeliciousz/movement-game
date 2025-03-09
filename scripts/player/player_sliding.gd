@@ -8,6 +8,16 @@ class_name PlayerSliding extends State
 @export var collision_shape: CollisionShape3D
 
 
+func slide_jump_check() -> bool:
+	if player.consume_jump_action_buffer():
+		player.coyote_possible = false
+		player.slide_jump()
+		transition.emit(&"PlayerAirborne")
+		return true
+	
+	return false
+
+
 func enter() -> void:
 	player.crouch_timer = 0
 	
@@ -16,9 +26,8 @@ func enter() -> void:
 	
 	player.slide_timer = 0
 	
-	if player.consume_jump_action_buffer():
-		player.slide_jump()
-		transition.emit(&"PlayerAirborne")
+	if slide_jump_check():
+		return
 
 
 func exit() -> void:
@@ -39,9 +48,7 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if player.consume_jump_action_buffer():
-		player.slide_jump()
-		transition.emit(&"PlayerAirborne")
+	if slide_jump_check():
 		return
 	
 	if player.consume_crouch_action_buffer():

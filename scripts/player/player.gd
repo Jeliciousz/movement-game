@@ -7,93 +7,98 @@ class_name Player extends CharacterBody3D
 
 @export_group("Physics")
 
-## The acceleration (m/s/s) applied opposite of the player's velocity while they're not moving.
-@export var friction: float = 40
+## The acceleration applied opposite of the player's velocity while they're not moving.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var friction: float = 40
 ## The acceleration (m/s/s) always applied opposite and proportional to the player's velocity.
-@export var air_resistence: float = 0.15
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var air_resistence: float = 0.15
 ## The downwards acceleration (m/s/s).
-@export var gravity: float = 30
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var gravity: float = 30
 
 @export_group("Movement")
 
 ## The highest speed (m/s) the player can reach on their own.
-@export var top_speed: float = 4
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var top_speed: float = 4
 ## How quickly the player accelerates (m/s/s).
-@export var acceleration: float = 80
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var acceleration: float = 80
 ## What [member top_speed] is multiplied by while moving backwards.
-@export var backwards_speed_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var backwards_speed_multiplier: float = 0.5
 
 @export_group("Air Control")
 
 ## What [member top_speed] is multiplied by while airborne.
-@export var airborne_speed_multiplier: float = 0.35
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var airborne_speed_multiplier: float = 0.35
 ## What [member acceleration] is multiplied by while airborne.
-@export var airborne_acceleration_multiplier: float = 0.35
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var airborne_acceleration_multiplier: float = 0.35
 
 @export_group("Jumping")
 
 ## The speed (m/s) applied upwards when jumping.
-@export var jump_power: float = 8
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_power: float = 8
 ## The speed (m/s) applied in the movement direction when jumping.
-@export var horizontal_jump_power: float = 1.5
-## What [member jump_power] is multiplied by when jumping while not moving.
-@export var standing_jump_multiplier: float = 1.1
+@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var horizontal_jump_power: float = 1.5
 ## The time (in seconds) a jump lasts.
-@export var jump_duration: float = 1
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var jump_duration: float = 1
+## What [member jump_power] is multiplied by when jumping while not moving.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var standing_jump_multiplier: float = 1.1
 ## What [member gravity] is multiplied by while jumping.
-@export var jumping_gravity_multiplier: float = 0.75
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jumping_gravity_multiplier: float = 0.75
 ## What [member horizontal_jump_power] is multiplied by when jumping backwards.
-@export var backwards_jump_multiplier: float = 0.1
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var backwards_jump_multiplier: float = 0.1
 ## The amount of times the player can jump while in the air.
-@export var air_jumps_limit: int = 0
+@export_range(0, 100, 1, "or_greater") var air_jumps_limit: int = 0
 
 @export_group("Sprinting")
 
 ## What [member top_speed] is multiplied by while sprinting.
-@export var sprint_speed_multiplier: float = 1.7
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_speed_multiplier: float = 1.7
 ## What [member acceleration] is multiplied by while sprinting.
-@export var sprint_acceleration_multiplier: float = 1.25
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_acceleration_multiplier: float = 1.25
 ## What [member jump_power] is multiplied by while sprinting.
-@export var sprint_jump_multiplier: float = 1.2
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_jump_multiplier: float = 1.2
 ## What [member horizontal_jump_power] is multiplied by while sprinting.
-@export var sprint_horizontal_jump_multiplier: float = 1.2
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_horizontal_jump_multiplier: float = 1.2
 
 @export_group("Crouching")
 
 ## What [member top_speed] is multiplied by while crouching.
-@export var crouch_speed_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_speed_multiplier: float = 0.5
 ## What [member acceleration] is multiplied by while crouching.
-@export var crouch_acceleration_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_acceleration_multiplier: float = 0.5
 ## The time (in seconds) it takes to be fully crouched.
-@export var crouch_transition_time: float = 0.1
-## What the player's collision height is multiplied by.
-@export var crouch_height_multiplier: float = 0.5
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var crouch_transition_time: float = 0.1
+## What the player's collision height is multiplied by while crouching.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_height_multiplier: float = 0.5
 
 @export_group("Sliding")
 
 ## The speed (m/s) applied in the direction the player is moving when sliding.
-@export var slide_power: float = 6
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_power: float = 6
 ## The time (in seconds) a slide lasts.
-@export var slide_duration: float = 0.8
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var slide_duration: float = 0.8
 ## What [member friction] is multiplied by while sliding.
-@export var slide_friction_multiplier: float = 0.1
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var slide_friction_multiplier: float = 0.1
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
-@export var slide_speed_threshold: float = 0.2
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_speed_threshold: float = 0.2
 ## The speed (m/s) applied upwards when slide jumping.
-@export var slide_jump_power: float = 12
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 12
 ## The speed (m/s) applied in the slide direction when slide jumping.
-@export var slide_horizontal_jump_power: float = -2
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_horizontal_jump_power: float = -2
 ## What [member acceleration] is multiplied by while sliding.
-@export var slide_acceleration_multiplier: float = 0.2
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var slide_acceleration_multiplier: float = 0.2
 ## The time (in seconds) that must pass between slides.
-@export var slide_cooldown_duration: float = 0.5
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var slide_cooldown_duration: float = 0.5
+
+@export_group("Wallrunning")
+
+## What the angle (in radians) from the velocity direction to the wall normal needs to be to start wallrunning.
+@export_range(0, 360, 1, "radians_as_degrees") var wallrun_angle_threshold: float = deg_to_rad(45)
 
 @export_group("Buffers")
 
 ## The time (in seconds) after leaving the ground the player can still jump during.
-@export var jump_coyote_time: float = 0.1
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var jump_coyote_time: float = 0.1
 ## The time (in seconds) an action will be buffered for.
-@export var action_buffer_duration: float = 0.05
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var action_buffer_duration: float = 0.05
 
 
 @onready var head: Node3D = $Head
@@ -118,6 +123,7 @@ var slide_timer: float = 999
 var slide_end_timer: float = 999
 
 var air_jumps: int = 0
+var coyote_possible: bool = false
 
 
 var velocity_direction: Vector3:

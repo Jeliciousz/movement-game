@@ -4,8 +4,8 @@ class_name PlayerAirborne extends State
 @export var player: Player
 
 
-func enter() -> void:
-	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
+func coyote_jump_check() -> bool:
+	if player.coyote_possible and player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
@@ -16,8 +16,12 @@ func enter() -> void:
 		player.jump(jump_power, horizontal_jump_power, true, false)
 		
 		transition.emit(&"PlayerJumping")
-		return
+		return true
 	
+	return false
+
+
+func air_jump_check() -> bool:
 	if player.air_jumps < player.air_jumps_limit and player.consume_jump_action_buffer():
 		player.air_jumps += 1
 		
@@ -27,6 +31,28 @@ func enter() -> void:
 		player.jump(jump_power, horizontal_jump_power, true, true)
 		
 		transition.emit(&"PlayerJumping")
+		return true
+	
+	return false
+
+
+func wallrun_check() -> bool:
+	if player.is_on_wall():
+		transition.emit(&"PlayerWallrun")
+		return true
+	
+	return false
+
+
+func enter() -> void:
+	if wallrun_check():
+		return
+	
+	if coyote_jump_check():
+		return
+	
+	if air_jump_check():
+		return
 
 
 func update_physics_state() -> void:
@@ -34,28 +60,14 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if player.airborne_timer <= player.jump_coyote_time and player.consume_jump_action_buffer():
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
-		
-		if player.sprint_action:
-			jump_power *= player.sprint_jump_multiplier
-			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
-		
-		player.jump(jump_power, horizontal_jump_power, true, false)
-		
-		transition.emit(&"PlayerJumping")
+	if wallrun_check():
 		return
 	
-	if player.air_jumps < player.air_jumps_limit and player.consume_jump_action_buffer():
-		player.air_jumps += 1
-		
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
-		
-		player.jump(jump_power, horizontal_jump_power, true, true)
-		
-		transition.emit(&"PlayerJumping")
+	if coyote_jump_check():
+		return
+	
+	if air_jump_check():
+		return
 
 
 func physics_update(delta: float) -> void:

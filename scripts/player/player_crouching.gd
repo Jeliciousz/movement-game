@@ -8,8 +8,8 @@ class_name PlayerCrouching extends State
 @export var collision_shape: CollisionShape3D
 
 
-func enter() -> void:
-	if player.consume_jump_action_buffer():
+func jump_check() -> bool:
+	if player.crouch_timer < player.crouch_transition_time and player.consume_jump_action_buffer():
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
@@ -20,6 +20,13 @@ func enter() -> void:
 		player.jump(jump_power, horizontal_jump_power, false, false)
 		
 		transition.emit(&"PlayerJumping")
+		return true
+	
+	return false
+
+
+func enter() -> void:
+	if jump_check():
 		return
 	
 	player.crouch_timer = 0
@@ -40,17 +47,7 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if player.crouch_timer < player.crouch_transition_time and player.consume_jump_action_buffer():
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
-		
-		if player.sprint_action:
-			jump_power *= player.sprint_jump_multiplier
-			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
-		
-		player.jump(jump_power, horizontal_jump_power, false, false)
-		
-		transition.emit(&"PlayerJumping")
+	if jump_check():
 		return
 	
 	if not Input.is_action_pressed("crouch"):

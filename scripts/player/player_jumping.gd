@@ -6,6 +6,7 @@ class_name PlayerJumping extends State
 
 func enter() -> void:
 	player.jump_timer = 0
+	player.coyote_possible = false
 
 
 func update_physics_state() -> void:

@@ -26,11 +26,11 @@ extends Node
 ## Camera pitch clamping.
 @export_subgroup("Clamping")
 
-## Maximum camera pitch in degrees.
-@export_range(0, 89.99) var max_pitch: float = 89.99
+## Maximum camera pitch in radians.
+@export_range(0, 89, 1, "radians_as_degrees") var max_pitch: float = deg_to_rad(89.9)
 
-## Minimum camera pitch in degrees.
-@export_range(-89.99, 0) var min_pitch: float = -89.99
+## Minimum camera pitch in radians.
+@export_range(-89, 0, 1, "radians_as_degrees") var min_pitch: float = deg_to_rad(-89.9)
 
 
 func _ready():
@@ -63,9 +63,9 @@ func _unhandled_input(event: InputEvent)-> void:
 func aim_look(event: InputEventMouseMotion) -> void:
 	var viewport_transform: Transform2D = get_tree().root.get_final_transform()
 	var motion: Vector2 = event.xformed_by(viewport_transform).relative
-	var degrees_per_unit: float = 0.25
+	var radians_per_unit: float = deg_to_rad(0.25)
 	
-	motion *= degrees_per_unit
+	motion *= radians_per_unit
 	motion *= mouse_sensitivity
 	
 	add_yaw(motion.x)
@@ -73,28 +73,28 @@ func aim_look(event: InputEventMouseMotion) -> void:
 	clamp_pitch()
 
 
-## Rotates the character around the local Y axis by a given amount (In degrees) to achieve yaw.
+## Rotates the character around the local Y axis by a given amount (in radians) to achieve yaw.
 func add_yaw(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 	
-	player.rotate_object_local(Vector3.DOWN, deg_to_rad(amount))
+	player.rotate_object_local(Vector3.DOWN, amount)
 	player.orthonormalize()
 
 
-## Rotates the head around the local x axis by a given amount (In degrees) to achieve pitch.
+## Rotates the head around the local x axis by a given amount (in radians) to achieve pitch.
 func add_pitch(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 	
-	head.rotate_object_local(Vector3.LEFT, deg_to_rad(amount))
+	head.rotate_object_local(Vector3.LEFT, amount)
 	head.orthonormalize()
 
 
 ## Clamps the pitch between min_pitch and max_pitch.
 func clamp_pitch() -> void:
-	if head.rotation.x > deg_to_rad(min_pitch) and head.rotation.x < deg_to_rad(max_pitch):
+	if head.rotation.x > min_pitch and head.rotation.x < max_pitch:
 		return
 	
-	head.rotation.x = clamp(head.rotation.x, deg_to_rad(min_pitch), deg_to_rad(max_pitch))
+	head.rotation.x = clamp(head.rotation.x, min_pitch, max_pitch)
 	head.orthonormalize()
