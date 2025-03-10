@@ -91,7 +91,7 @@ class_name Player extends CharacterBody3D
 @export_group("Wall-Running")
 
 ## The highest speed (m/s) the player can reach while wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 7
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
 ## How quickly the player accelerates (m/s/s) while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
 ## What the speed going into a wall gets multiplied by when wall-running.
@@ -105,7 +105,9 @@ class_name Player extends CharacterBody3D
 ## What [member gravity] is multiplied by while wall-running after duration runs out.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.75
 ## The speed (m/s) the player must have while sprinting to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_speed_threshold: float = 6
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 6
+## The speed (m/s) the player must maintain to keep wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
 ## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
 @export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(5)
 ## What the maximum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.

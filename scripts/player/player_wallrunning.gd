@@ -13,6 +13,10 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
+	if player.horizontal_speed < player.wallrun_stop_speed_threshold:
+		transition.emit(&"PlayerAirborne")
+		return
+	
 	if player.consume_jump_action_buffer():
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
@@ -37,8 +41,13 @@ func physics_update(delta: float) -> void:
 		
 		player.add_friction(delta, friction, player.wallrun_top_speed)
 		player.add_gravity(delta, gravity)
-	
-	player.add_movement(delta, player.wallrun_top_speed, player.wallrun_acceleration)
+	else:
+		player.add_movement(delta, player.wallrun_top_speed, player.wallrun_acceleration)
+		
+		var wallrun_wall_parallel: Vector3 = abs(player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90)))
+		
+		player.velocity.x *= wallrun_wall_parallel.x
+		player.velocity.z *= wallrun_wall_parallel.z
 	
 	player.colliding_velocity = player.velocity
 	player.move_and_slide()

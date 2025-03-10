@@ -48,7 +48,7 @@ func air_jump_check() -> bool:
 
 
 func wallrun_check() -> bool:
-	if player.is_on_wall() and player.sprint_action and player.horizontal_colliding_speed >= player.wallrun_speed_threshold:
+	if player.is_on_wall() and player.sprint_action and player.horizontal_colliding_speed >= player.wallrun_start_speed_threshold:
 		var wall_normal = player.get_wall_normal()
 		
 		var wall_product = player.horizontal_colliding_direction.dot(-wall_normal)
