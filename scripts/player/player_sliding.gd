@@ -62,7 +62,7 @@ func physics_update(delta: float) -> void:
 	var friction: float = player.friction * player.slide_friction_multiplier
 	var acceleration: float = player.acceleration * player.slide_acceleration_multiplier
 	
-	player.add_air_resistence(delta)
+	player.add_air_resistence(delta, player.air_resistence)
 	player.add_friction(delta, friction, 0)
 	player.add_movement(delta, 0, acceleration)
 	

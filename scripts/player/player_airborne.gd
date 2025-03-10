@@ -55,7 +55,8 @@ func wallrun_check() -> bool:
 		
 		if cos(player.wallrun_maximum_angle_threshold) < wall_product and wall_product < cos(player.wallrun_minimum_angle_threshold):
 			player.wallrun_wall_normal = wall_normal
-			player.velocity = player.horizontal_velocity_direction * player.horizontal_colliding_speed * player.wallrun_speed_conversion_multiplier
+			#player.velocity = player.horizontal_velocity_direction * player.horizontal_colliding_speed * player.wallrun_speed_conversion_multiplier
+			player.velocity = player.velocity_direction * player.colliding_speed * player.wallrun_speed_conversion_multiplier
 			transition.emit(&"PlayerWallrunning")
 			return true
 	
@@ -99,7 +100,7 @@ func physics_update(delta: float) -> void:
 	var backwards_multiplier = lerpf(1, player.backwards_speed_multiplier, player.backwards_dot_product)
 	top_speed *= backwards_multiplier
 	
-	player.add_air_resistence(delta)
+	player.add_air_resistence(delta, player.air_resistence)
 	player.add_gravity(delta, player.gravity)
 	player.add_movement(delta, top_speed, acceleration)
 	

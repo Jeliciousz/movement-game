@@ -33,15 +33,21 @@ func update_physics_state() -> void:
 func physics_update(delta: float) -> void:
 	player.wallrun_timer += delta
 	
-	player.add_air_resistence(delta)
+	var air_resistence: float = player.air_resistence * player.wallrun_air_resistence_multiplier
+	var friction: float = player.friction * player.wallrun_friction_multiplier
+	
+	player.add_air_resistence(delta, air_resistence)
 	
 	if player.wallrun_timer > player.wallrun_duration:
-		var friction: float = player.friction * player.wallrun_friction_multiplier
 		var gravity: float = player.gravity * player.wallrun_gravity_multiplier
 		
 		player.add_friction(delta, friction, player.wallrun_top_speed)
 		player.add_gravity(delta, gravity)
 	else:
+		#player.add_friction(delta, friction, player.wallrun_top_speed)
+		
+		player.velocity.y = move_toward(player.velocity.y, 0, player.wallrun_vertical_friction * delta)
+		
 		player.add_movement(delta, player.wallrun_top_speed, player.wallrun_acceleration)
 		
 		var wallrun_wall_parallel: Vector3 = abs(player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90)))

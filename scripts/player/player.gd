@@ -94,24 +94,28 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
 ## How quickly the player accelerates (m/s/s) while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
-## What the speed going into a wall gets multiplied by when wall-running.
-@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.95
 ## The speed (m/s) applied perpendicular to the wall when wall-jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 4
 ## The time (in seconds) a wallrun lasts.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var wallrun_duration: float = 3
-## What [member friction] is multiplied by while wall-running after duration runs out.
+@export_range(0, 1, 0.05, "or_greater", "suffix:s") var wallrun_duration: float = 2
+## What the speed going into a wall gets multiplied by when wall-running.
+@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.95
+## The acceleration applied opposite of the player's vertical velocity while wall-running (before duration runs out).
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 15
+## What [member air_resistence] is multiplied by while wall-running.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.85
+## What [member friction] is multiplied by while wall-running.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.25
-## What [member gravity] is multiplied by while wall-running after duration runs out.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.75
+## What [member gravity] is multiplied by while wall-running (gravity is applied after duration runs out).
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
 ## The speed (m/s) the player must have while sprinting to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 6
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
 ## The speed (m/s) the player must maintain to keep wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
 ## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
-@export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(5)
+@export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(2)
 ## What the maximum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
-@export_range(0, 180, 1, "radians_as_degrees") var wallrun_maximum_angle_threshold: float = deg_to_rad(85)
+@export_range(0, 180, 1, "radians_as_degrees") var wallrun_maximum_angle_threshold: float = deg_to_rad(88)
 
 @export_group("Buffers")
 
@@ -157,6 +161,10 @@ var horizontal_colliding_direction: Vector3:
 var horizontal_colliding_speed: float:
 	get:
 		return Vector3(colliding_velocity.x, 0, colliding_velocity.z).length()
+
+var colliding_speed: float:
+	get:
+		return colliding_velocity.length()
 
 var velocity_direction: Vector3:
 	get:
@@ -261,7 +269,7 @@ func add_gravity(delta: float, gravity: float) -> void:
 	velocity.y -= gravity * delta
 
 
-func add_air_resistence(delta: float) -> void:
+func add_air_resistence(delta: float, air_resistence: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * speed * delta)
 
 

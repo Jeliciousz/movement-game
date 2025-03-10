@@ -31,7 +31,7 @@ func physics_update(delta: float) -> void:
 	var backwards_multiplier = lerpf(1, player.backwards_speed_multiplier, player.backwards_dot_product)
 	top_speed *= backwards_multiplier
 	
-	player.add_air_resistence(delta)
+	player.add_air_resistence(delta, player.air_resistence)
 	player.add_gravity(delta, gravity)
 	player.add_movement(delta, top_speed, acceleration)
 	
