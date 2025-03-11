@@ -18,11 +18,10 @@ func slide_jump_check() -> bool:
 
 
 func enter() -> void:
-	player.crouch_timestamp = Time.get_ticks_msec()
-	
 	collision_shape.shape.height *= player.crouch_height_multiplier
 	collision_shape.position.y *= player.crouch_height_multiplier
 	
+	player.crouch_timestamp = Time.get_ticks_msec()
 	player.slide_timestamp = Time.get_ticks_msec()
 	
 	if slide_jump_check():
@@ -30,11 +29,10 @@ func enter() -> void:
 
 
 func exit() -> void:
-	player.crouch_timestamp = Time.get_ticks_msec()
-	
 	collision_shape.shape.height /= player.crouch_height_multiplier
 	collision_shape.position.y /= player.crouch_height_multiplier
 	
+	player.crouch_timestamp = Time.get_ticks_msec()
 	player.slide_timestamp = Time.get_ticks_msec()
 
 

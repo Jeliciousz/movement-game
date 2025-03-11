@@ -31,20 +31,20 @@ func jump_check() -> bool:
 
 
 func enter() -> void:
-	player.crouch_timestamp = Time.get_ticks_msec()
-	
 	collision_shape.shape.height = player.standing_collider_height * player.crouch_height_multiplier
 	collision_shape.position.y = player.standing_collider_y * player.crouch_height_multiplier
+	
+	player.crouch_timestamp = Time.get_ticks_msec()
 	
 	if jump_check():
 		return
 
 
 func exit() -> void:
-	player.crouch_timestamp = Time.get_ticks_msec()
-	
 	collision_shape.shape.height = player.standing_collider_height
 	collision_shape.position.y = player.standing_collider_y
+	
+	player.crouch_timestamp = Time.get_ticks_msec()
 
 
 func update_physics_state() -> void:

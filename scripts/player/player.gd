@@ -207,7 +207,7 @@ var looking_direction: Vector3:
 func _process(_delta: float) -> void:
 	var weight: float = minf(float(Time.get_ticks_msec() - crouch_timestamp) / float(crouch_transition_time), 1)
 	
-	if state_machine.current_state.name == &"PlayerCrouching":
+	if state_machine.current_state.name == &"PlayerCrouching" or state_machine.current_state.name == &"PlayerSliding":
 		mesh.scale.y = lerpf(1, crouch_height_multiplier, weight)
 		mesh.position.y = lerpf(standing_mesh_y, standing_mesh_y * crouch_height_multiplier, weight)
 		head.position.y = lerpf(standing_head_y, standing_head_y * crouch_height_multiplier, weight)
