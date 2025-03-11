@@ -4,9 +4,12 @@ class_name PlayerGrounded extends State
 @export var player: Player
 
 
+var is_sprinting: bool = true
+
+
 func crouch_slide_check() -> bool:
 	if InputBuffer.is_action_buffered("crouch"):
-		if not player.is_sprinting or player.speed < player.slide_speed_threshold:
+		if not is_sprinting or player.speed < player.slide_speed_threshold:
 			transition.emit(&"PlayerCrouching")
 			return true
 		
@@ -20,17 +23,16 @@ func crouch_slide_check() -> bool:
 
 func jump_check() -> bool:
 	if InputBuffer.is_action_buffered("jump"):
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
+		var weight: float = clampf(player.speed - player.min_jump_speed / player.max_jump_speed - player.min_jump_speed, 0, 1)
+		
+		var jump_power = lerpf(player.jump_power, player.max_jump_power, weight)
+		var horizontal_jump_power = lerpf(player.horizontal_jump_power, player.max_horizontal_jump_power, weight)
 		
 		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
 		
 		if player.move_direction.is_zero_approx():
 			jump_power *= player.standing_jump_multiplier
 			horizontal_jump_power = 0
-		elif player.is_sprinting:
-			jump_power *= player.sprint_jump_multiplier
-			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
 		
 		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, false, false)
 		
@@ -57,7 +59,7 @@ func update_physics_state() -> void:
 		return
 	
 	if InputBuffer.is_action_buffered("sprint"):
-		player.is_sprinting = not player.is_sprinting
+		is_sprinting = not is_sprinting
 	
 	if crouch_slide_check():
 		return
@@ -67,15 +69,13 @@ func update_physics_state() -> void:
 
 
 func physics_update(delta: float) -> void:
-	var top_speed: float = player.top_speed
-	var acceleration: float = player.acceleration
-	
-	if player.is_sprinting:
-		top_speed *= player.sprint_speed_multiplier
-		acceleration *= player.sprint_acceleration_multiplier
-	
 	var backwards_multiplier = lerpf(1, player.backwards_speed_multiplier, player.backwards_dot_product)
-	top_speed *= backwards_multiplier
+	var top_speed = player.top_speed * backwards_multiplier
+	var acceleration = player.acceleration * backwards_multiplier
+	
+	if is_sprinting:
+		top_speed = player.sprint_top_speed * backwards_multiplier
+		acceleration = player.sprint_acceleration * backwards_multiplier
 	
 	player.add_air_resistence(delta, player.air_resistence)
 	player.add_friction(delta, player.friction, top_speed)

@@ -18,9 +18,6 @@ func jump_check() -> bool:
 		if player.move_direction.is_zero_approx():
 			jump_power *= player.standing_jump_multiplier
 			horizontal_jump_power = 0
-		elif player.is_sprinting:
-			jump_power *= player.sprint_jump_multiplier
-			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
 		
 		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, false, false)
 		

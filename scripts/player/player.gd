@@ -46,17 +46,21 @@ class_name Player extends CharacterBody3D
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var standing_jump_multiplier: float = 1.1
 ## What [member horizontal_jump_power] is multiplied by when jumping backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var backwards_jump_multiplier: float = 0.1
+## The speed (m/s) needed to achieve base jump power.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var min_jump_speed: float = 4
+## The speed (m/s) needed to achieve max jump power.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var max_jump_speed: float = 7
+## The speed (m/s) applied upwards when jumping at max speed.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var max_jump_power: float = 9.5
+## The speed (m/s) applied in the movement direction when jumping at max speed.
+@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var max_horizontal_jump_power: float = 2
 
 @export_group("Sprinting")
 
-## What [member top_speed] is multiplied by while sprinting.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_speed_multiplier: float = 1.7
-## What [member acceleration] is multiplied by while sprinting.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_acceleration_multiplier: float = 1.25
-## What [member jump_power] is multiplied by while sprinting.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_jump_multiplier: float = 1.2
-## What [member horizontal_jump_power] is multiplied by while sprinting.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_horizontal_jump_multiplier: float = 1.2
+## The highest speed (m/s) the player can reach while sprinting.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var sprint_top_speed: float = 7
+## How quickly the player accelerates (m/s/s) while sprinting.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var sprint_acceleration: float = 100
 
 @export_group("Crouching")
 
@@ -143,8 +147,6 @@ class_name Player extends CharacterBody3D
 
 var input_axis: Vector2 = Vector2.ZERO
 var move_direction: Vector3 = Vector3.ZERO
-
-var is_sprinting: bool = true
 
 var jump_timestamp: float = 0
 var crouch_timestamp: float = 0
