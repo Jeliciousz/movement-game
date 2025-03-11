@@ -5,7 +5,7 @@ class_name PlayerAirdashing extends State
 
 
 func wallrun_check() -> bool:
-	if player.is_on_wall() and player.is_sprinting and player.horizontal_colliding_speed >= player.wallrun_start_speed_threshold:
+	if player.is_on_wall() and player.horizontal_colliding_speed >= player.wallrun_start_speed_threshold:
 		var wall_normal = player.get_wall_normal()
 		
 		var wall_product = player.horizontal_colliding_direction.dot(-wall_normal)

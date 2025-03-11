@@ -113,7 +113,7 @@ class_name Player extends CharacterBody3D
 ## What [member gravity] is multiplied by while wall-running (gravity is applied after duration runs out).
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.25
 ## The speed (m/s) the player must have to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 4
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
 ## The speed (m/s) the player must maintain to keep wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
 ## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.

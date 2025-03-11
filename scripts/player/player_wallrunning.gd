@@ -13,6 +13,14 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
+	if not player.is_on_wall():
+		transition.emit(&"PlayerAirborne")
+		return
+	
+	if not player.get_last_slide_collision().get_collider().has_node("CanWallrun"):
+		transition.emit(&"PlayerAirborne")
+		return
+	
 	if player.horizontal_speed < player.wallrun_stop_speed_threshold:
 		transition.emit(&"PlayerAirborne")
 		return
@@ -50,6 +58,8 @@ func physics_update(delta: float) -> void:
 		
 		player.velocity.x *= wallrun_wall_parallel.x
 		player.velocity.z *= wallrun_wall_parallel.z
+	
+	player.add_force(1, -player.wallrun_wall_normal)
 	
 	player.colliding_velocity = player.velocity
 	player.move_and_slide()

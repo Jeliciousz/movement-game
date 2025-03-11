@@ -26,16 +26,24 @@ func air_jump_check() -> bool:
 
 
 func wallrun_check() -> bool:
-	if player.is_on_wall() and player.horizontal_colliding_speed >= player.wallrun_start_speed_threshold:
-		var wall_normal = player.get_wall_normal()
-		
-		var wall_product = player.horizontal_colliding_direction.dot(-wall_normal)
-		
-		if cos(player.wallrun_maximum_angle_threshold) < wall_product and wall_product < cos(player.wallrun_minimum_angle_threshold):
-			player.wallrun_wall_normal = wall_normal
-			player.velocity = player.velocity_direction * player.colliding_speed * player.wallrun_speed_conversion_multiplier
-			transition.emit(&"PlayerWallrunning")
-			return true
+	if player.horizontal_colliding_speed < player.wallrun_start_speed_threshold:
+		return false
+	
+	if not player.is_on_wall():
+		return false
+	
+	if not player.get_last_slide_collision().get_collider().has_node("CanWallrun"):
+		return false
+	
+	var wall_normal = player.get_wall_normal()
+	
+	var wall_product = player.horizontal_colliding_direction.dot(-wall_normal)
+	
+	if cos(player.wallrun_maximum_angle_threshold) < wall_product and wall_product < cos(player.wallrun_minimum_angle_threshold):
+		player.wallrun_wall_normal = wall_normal
+		player.velocity = player.velocity_direction * player.colliding_speed * player.wallrun_speed_conversion_multiplier
+		transition.emit(&"PlayerWallrunning")
+		return true
 	
 	return false
 
