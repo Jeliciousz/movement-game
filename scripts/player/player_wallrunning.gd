@@ -13,13 +13,26 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if not player.is_on_wall():
+	var test = player.move_and_collide(-player.wallrun_wall_normal, true)
+	
+	if not test:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if not player.get_last_slide_collision().get_collider().has_node("CanWallrun"):
+	if not test.get_collider().has_node("CanWallrun"):
 		transition.emit(&"PlayerAirborne")
 		return
+	
+	player.move_and_collide(-player.wallrun_wall_normal)
+	
+	player.wallrun_wall_normal = test.get_normal()
+	
+	var wallrun_wall_parallel: Vector3 = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+	
+	if player.horizontal_velocity_direction.dot(wallrun_wall_parallel) <= 0:
+		wallrun_wall_parallel *= -1
+	
+	player.velocity = Vector3(wallrun_wall_parallel.x * player.horizontal_speed, player.velocity.y, wallrun_wall_parallel.z * player.horizontal_speed)
 	
 	if player.horizontal_speed < player.wallrun_stop_speed_threshold:
 		transition.emit(&"PlayerAirborne")
@@ -52,14 +65,14 @@ func physics_update(delta: float) -> void:
 	else:
 		player.velocity.y = move_toward(player.velocity.y, 0, player.wallrun_vertical_friction * delta)
 		
-		player.add_movement(delta, player.wallrun_top_speed, player.wallrun_acceleration)
-		
 		var wallrun_wall_parallel: Vector3 = abs(player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90)))
 		
-		player.velocity.x *= wallrun_wall_parallel.x
-		player.velocity.z *= wallrun_wall_parallel.z
+		var direction = player.move_direction
+		direction.x *= wallrun_wall_parallel.x
+		direction.z *= wallrun_wall_parallel.z
+		
+		player.add_movement(delta, direction, player.wallrun_top_speed, player.wallrun_acceleration)
 	
-	player.add_force(1, -player.wallrun_wall_normal)
 	
 	player.colliding_velocity = player.velocity
 	player.move_and_slide()

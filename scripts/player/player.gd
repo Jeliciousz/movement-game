@@ -89,8 +89,8 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_horizontal_jump_power: float = -3
 ## What [member acceleration] is multiplied by while sliding.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var slide_acceleration_multiplier: float = 0.2
-## The time (in seconds) that must pass between slides.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var slide_cooldown_duration: float = 0.5
+## The time (in milliseconds) that must pass between slides.
+@export_range(0, 1, 0.05, "or_greater", "suffix:ms") var slide_cooldown_duration: int = 250
 
 @export_group("Wall-Running")
 
@@ -287,7 +287,7 @@ func add_friction(delta: float, friction: float, top_speed: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, friction * friction_product * delta)
 
 
-func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
+func add_movement(delta: float, direction: Vector3, top_speed: float, acceleration: float) -> void:
 	#	This seemingly overcomplicated movement code is the result of trying to achieve movement that doesn't feel clunky or finnicky, and has good control,
 	#	while still limiting the horizontal speed that the player can reach on their own
 	#
@@ -309,7 +309,7 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	#	-Jeliciousz
 	
 	var old_horizontal_speed = horizontal_speed
-	velocity += move_direction * acceleration * delta
+	velocity += direction * acceleration * delta
 	var new_horizontal_speed = horizontal_speed
 	
 	if new_horizontal_speed < old_horizontal_speed:

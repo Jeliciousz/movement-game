@@ -27,7 +27,7 @@ func physics_update(delta: float) -> void:
 	
 	player.add_air_resistence(delta, player.air_resistence)
 	player.add_gravity(delta, gravity)
-	player.add_movement(delta, top_speed, acceleration)
+	player.add_movement(delta, player.move_direction, top_speed, acceleration)
 	
 	player.colliding_velocity = player.velocity
 	player.move_and_slide()
