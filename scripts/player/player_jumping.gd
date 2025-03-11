@@ -5,8 +5,7 @@ class_name PlayerJumping extends State
 
 
 func enter() -> void:
-	player.jump_timer = 0
-	player.coyote_possible = false
+	player.jump_timestamp = Time.get_ticks_msec()
 
 
 func update_physics_state() -> void:
@@ -14,16 +13,11 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if not Input.is_action_pressed("jump") or player.jump_timer >= player.jump_duration:
+	if not Input.is_action_pressed("jump") or Time.get_ticks_msec() - player.jump_timestamp >= player.jump_duration:
 		transition.emit(&"PlayerAirborne")
 
 
 func physics_update(delta: float) -> void:
-	player.airborne_timer += delta
-	player.jump_timer += delta
-	player.crouch_timer -= delta
-	player.slide_end_timer += delta
-	
 	var top_speed: float = player.top_speed * player.airborne_speed_multiplier
 	var acceleration: float = player.acceleration * player.airborne_acceleration_multiplier
 	var gravity: float = player.gravity * player.jumping_gravity_multiplier

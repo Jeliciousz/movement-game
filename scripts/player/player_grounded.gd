@@ -5,12 +5,12 @@ class_name PlayerGrounded extends State
 
 
 func crouch_slide_check() -> bool:
-	if player.consume_crouch_action_buffer():
-		if not player.sprint_action or player.speed < player.slide_speed_threshold:
+	if InputBuffer.is_action_buffered("crouch"):
+		if not player.is_sprinting or player.speed < player.slide_speed_threshold:
 			transition.emit(&"PlayerCrouching")
 			return true
 		
-		if player.slide_end_timer > player.slide_cooldown_duration:
+		if Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration:
 			player.add_force(player.slide_power, player.move_direction)
 			transition.emit(&"PlayerSliding")
 			return true
@@ -19,7 +19,7 @@ func crouch_slide_check() -> bool:
 
 
 func jump_check() -> bool:
-	if player.consume_jump_action_buffer():
+	if InputBuffer.is_action_buffered("jump"):
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
@@ -28,7 +28,7 @@ func jump_check() -> bool:
 		if player.move_direction.is_zero_approx():
 			jump_power *= player.standing_jump_multiplier
 			horizontal_jump_power = 0
-		elif player.sprint_action:
+		elif player.is_sprinting:
 			jump_power *= player.sprint_jump_multiplier
 			horizontal_jump_power *= player.sprint_horizontal_jump_multiplier
 		
@@ -41,9 +41,8 @@ func jump_check() -> bool:
 
 
 func enter() -> void:
-	player.airborne_timer = 0
 	player.air_jumps = 0
-	player.coyote_possible = true
+	player.air_dashes = 0
 	
 	if crouch_slide_check():
 		return
@@ -57,6 +56,9 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
+	if InputBuffer.is_action_buffered("sprint"):
+		player.is_sprinting = not player.is_sprinting
+	
 	if crouch_slide_check():
 		return
 	
@@ -65,13 +67,10 @@ func update_physics_state() -> void:
 
 
 func physics_update(delta: float) -> void:
-	player.crouch_timer -= delta
-	player.slide_end_timer += delta
-	
 	var top_speed: float = player.top_speed
 	var acceleration: float = player.acceleration
 	
-	if player.sprint_action:
+	if player.is_sprinting:
 		top_speed *= player.sprint_speed_multiplier
 		acceleration *= player.sprint_acceleration_multiplier
 	

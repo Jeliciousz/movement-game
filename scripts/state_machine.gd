@@ -10,7 +10,7 @@ var current_state: State
 func _ready() -> void:
 	for child in get_children():
 		if child is State:
-			states.set(child.name, child)
+			states[child.name] = child
 			child.transition.connect(on_child_transition)
 	
 	if initial_state:
@@ -31,14 +31,12 @@ func _physics_process(delta: float) -> void:
 
 
 func on_child_transition(new_state_name: StringName) -> void:
-	var new_state = states.get(new_state_name)
+	var new_state = states[new_state_name]
 	if not new_state:
 		return
 	
 	if current_state:
 		current_state.exit()
-	
-	var old_state_name: StringName = current_state.name
 	
 	current_state = new_state
 	current_state.enter()

@@ -36,16 +36,16 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_power: float = 8
 ## The speed (m/s) applied in the movement direction when jumping.
 @export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var horizontal_jump_power: float = 1.5
-## The time (in seconds) a jump lasts.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var jump_duration: float = 1
-## What [member jump_power] is multiplied by when jumping while not moving.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var standing_jump_multiplier: float = 1.1
+## The time (in milliseconds) a jump lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_duration: int = 1000
+## The amount of times the player can jump while in the air.
+@export_range(0, 100, 1, "or_greater") var air_jumps_limit: int = 1
 ## What [member gravity] is multiplied by while jumping.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jumping_gravity_multiplier: float = 0.75
+## What [member jump_power] is multiplied by when jumping while not moving.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var standing_jump_multiplier: float = 1.1
 ## What [member horizontal_jump_power] is multiplied by when jumping backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var backwards_jump_multiplier: float = 0.1
-## The amount of times the player can jump while in the air.
-@export_range(0, 100, 1, "or_greater") var air_jumps_limit: int = 0
 
 @export_group("Sprinting")
 
@@ -64,8 +64,8 @@ class_name Player extends CharacterBody3D
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_speed_multiplier: float = 0.5
 ## What [member acceleration] is multiplied by while crouching.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_acceleration_multiplier: float = 0.5
-## The time (in seconds) it takes to be fully crouched.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var crouch_transition_time: float = 0.1
+## The time (in milliseconds) it takes to be fully crouched.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var crouch_transition_time: int = 100
 ## What the player's collision height is multiplied by while crouching.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_height_multiplier: float = 0.5
 
@@ -73,8 +73,8 @@ class_name Player extends CharacterBody3D
 
 ## The speed (m/s) applied in the direction the player is moving when sliding.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_power: float = 6
-## The time (in seconds) a slide lasts.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var slide_duration: float = 0.8
+## The time (in milliseconds) a slide lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_duration: int = 800
 ## What [member friction] is multiplied by while sliding.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var slide_friction_multiplier: float = 0.1
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
@@ -96,8 +96,8 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
 ## The speed (m/s) applied perpendicular to the wall when wall-jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 4
-## The time (in seconds) a wallrun lasts.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var wallrun_duration: float = 2
+## The time (in milliseconds) a wallrun lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
 ## What the speed going into a wall gets multiplied by when wall-running.
 @export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.95
 ## The acceleration applied opposite of the player's vertical velocity while wall-running (before duration runs out).
@@ -108,8 +108,8 @@ class_name Player extends CharacterBody3D
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.25
 ## What [member gravity] is multiplied by while wall-running (gravity is applied after duration runs out).
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
-## The speed (m/s) the player must have while sprinting to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
+## The speed (m/s) the player must have to start wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 4
 ## The speed (m/s) the player must maintain to keep wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
 ## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
@@ -117,12 +117,17 @@ class_name Player extends CharacterBody3D
 ## What the maximum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
 @export_range(0, 180, 1, "radians_as_degrees") var wallrun_maximum_angle_threshold: float = deg_to_rad(88)
 
-@export_group("Buffers")
-
-## The time (in seconds) after leaving the ground the player can still jump during.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var jump_coyote_time: float = 0.1
-## The time (in seconds) an action will be buffered for.
-@export_range(0, 1, 0.05, "or_greater", "suffix:s") var action_buffer_duration: float = 0.05
+@export_group("Air-Dashing")
+## The speed (m/s) applied in the direction the player is looking when air-dashing.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_power: float = 12
+## The speed (m/s) applied upwards when air-dashing.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var vertical_air_dash_power: float = 4
+## The time (in milliseconds) an air-dash lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var air_dash_duration: int = 350
+## The speed (m/s) applied opposite to the player's velocity at the end of an air-dash.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_end_power: float = 4
+## The amount of times the player can air-dash.
+@export_range(0, 100, 1, "or_greater") var air_dashes_limit: int = 1
 
 
 @onready var head: Node3D = $Head
@@ -130,25 +135,25 @@ class_name Player extends CharacterBody3D
 @onready var mesh: Node3D = $MeshInstance
 @onready var standing_mesh_y: float = $MeshInstance.position.y
 
+@onready var state_machine: StateMachine = $StateMachine
+
 @onready var standing_collider_height: float = $CollisionShape.shape.height
 @onready var standing_collider_y: float = $CollisionShape.position.y
 
 
 var input_axis: Vector2 = Vector2.ZERO
 var move_direction: Vector3 = Vector3.ZERO
-var sprint_action: bool = true
 
-var jump_action_timer: float = 999
-var crouch_action_timer: float = 999
-var airborne_timer: float = 999
-var jump_timer: float = 999
-var crouch_timer: float = 0
-var slide_timer: float = 999
-var slide_end_timer: float = 999
-var wallrun_timer: float = 999
+var is_sprinting: bool = true
+
+var jump_timestamp: float = 0
+var crouch_timestamp: float = 0
+var slide_timestamp: float = 0
+var wallrun_timestamp: float = 0
+var air_dash_timestamp: float = 0
 
 var air_jumps: int = 0
-var coyote_possible: bool = false
+var air_dashes: int = 0
 
 var colliding_velocity: Vector3 = Vector3.ZERO
 
@@ -190,8 +195,29 @@ var backwards_dot_product: float:
 	get:
 		return maxf(move_direction.dot(transform.basis.z), 0)
 
+var body_direction: Vector3:
+	get:
+		return -global_transform.basis.z
 
-func _unhandled_input(_event: InputEvent) -> void:
+var looking_direction: Vector3:
+	get:
+		return -head.global_transform.basis.z
+
+
+func _process(_delta: float) -> void:
+	var weight: float = minf(float(Time.get_ticks_msec() - crouch_timestamp) / float(crouch_transition_time), 1)
+	
+	if state_machine.current_state.name == &"PlayerCrouching":
+		mesh.scale.y = lerpf(1, crouch_height_multiplier, weight)
+		mesh.position.y = lerpf(standing_mesh_y, standing_mesh_y * crouch_height_multiplier, weight)
+		head.position.y = lerpf(standing_head_y, standing_head_y * crouch_height_multiplier, weight)
+	else:
+		mesh.scale.y = lerpf(crouch_height_multiplier, 1, weight)
+		mesh.position.y = lerpf(standing_mesh_y * crouch_height_multiplier, standing_mesh_y, weight)
+		head.position.y = lerpf(standing_head_y * crouch_height_multiplier, standing_head_y, weight)
+
+
+func _physics_process(delta: float) -> void:
 	#	This handles the movement inputs
 	#
 	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
@@ -230,39 +256,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 	elif Input.is_action_just_released("right"):
 		input_axis.x = -float(Input.is_action_pressed("left"))
 	
-	
-	if Input.is_action_just_pressed("jump"):
-		jump_action_timer = 0
-	
-	if Input.is_action_just_pressed("sprint"):
-		sprint_action = not sprint_action
-	
-	if Input.is_action_just_pressed("crouch"):
-		crouch_action_timer = 0
-
-
-func _process(_delta: float) -> void:
-	mesh.scale.y = lerpf(1.0, crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
-	mesh.position.y = lerpf(standing_mesh_y, standing_mesh_y * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
-	head.position.y = lerpf(standing_head_y, standing_head_y * crouch_height_multiplier, clampf(crouch_timer / crouch_transition_time, 0, 1))
-
-
-func _physics_process(delta: float) -> void:
 	move_direction = (transform.basis * Vector3(input_axis.x, 0, input_axis.y)).normalized()
-	jump_action_timer += delta
-	crouch_action_timer += delta
-
-
-func consume_jump_action_buffer() -> bool:
-	var buffered: bool = jump_action_timer <= action_buffer_duration
-	jump_action_timer = 999
-	return buffered
-
-
-func consume_crouch_action_buffer() -> bool:
-	var buffered: bool = crouch_action_timer <= action_buffer_duration
-	crouch_action_timer = 999
-	return buffered
 
 
 func add_gravity(delta: float, gravity: float) -> void:

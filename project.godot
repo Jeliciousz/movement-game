@@ -14,6 +14,10 @@ config/name="FPS"
 run/main_scene="uid://cn808y3swtcaf"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
+[autoload]
+
+InputBuffer="*res://scripts/autoloads/input_buffer.gd"
+
 [display]
 
 window/size/viewport_width=1280

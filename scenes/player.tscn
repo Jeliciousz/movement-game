@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=17 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dk6fkt5228gib" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://c54mkknjvn7o8" path="res://scripts/player/player_sliding.gd" id="8_y4r1p"]
 [ext_resource type="Script" uid="uid://uw3hgbieer2y" path="res://scripts/player/player_wallrunning.gd" id="10_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b1jqlqil8ffd7" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair002.png" id="11_d2wvv"]
+[ext_resource type="Script" uid="uid://ddkrabut4oyga" path="res://scripts/player/player_air_dashing.gd" id="11_f1ej7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5uuo"]
 radius = 0.4
@@ -43,9 +44,9 @@ mesh = SubResource("CapsuleMesh_y4r1p")
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Head"]
+[node name="Camera" type="Camera3D" parent="Head"]
 current = true
-fov = 120.0
+fov = 100.0
 
 [node name="AimController" type="Node" parent="." node_paths=PackedStringArray("player", "head")]
 script = ExtResource("2_g2els")
@@ -91,6 +92,11 @@ metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="PlayerWallrunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("10_jej6c")
+player = NodePath("../..")
+metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
+
+[node name="PlayerAirdashing" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+script = ExtResource("11_f1ej7")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
