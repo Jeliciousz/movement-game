@@ -38,7 +38,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var horizontal_jump_power: float = 1.5
 ## The time (in milliseconds) a jump lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_duration: int = 1000
-## The amount of times the player can jump while in the air.
+## The amount of times the player can jump in the air before touching the ground.
 @export_range(0, 100, 1, "or_greater") var air_jumps_limit: int = 1
 ## What [member gravity] is multiplied by while jumping.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jumping_gravity_multiplier: float = 0.75
@@ -104,10 +104,10 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 15
 ## What [member air_resistence] is multiplied by while wall-running.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.85
-## What [member friction] is multiplied by while wall-running.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.25
+## What [member friction] is multiplied by while wall-running (friction is applied after duration runs out).
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.15
 ## What [member gravity] is multiplied by while wall-running (gravity is applied after duration runs out).
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.25
 ## The speed (m/s) the player must have to start wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 4
 ## The speed (m/s) the player must maintain to keep wall-running.
@@ -126,7 +126,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var air_dash_duration: int = 350
 ## The speed (m/s) applied opposite to the player's velocity at the end of an air-dash.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_end_power: float = 4
-## The amount of times the player can air-dash.
+## The amount of times the player can air-dash before touching the ground.
 @export_range(0, 100, 1, "or_greater") var air_dashes_limit: int = 1
 
 
