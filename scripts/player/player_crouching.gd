@@ -10,6 +10,8 @@ class_name PlayerCrouching extends State
 
 func jump_check() -> bool:
 	if Time.get_ticks_msec() - player.crouch_timestamp < player.crouch_transition_time and InputBuffer.is_action_buffered("jump"):
+		player.coyote_possible = false
+		
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		

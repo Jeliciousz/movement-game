@@ -7,6 +7,29 @@ class_name PlayerAirborne extends State
 func air_jump_check() -> bool:
 	if player.air_jumps < player.air_jumps_limit and InputBuffer.is_action_buffered("jump"):
 		player.air_jumps += 1
+		player.coyote_possible = false
+		
+		var jump_power = player.jump_power
+		var horizontal_jump_power = player.horizontal_jump_power
+		
+		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
+		
+		if player.move_direction.is_zero_approx():
+			jump_power *= player.standing_jump_multiplier
+			horizontal_jump_power = 0
+		
+		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, true, true)
+		
+		transition.emit(&"PlayerJumping")
+		return true
+	
+	return false
+
+
+func coyote_jump_check() -> bool:
+	if player.coyote_possible and InputBuffer.is_action_buffered("jump"):
+		player.air_jumps += 1
+		player.coyote_possible = false
 		
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
@@ -32,7 +55,7 @@ func wallrun_check() -> bool:
 	if not player.is_on_wall():
 		return false
 	
-	if not player.get_last_slide_collision().get_collider().has_node("CanWallrun"):
+	if not player.get_last_slide_collision().get_collider().is_in_gruop("CanWallrun"):
 		return false
 	
 	var wall_normal = player.get_wall_normal()
@@ -57,6 +80,9 @@ func air_dash_check() -> bool:
 
 
 func enter() -> void:
+	if coyote_jump_check():
+		return
+	
 	if wallrun_check():
 		return
 	
@@ -67,6 +93,9 @@ func enter() -> void:
 func update_physics_state() -> void:
 	if player.is_on_floor():
 		transition.emit(&"PlayerGrounded")
+		return
+	
+	if coyote_jump_check():
 		return
 	
 	if wallrun_check():

@@ -156,6 +156,7 @@ var air_dash_timestamp: float = 0
 
 var air_jumps: int = 0
 var air_dashes: int = 0
+var coyote_possible: bool = false
 
 var colliding_velocity: Vector3 = Vector3.ZERO
 

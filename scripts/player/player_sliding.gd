@@ -10,6 +10,7 @@ class_name PlayerSliding extends State
 
 func slide_jump_check() -> bool:
 	if InputBuffer.is_action_buffered("jump"):
+		player.coyote_possible = false
 		player.jump(player.slide_jump_power, player.slide_horizontal_jump_power, player.horizontal_velocity_direction, true, false)
 		transition.emit(&"PlayerAirborne")
 		return true

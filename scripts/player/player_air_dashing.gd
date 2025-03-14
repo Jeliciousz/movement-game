@@ -22,6 +22,7 @@ func wallrun_check() -> bool:
 func air_jump_check() -> bool:
 	if player.air_jumps < player.air_jumps_limit and Input.is_action_just_pressed("jump"):
 		player.air_jumps += 1
+		player.coyote_possible = false
 		
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power

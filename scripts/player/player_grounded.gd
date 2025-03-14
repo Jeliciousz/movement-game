@@ -23,6 +23,8 @@ func crouch_slide_check() -> bool:
 
 func jump_check() -> bool:
 	if InputBuffer.is_action_buffered("jump"):
+		player.coyote_possible = false
+		
 		var weight: float = clampf(player.speed - player.min_jump_speed / player.max_jump_speed - player.min_jump_speed, 0, 1)
 		
 		var jump_power = lerpf(player.jump_power, player.max_jump_power, weight)
@@ -45,6 +47,7 @@ func jump_check() -> bool:
 func enter() -> void:
 	player.air_jumps = 0
 	player.air_dashes = 0
+	player.coyote_possible = true
 	
 	if crouch_slide_check():
 		return

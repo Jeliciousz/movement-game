@@ -25,9 +25,10 @@ height = 1.6
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
-wall_min_slide_angle = 0.0
+wall_min_slide_angle = 0.0872665
 floor_stop_on_slope = false
 floor_constant_speed = true
+safe_margin = 0.008
 script = ExtResource("1_3vyb7")
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]

@@ -4,24 +4,16 @@ class_name PlayerWallrunning extends State
 @export var player: Player
 
 
-func enter() -> void:
-	player.wallrun_timestamp = Time.get_ticks_msec()
-
-
-func update_physics_state() -> void:
-	if player.is_on_floor():
-		transition.emit(&"PlayerGrounded")
-		return
-	
+func wallrun_check() -> bool:
 	var test = player.move_and_collide(-player.wallrun_wall_normal, true)
 	
 	if not test:
 		transition.emit(&"PlayerAirborne")
-		return
+		return true
 	
-	if not test.get_collider().has_node("CanWallrun"):
+	if not test.get_collider().is_in_group("CanWallrun"):
 		transition.emit(&"PlayerAirborne")
-		return
+		return true
 	
 	player.move_and_collide(-player.wallrun_wall_normal)
 	
@@ -32,13 +24,27 @@ func update_physics_state() -> void:
 	if player.horizontal_velocity_direction.dot(wallrun_wall_parallel) <= 0:
 		wallrun_wall_parallel *= -1
 	
+	var old_horizontal_velocity: Vector3 = Vector3(player.velocity.x, 0, player.velocity.z)
+	
 	player.velocity = Vector3(wallrun_wall_parallel.x * player.horizontal_speed, player.velocity.y, wallrun_wall_parallel.z * player.horizontal_speed)
 	
-	if player.horizontal_speed < player.wallrun_stop_speed_threshold:
-		transition.emit(&"PlayerAirborne")
-		return
+	var horizontal_velocity: Vector3 = Vector3(player.velocity.x, 0, player.velocity.z)
 	
+	var angle: float = old_horizontal_velocity.angle_to(horizontal_velocity)
+	
+	if old_horizontal_velocity.cross(horizontal_velocity).y > 0:
+		angle *= -1
+	
+	player.rotate_object_local(Vector3.DOWN, angle)
+	player.orthonormalize()
+	
+	return false
+
+
+func walljump_check() -> bool:
 	if InputBuffer.is_action_buffered("jump"):
+		player.coyote_possible = false
+		
 		var jump_power = player.jump_power
 		var horizontal_jump_power = player.horizontal_jump_power
 		
@@ -49,6 +55,30 @@ func update_physics_state() -> void:
 		player.jump(jump_power, 0, player.move_direction, true, false)
 		player.add_force(player.wallrun_kick_power, player.wallrun_wall_normal)
 		transition.emit(&"PlayerJumping")
+		return true
+	
+	return false
+
+
+func enter() -> void:
+	player.wallrun_timestamp = Time.get_ticks_msec()
+	player.coyote_possible = true
+
+
+func update_physics_state() -> void:
+	if player.is_on_floor():
+		transition.emit(&"PlayerGrounded")
+		return
+	
+	if wallrun_check():
+		return
+	
+	if player.horizontal_speed < player.wallrun_stop_speed_threshold:
+		transition.emit(&"PlayerAirborne")
+		return
+	
+	if walljump_check():
+		return
 
 
 func physics_update(delta: float) -> void:
