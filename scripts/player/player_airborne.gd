@@ -4,89 +4,65 @@ class_name PlayerAirborne extends State
 @export var player: Player
 
 
-func air_jump_check() -> bool:
-	if player.air_jumps < player.air_jumps_limit and InputBuffer.is_action_buffered("jump"):
-		player.air_jumps += 1
-		player.coyote_possible = false
-		
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
-		
-		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
-		
-		if player.move_direction.is_zero_approx():
-			jump_power *= player.standing_jump_multiplier
-			horizontal_jump_power = 0
-		
-		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, true, true)
-		
-		transition.emit(&"PlayerJumping")
-		return true
-	
-	return false
-
-
-func coyote_jump_check() -> bool:
-	if player.coyote_possible and InputBuffer.is_action_buffered("jump"):
-		player.air_jumps += 1
-		player.coyote_possible = false
-		
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
-		
-		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
-		
-		if player.move_direction.is_zero_approx():
-			jump_power *= player.standing_jump_multiplier
-			horizontal_jump_power = 0
-		
-		player.jump(jump_power, horizontal_jump_power * backwards_multiplier, player.move_direction, true, true)
-		
-		transition.emit(&"PlayerJumping")
-		return true
-	
-	return false
-
-
-func wallrun_check() -> bool:
-	if player.horizontal_colliding_speed < player.wallrun_start_speed_threshold:
-		return false
-	
-	if not player.is_on_wall():
-		return false
-	
-	if not player.get_last_slide_collision().get_collider().is_in_gruop("CanWallrun"):
-		return false
-	
-	var wall_normal = player.get_wall_normal()
-	
-	var wall_product = player.horizontal_colliding_direction.dot(-wall_normal)
-	
-	if cos(player.wallrun_maximum_angle_threshold) < wall_product and wall_product < cos(player.wallrun_minimum_angle_threshold):
-		player.wallrun_wall_normal = wall_normal
-		player.velocity = player.velocity_direction * player.colliding_speed * player.wallrun_speed_conversion_multiplier
-		transition.emit(&"PlayerWallrunning")
-		return true
-	
-	return false
-
-
-func air_dash_check() -> bool:
-	if player.air_dashes < player.air_dashes_limit and InputBuffer.is_action_buffered("sprint"):
-		transition.emit(&"PlayerAirdashing")
-		return true
-	
-	return false
+#func wallrun_check() -> bool:
+	#if player.horizontal_speed < player.wallrun_start_speed_threshold:
+		#return false
+	#
+	#if not player.is_on_wall():
+		#return false
+	#
+	#if not player.get_last_slide_collision().get_collider().is_in_group("CanWallrun"):
+		#return false
+	#
+	#var wall_normal = player.get_wall_normal()
+	#wall_normal.y = 0
+	#wall_normal = wall_normal.normalized()
+	#
+	#if wall_normal.is_equal_approx(player.wallrun_wall_normal):
+		#return false
+	#
+	#var travel: Vector3 = player.get_last_slide_collision().get_travel()
+	#travel.y = 0
+	#travel = travel.normalized()
+	#
+	#if travel.angle_to(-wall_normal) < player.wallrun_minimum_angle_threshold:
+		#return false
+	#
+	#player.wallrun_wall_normal = wall_normal
+	#player.velocity = player.velocity_direction * player.horizontal_speed * player.wallrun_speed_conversion_multiplier
+	#transition.emit(&"PlayerWallrunning")
+	#return true
 
 
 func enter() -> void:
-	if coyote_jump_check():
+	player.airborne_timestamp = Time.get_ticks_msec()
+	
+	#if wallrun_check():
+	#	return
+	
+	# Coyote Sliding
+	if player.coyote_slide_possible and Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and is_zero_approx(player.get_amount_moving_backwards()) and InputBuffer.is_action_buffered("crouch"):
+		player.velocity.y = 0
+		player.add_velocity(player.slide_power, player.move_direction)
+		transition.emit(&"PlayerSliding")
 		return
 	
-	if wallrun_check():
+	# Coyote Jumping
+	if player.coyote_jump_possible and InputBuffer.is_action_buffered("jump"):
+		player.velocity.y = 0
+		player.jump()
+		transition.emit(&"PlayerJumping")
 		return
 	
-	if air_dash_check():
+	# Air Jumping
+	if player.air_jumps < player.air_jump_limit and InputBuffer.is_action_buffered("jump"):
+		player.air_jump()
+		transition.emit(&"PlayerJumping")
+		return
+	
+	# Air Dashing
+	if player.air_dashes < player.air_dash_limit and Input.is_action_just_pressed("sprint"):
+		transition.emit(&"PlayerAirdashing")
 		return
 
 
@@ -95,29 +71,41 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if coyote_jump_check():
+	#if wallrun_check():
+	#	return
+	
+	# Coyote Sliding
+	if player.coyote_slide_possible and Time.get_ticks_msec() - player.airborne_timestamp <= player.slide_coyote_duration and Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and is_zero_approx(player.get_amount_moving_backwards()) and InputBuffer.is_action_buffered("crouch"):
+		player.velocity.y = 0
+		player.add_velocity(player.slide_power, player.move_direction)
+		transition.emit(&"PlayerSliding")
 		return
 	
-	if wallrun_check():
+	# Coyote Jumping
+	if player.coyote_jump_possible and Time.get_ticks_msec() - player.airborne_timestamp <= player.jump_coyote_duration and InputBuffer.is_action_buffered("jump"):
+		player.velocity.y = 0
+		player.jump()
+		transition.emit(&"PlayerJumping")
 		return
 	
-	if air_jump_check():
+	# Air Jumping
+	if player.air_jumps < player.air_jump_limit and InputBuffer.is_action_buffered("jump"):
+		player.air_jump()
+		transition.emit(&"PlayerJumping")
 		return
 	
-	if air_dash_check():
+	# Air Dashing
+	if player.air_dashes < player.air_dash_limit and Input.is_action_just_pressed("sprint"):
+		transition.emit(&"PlayerAirdashing")
 		return
 
 
 func physics_update(delta: float) -> void:
-	var top_speed: float = player.top_speed * player.airborne_speed_multiplier
-	var acceleration: float = player.acceleration * player.airborne_acceleration_multiplier
+	var backwards_multiplier = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
-	var backwards_multiplier = lerpf(1, player.backwards_speed_multiplier, player.backwards_dot_product)
-	top_speed *= backwards_multiplier
+	var top_speed: float = player.air_speed * backwards_multiplier
+	var acceleration: float = player.air_acceleration * backwards_multiplier
 	
-	player.add_air_resistence(delta, player.air_resistence)
-	player.add_gravity(delta, player.gravity)
-	player.add_movement(delta, player.move_direction, top_speed, acceleration)
-	
-	player.colliding_velocity = player.velocity
-	player.move_and_slide()
+	player.add_air_resistence(delta, player.physics_air_resistence)
+	player.add_gravity(delta, player.physics_gravity)
+	player.add_movement(delta, top_speed, acceleration)

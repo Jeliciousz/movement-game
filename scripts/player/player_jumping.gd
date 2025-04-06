@@ -6,6 +6,9 @@ class_name PlayerJumping extends State
 
 func enter() -> void:
 	player.jump_timestamp = Time.get_ticks_msec()
+	
+	player.coyote_jump_possible = false
+	player.coyote_slide_possible = false
 
 
 func update_physics_state() -> void:
@@ -13,21 +16,18 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if not Input.is_action_pressed("jump") or Time.get_ticks_msec() - player.jump_timestamp >= player.jump_duration:
+	if Time.get_ticks_msec() - player.jump_timestamp >= player.jump_duration or not Input.is_action_pressed("jump"):
 		transition.emit(&"PlayerAirborne")
+		return
 
 
 func physics_update(delta: float) -> void:
-	var top_speed: float = player.top_speed * player.airborne_speed_multiplier
-	var acceleration: float = player.acceleration * player.airborne_acceleration_multiplier
-	var gravity: float = player.gravity * player.jumping_gravity_multiplier
+	var backwards_multiplier = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
-	var backwards_multiplier = lerpf(1, player.backwards_speed_multiplier, player.backwards_dot_product)
-	top_speed *= backwards_multiplier
+	var top_speed: float = player.air_speed * backwards_multiplier
+	var acceleration: float = player.air_acceleration * backwards_multiplier
+	var gravity: float = player.physics_gravity * player.jump_gravity_multiplier
 	
-	player.add_air_resistence(delta, player.air_resistence)
+	player.add_air_resistence(delta, player.physics_air_resistence)
 	player.add_gravity(delta, gravity)
-	player.add_movement(delta, player.move_direction, top_speed, acceleration)
-	
-	player.colliding_velocity = player.velocity
-	player.move_and_slide()
+	player.add_movement(delta, top_speed, acceleration)

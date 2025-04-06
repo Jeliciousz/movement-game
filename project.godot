@@ -34,7 +34,8 @@ version_control/autoload_on_startup=true
 
 [global_group]
 
-CanWallrun="Walls that can be run on"
+WallrunBodies="Walls that can be run on"
+PlayerSpawnNodes="Points the player can spawn at."
 
 [input]
 
@@ -78,6 +79,7 @@ crouch={
 
 common/physics_jitter_fix=0.0
 3d/physics_engine="Jolt Physics"
+3d/default_gravity=30.0
 common/physics_interpolation=true
 
 [rendering]

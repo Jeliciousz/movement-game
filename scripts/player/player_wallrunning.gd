@@ -18,25 +18,15 @@ func wallrun_check() -> bool:
 	player.move_and_collide(-player.wallrun_wall_normal)
 	
 	player.wallrun_wall_normal = test.get_normal()
+	player.wallrun_wall_normal.y = 0
+	player.wallrun_wall_normal = player.wallrun_wall_normal.normalized()
 	
 	var wallrun_wall_parallel: Vector3 = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
 	
 	if player.horizontal_velocity_direction.dot(wallrun_wall_parallel) <= 0:
 		wallrun_wall_parallel *= -1
 	
-	var old_horizontal_velocity: Vector3 = Vector3(player.velocity.x, 0, player.velocity.z)
-	
 	player.velocity = Vector3(wallrun_wall_parallel.x * player.horizontal_speed, player.velocity.y, wallrun_wall_parallel.z * player.horizontal_speed)
-	
-	var horizontal_velocity: Vector3 = Vector3(player.velocity.x, 0, player.velocity.z)
-	
-	var angle: float = old_horizontal_velocity.angle_to(horizontal_velocity)
-	
-	if old_horizontal_velocity.cross(horizontal_velocity).y > 0:
-		angle *= -1
-	
-	player.rotate_object_local(Vector3.DOWN, angle)
-	player.orthonormalize()
 	
 	return false
 
@@ -62,7 +52,6 @@ func walljump_check() -> bool:
 
 func enter() -> void:
 	player.wallrun_timestamp = Time.get_ticks_msec()
-	player.coyote_possible = true
 
 
 func update_physics_state() -> void:
@@ -85,7 +74,7 @@ func physics_update(delta: float) -> void:
 	var air_resistence: float = player.air_resistence * player.wallrun_air_resistence_multiplier
 	var friction: float = player.friction * player.wallrun_friction_multiplier
 	
-	player.add_air_resistence(delta, air_resistence)
+	#player.add_air_resistence(delta, air_resistence)
 	
 	if Time.get_ticks_msec() - player.wallrun_timestamp > player.wallrun_duration:
 		var gravity: float = player.gravity * player.wallrun_gravity_multiplier
@@ -103,6 +92,4 @@ func physics_update(delta: float) -> void:
 		
 		player.add_movement(delta, direction, player.wallrun_top_speed, player.wallrun_acceleration)
 	
-	
-	player.colliding_velocity = player.velocity
 	player.move_and_slide()

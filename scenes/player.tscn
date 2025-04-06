@@ -1,9 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=18 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dk6fkt5228gib" path="res://scripts/player/player.gd" id="1_3vyb7"]
-[ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://b64xddq5uht26" path="res://scripts/player/crouch_animator.gd" id="2_a8ls1"]
+[ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_input.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://by2yhiyhlpwcy" path="res://scripts/player/move_input.gd" id="2_oprun"]
 [ext_resource type="Script" uid="uid://byetn4r2o80jg" path="res://scripts/state_machine.gd" id="3_qhqgy"]
-[ext_resource type="Script" uid="uid://botegguhhalgt" path="res://scripts/player/player_spawn.gd" id="4_3v2ag"]
+[ext_resource type="Script" uid="uid://botegguhhalgt" path="res://scripts/player/player_spawning.gd" id="4_3v2ag"]
 [ext_resource type="Script" uid="uid://batpfq7ieq7du" path="res://scripts/player/player_grounded.gd" id="4_dqkch"]
 [ext_resource type="Script" uid="uid://np4wci38gpwk" path="res://scripts/player/player_airborne.gd" id="5_qlg0r"]
 [ext_resource type="Script" uid="uid://c6uoquqgdrma3" path="res://scripts/player/player_jumping.gd" id="6_tuyoq"]
@@ -11,7 +13,6 @@
 [ext_resource type="Script" uid="uid://ddsvsv7u5twkw" path="res://scripts/player/player_crouching.gd" id="7_ur7pv"]
 [ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/hud/spedometer.gd" id="8_smehm"]
 [ext_resource type="Script" uid="uid://c54mkknjvn7o8" path="res://scripts/player/player_sliding.gd" id="8_y4r1p"]
-[ext_resource type="Script" uid="uid://uw3hgbieer2y" path="res://scripts/player/player_wallrunning.gd" id="10_jej6c"]
 [ext_resource type="Texture2D" uid="uid://b1jqlqil8ffd7" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair002.png" id="11_d2wvv"]
 [ext_resource type="Script" uid="uid://ddkrabut4oyga" path="res://scripts/player/player_air_dashing.gd" id="11_f1ej7"]
 
@@ -24,10 +25,12 @@ radius = 0.4
 height = 1.6
 
 [node name="Player" type="CharacterBody3D"]
+process_physics_priority = 1
 collision_layer = 2
 wall_min_slide_angle = 0.0872665
 floor_stop_on_slope = false
 floor_constant_speed = true
+floor_snap_length = 0.2
 safe_margin = 0.008
 script = ExtResource("1_3vyb7")
 
@@ -35,33 +38,23 @@ script = ExtResource("1_3vyb7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("CapsuleShape3D_e5uuo")
 
-[node name="MeshInstance" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-layers = 2
-cast_shadow = 3
-gi_mode = 0
-mesh = SubResource("CapsuleMesh_y4r1p")
+[node name="MoveInput" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("2_oprun")
+player = NodePath("..")
 
-[node name="Head" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
-
-[node name="Camera" type="Camera3D" parent="Head"]
-current = true
-fov = 100.0
-
-[node name="AimController" type="Node" parent="." node_paths=PackedStringArray("player", "head")]
+[node name="AimInput" type="Node" parent="." node_paths=PackedStringArray("player", "head")]
 script = ExtResource("2_g2els")
 player = NodePath("..")
 head = NodePath("../Head")
-max_pitch = null
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_qhqgy")
-initial_state = NodePath("PlayerSpawn")
+initial_state = NodePath("PlayerSpawning")
 
-[node name="PlayerSpawn" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+[node name="PlayerSpawning" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "player_head")]
 script = ExtResource("4_3v2ag")
 player = NodePath("../..")
+player_head = NodePath("../../Head")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="PlayerGrounded" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
@@ -77,29 +70,43 @@ script = ExtResource("6_tuyoq")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
-[node name="PlayerCrouching" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head", "collision_shape")]
+[node name="PlayerCrouching" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "player_collider")]
 script = ExtResource("7_ur7pv")
 player = NodePath("../..")
-head = NodePath("../../Head")
-collision_shape = NodePath("../../CollisionShape")
+player_collider = NodePath("../../CollisionShape")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
-[node name="PlayerSliding" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "head", "collision_shape")]
+[node name="PlayerSliding" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "player_collider")]
 script = ExtResource("8_y4r1p")
 player = NodePath("../..")
-head = NodePath("../../Head")
-collision_shape = NodePath("../../CollisionShape")
-metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
-
-[node name="PlayerWallrunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
-script = ExtResource("10_jej6c")
-player = NodePath("../..")
+player_collider = NodePath("../../CollisionShape")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
 [node name="PlayerAirdashing" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("11_f1ej7")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
+
+[node name="CrouchAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_mesh")]
+script = ExtResource("2_a8ls1")
+player = NodePath("..")
+player_state_machine = NodePath("../StateMachine")
+player_head = NodePath("../Head")
+player_mesh = NodePath("../MeshInstance")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+
+[node name="Camera" type="Camera3D" parent="Head"]
+current = true
+fov = 100.0
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+layers = 2
+cast_shadow = 3
+gi_mode = 0
+mesh = SubResource("CapsuleMesh_y4r1p")
 
 [node name="Hud" type="Control" parent="."]
 layout_mode = 3
