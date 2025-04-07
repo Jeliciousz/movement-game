@@ -14,12 +14,12 @@ func enter() -> void:
 	var speed = player.velocity.length()
 	
 	# Crouching
-	if (speed < player.slide_speed_threshold or not player.is_sprinting) and InputBuffer.is_action_buffered("crouch"):
+	if (not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards()) or speed < player.slide_speed_threshold) and InputBuffer.is_action_buffered("crouch"):
 		transition.emit(&"PlayerCrouching")
 		return
 	
 	# Sliding
-	if Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and is_zero_approx(player.get_amount_moving_backwards()) and InputBuffer.is_action_buffered("crouch"):
+	if Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and InputBuffer.is_action_buffered("crouch"):
 		player.add_velocity(player.slide_power, player.move_direction)
 		transition.emit(&"PlayerSliding")
 		return
@@ -43,12 +43,12 @@ func update_physics_state() -> void:
 	var speed = player.velocity.length()
 	
 	# Crouching
-	if (speed < player.slide_speed_threshold or not player.is_sprinting) and InputBuffer.is_action_buffered("crouch"):
+	if (not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards()) or speed < player.slide_speed_threshold) and InputBuffer.is_action_buffered("crouch"):
 		transition.emit(&"PlayerCrouching")
 		return
 	
 	# Sliding
-	if Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and is_zero_approx(player.get_amount_moving_backwards()) and InputBuffer.is_action_buffered("crouch"):
+	if Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and InputBuffer.is_action_buffered("crouch"):
 		player.add_velocity(player.slide_power, player.move_direction)
 		transition.emit(&"PlayerSliding")
 		return

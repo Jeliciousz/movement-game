@@ -39,7 +39,7 @@ func update_physics_state() -> void:
 		return
 	
 	# Crouch Jumping
-	if Time.get_ticks_msec() - player.crouch_timestamp < player.crouch_transition_time and InputBuffer.is_action_buffered("jump"):
+	if Time.get_ticks_msec() - player.crouch_timestamp <= player.jump_coyote_duration and InputBuffer.is_action_buffered("jump"):
 		player.jump()
 		transition.emit(&"PlayerJumping")
 		return

@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dk6fkt5228gib" path="res://scripts/player/player.gd" id="1_3vyb7"]
-[ext_resource type="Script" uid="uid://b64xddq5uht26" path="res://scripts/player/crouch_animator.gd" id="2_a8ls1"]
+[ext_resource type="Script" uid="uid://b64xddq5uht26" path="res://scripts/player/view_animator.gd" id="2_a8ls1"]
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_input.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://by2yhiyhlpwcy" path="res://scripts/player/move_input.gd" id="2_oprun"]
 [ext_resource type="Script" uid="uid://byetn4r2o80jg" path="res://scripts/state_machine.gd" id="3_qhqgy"]
@@ -23,6 +23,8 @@ height = 1.6
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_y4r1p"]
 radius = 0.4
 height = 1.6
+radial_segments = 16
+rings = 2
 
 [node name="Player" type="CharacterBody3D"]
 process_physics_priority = 1
@@ -87,12 +89,12 @@ script = ExtResource("11_f1ej7")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
-[node name="CrouchAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_mesh")]
+[node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head")]
+process_physics_priority = -1
 script = ExtResource("2_a8ls1")
 player = NodePath("..")
 player_state_machine = NodePath("../StateMachine")
 player_head = NodePath("../Head")
-player_mesh = NodePath("../MeshInstance")
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)

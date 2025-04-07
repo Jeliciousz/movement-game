@@ -39,8 +39,6 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var crouch_speed: float = 2
 ## How quickly the player accelerates (m/s/s) while crouching.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 40
-## The time (in milliseconds) it takes to be fully crouched.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var crouch_transition_time: int = 100
 ## What the player's collision height is multiplied by while crouching.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_height_multiplier: float = 0.5
 
@@ -86,7 +84,7 @@ class_name Player extends CharacterBody3D
 ## The time (in milliseconds) a slide lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_duration: int = 800
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_speed_threshold: float = 0.2
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_speed_threshold: float = 2
 ## The time (in milliseconds) that must pass between slides.
 @export_range(0, 1, 0.05, "or_greater", "suffix:ms") var slide_cooldown_duration: int = 250
 ## The acceleration applied opposite of the player's velocity while sliding and not moving.
