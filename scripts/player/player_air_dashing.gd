@@ -4,34 +4,36 @@ class_name PlayerAirdashing extends State
 @export var player: Player
 
 
-#func wallrun_check() -> bool:
-	#if player.horizontal_speed < player.wallrun_start_speed_threshold:
-		#return false
-	#
-	#if not player.is_on_wall():
-		#return false
-	#
-	#if not player.get_last_slide_collision().get_collider().is_in_group("CanWallrun"):
-		#return false
-	#
-	#var wall_normal = player.get_wall_normal()
-	#wall_normal.y = 0
-	#wall_normal = wall_normal.normalized()
-	#
-	#if wall_normal.is_equal_approx(player.wallrun_wall_normal):
-		#return false
-	#
-	#var travel: Vector3 = player.get_last_slide_collision().get_travel()
-	#travel.y = 0
-	#travel = travel.normalized()
-	#
-	#if travel.angle_to(-wall_normal) < player.wallrun_minimum_angle_threshold:
-		#return false
-	#
-	#player.wallrun_wall_normal = wall_normal
-	#player.velocity = player.velocity_direction * player.horizontal_speed * player.wallrun_speed_conversion_multiplier
-	#transition.emit(&"PlayerWallrunning")
-	#return true
+func wallrun_check() -> bool:
+	var horizontal_speed: float = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
+	
+	if horizontal_speed < player.wallrun_start_speed_threshold:
+		return false
+	
+	if not player.is_on_wall():
+		return false
+	
+	if not player.get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
+		return false
+	
+	var wall_normal = Vector3(player.get_wall_normal().x, 0, player.get_wall_normal().z).normalized()
+	
+	if wall_normal.is_equal_approx(player.wallrun_wall_normal):
+		return false
+	
+	if wall_normal.y < 0:
+		return false
+	
+	var horizontal_velocity_direction: Vector3 = Vector3(player.colliding_velocity.x, 0, player.colliding_velocity.z).normalized()
+	
+	if horizontal_velocity_direction.angle_to(-wall_normal) < player.wallrun_minimum_angle_threshold:
+		return false
+	
+	player.wallrun_wall_normal = wall_normal
+	player.wallrun_wall_parallel = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+	player.velocity = player.velocity.normalized() * horizontal_speed * player.wallrun_speed_conversion_multiplier
+	
+	return true
 
 
 func enter() -> void:
@@ -41,8 +43,9 @@ func enter() -> void:
 	player.velocity.y = player.air_dash_vertical_power * maxf(1 - player.get_look_direction().dot(Vector3.DOWN), 1)
 	player.velocity += player.get_look_direction() * player.air_dash_power
 	
-	#if wallrun_check():
-	#	return
+	if wallrun_check():
+		transition.emit(&"PlayerWallrunning")
+		return
 	
 	# Air Jumping
 	if player.air_jumps < player.air_jump_limit and InputBuffer.is_action_buffered("jump"):
@@ -61,8 +64,9 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	#if wallrun_check():
-	#	return
+	if wallrun_check():
+		transition.emit(&"PlayerWallrunning")
+		return
 	
 	# Air Jumping
 	if player.air_jumps < player.air_jump_limit and InputBuffer.is_action_buffered("jump"):

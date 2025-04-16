@@ -5,6 +5,8 @@ class_name PlayerCrouching extends State
 
 @export var player_collider: CollisionShape3D
 
+@export var standing_area: Area3D
+
 
 @onready var base_collider_height: float = player_collider.shape.height
 
@@ -34,12 +36,12 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if not Input.is_action_pressed("crouch"):
+	if not standing_area.has_overlapping_bodies() and not Input.is_action_pressed("crouch"):
 		transition.emit(&"PlayerGrounded")
 		return
 	
 	# Crouch Jumping
-	if Time.get_ticks_msec() - player.crouch_timestamp <= player.jump_coyote_duration and InputBuffer.is_action_buffered("jump"):
+	if Time.get_ticks_msec() - player.crouch_timestamp <= player.jump_coyote_duration and not standing_area.has_overlapping_bodies() and InputBuffer.is_action_buffered("jump"):
 		player.jump()
 		transition.emit(&"PlayerJumping")
 		return

@@ -63,7 +63,7 @@ func _unhandled_input(event: InputEvent)-> void:
 func aim_look(event: InputEventMouseMotion) -> void:
 	var viewport_transform: Transform2D = get_tree().root.get_final_transform()
 	var motion: Vector2 = event.xformed_by(viewport_transform).relative
-	var radians_per_unit: float = deg_to_rad(0.15)
+	var radians_per_unit: float = deg_to_rad(0.2)
 	
 	motion *= radians_per_unit
 	motion *= mouse_sensitivity

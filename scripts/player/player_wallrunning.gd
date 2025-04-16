@@ -4,48 +4,39 @@ class_name PlayerWallrunning extends State
 @export var player: Player
 
 
-func wallrun_check() -> bool:
-	var test = player.move_and_collide(-player.wallrun_wall_normal, true)
+func still_on_wall_check() -> bool:
+	var horizontal_colliding_speed = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
+	
+	var test = player.move_and_collide(-player.wallrun_wall_normal * horizontal_colliding_speed * 0.1, true)
 	
 	if not test:
-		transition.emit(&"PlayerAirborne")
 		return true
 	
-	if not test.get_collider().is_in_group("CanWallrun"):
-		transition.emit(&"PlayerAirborne")
+	if not test.get_collider().is_in_group("WallrunBodies"):
 		return true
 	
-	player.move_and_collide(-player.wallrun_wall_normal)
+	player.move_and_collide(-player.wallrun_wall_normal * horizontal_colliding_speed * 0.1)
 	
-	player.wallrun_wall_normal = test.get_normal()
-	player.wallrun_wall_normal.y = 0
-	player.wallrun_wall_normal = player.wallrun_wall_normal.normalized()
+	player.wallrun_wall_normal = Vector3(test.get_normal().x, 0, test.get_normal().z).normalized()
 	
-	var wallrun_wall_parallel: Vector3 = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+	#player.move_and_collide(player.wallrun_wall_normal * 0.01)
 	
-	if player.horizontal_velocity_direction.dot(wallrun_wall_parallel) <= 0:
-		wallrun_wall_parallel *= -1
+	# This is necessary to update the is_on_wall method
+	#var player_velocity = player.velocity
+	#player.velocity = Vector3.ZERO
+	#player.move_and_slide()
+	#player.velocity = player_velocity
 	
-	player.velocity = Vector3(wallrun_wall_parallel.x * player.horizontal_speed, player.velocity.y, wallrun_wall_parallel.z * player.horizontal_speed)
+	player.wallrun_wall_parallel = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
 	
-	return false
-
-
-func walljump_check() -> bool:
-	if InputBuffer.is_action_buffered("jump"):
-		player.coyote_possible = false
-		
-		var jump_power = player.jump_power
-		var horizontal_jump_power = player.horizontal_jump_power
-		
-		var backwards_multiplier = lerpf(1, player.backwards_jump_multiplier, player.backwards_dot_product)
-		
-		var wall_dot_product = minf(1 - player.move_direction.dot(player.wallrun_wall_normal), 1)
-		
-		player.jump(jump_power, 0, player.move_direction, true, false)
-		player.add_force(player.wallrun_kick_power, player.wallrun_wall_normal)
-		transition.emit(&"PlayerJumping")
-		return true
+	var horizontal_velocity_direction: Vector3 = Vector3(player.velocity.x, 0, player.velocity.z).normalized()
+	
+	if player.wallrun_wall_parallel.dot(horizontal_velocity_direction) < 0:
+		player.velocity.x = -player.wallrun_wall_parallel.x * horizontal_colliding_speed
+		player.velocity.z = -player.wallrun_wall_parallel.z * horizontal_colliding_speed
+	else:
+		player.velocity.x = player.wallrun_wall_parallel.x * horizontal_colliding_speed
+		player.velocity.z = player.wallrun_wall_parallel.z * horizontal_colliding_speed
 	
 	return false
 
@@ -59,37 +50,37 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerGrounded")
 		return
 	
-	if wallrun_check():
-		return
-	
-	if player.horizontal_speed < player.wallrun_stop_speed_threshold:
+	if still_on_wall_check():
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if walljump_check():
+	var horizontal_speed = Vector2(player.velocity.x, player.velocity.z).length()
+	
+	if horizontal_speed <= player.wallrun_stop_speed_threshold:
+		transition.emit(&"PlayerAirborne")
+		return
+	
+	#if player.is_on_wall():
+	#	transition.emit(&"PlayerAirborne")
+	#	return
+	
+	if InputBuffer.is_action_buffered("jump"):
+		player.wall_jump()
+		transition.emit(&"PlayerJumping")
 		return
 
 
 func physics_update(delta: float) -> void:
-	var air_resistence: float = player.air_resistence * player.wallrun_air_resistence_multiplier
-	var friction: float = player.friction * player.wallrun_friction_multiplier
-	
-	#player.add_air_resistence(delta, air_resistence)
+	player.add_air_resistence(delta, player.wallrun_air_resistence)
 	
 	if Time.get_ticks_msec() - player.wallrun_timestamp > player.wallrun_duration:
-		var gravity: float = player.gravity * player.wallrun_gravity_multiplier
-		
-		player.add_friction(delta, friction, player.wallrun_top_speed)
-		player.add_gravity(delta, gravity)
+		player.add_friction(delta, player.wallrun_friction, player.wallrun_top_speed)
+		player.add_gravity(delta, player.wallrun_gravity)
 	else:
 		player.velocity.y = move_toward(player.velocity.y, 0, player.wallrun_vertical_friction * delta)
 		
-		var wallrun_wall_parallel: Vector3 = abs(player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90)))
+		var product = player.move_direction.dot(player.wallrun_wall_parallel)
 		
-		var direction = player.move_direction
-		direction.x *= wallrun_wall_parallel.x
-		direction.z *= wallrun_wall_parallel.z
+		player.move_direction = player.wallrun_wall_parallel * product
 		
-		player.add_movement(delta, direction, player.wallrun_top_speed, player.wallrun_acceleration)
-	
-	player.move_and_slide()
+		player.add_movement(delta, player.wallrun_top_speed, player.wallrun_acceleration)

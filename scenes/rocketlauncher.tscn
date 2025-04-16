@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://cujegp7i3nmbg"]
+
+[ext_resource type="PackedScene" uid="uid://cccb2uxtnnpml" path="res://assets/models/rocketlauncher.glb" id="1_w88fu"]
+
+[node name="rocketlauncher" instance=ExtResource("1_w88fu")]
+
+[node name="Body" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00629031, 0.000642031, 0.138967)
+layers = 2
+
+[node name="Pump" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00632319, 0.000642031, -0.429048)
+layers = 2
+
+[node name="MagCover" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0862229, 0.0163931, -0.165475)
+layers = 2
+
+[node name="Trigger" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0217853, -0.0656539, -0.157925)
+layers = 2

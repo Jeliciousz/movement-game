@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://vqnx7jtc25ak"
-path="res://.godot/imported/curved_wall.glb-c893c06e90e7a09e53d048e748974aff.scn"
+uid="uid://cccb2uxtnnpml"
+path="res://.godot/imported/rocketlauncher.glb-452d02a3952b290ed76535ae6ec9a45b.scn"
 
 [deps]
 
-source_file="res://assets/models/curved_wall.glb"
-dest_files=["res://.godot/imported/curved_wall.glb-c893c06e90e7a09e53d048e748974aff.scn"]
+source_file="res://assets/models/rocketlauncher.glb"
+dest_files=["res://.godot/imported/rocketlauncher.glb-452d02a3952b290ed76535ae6ec9a45b.scn"]
 
 [params]
 

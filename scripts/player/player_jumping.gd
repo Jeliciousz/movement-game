@@ -3,12 +3,16 @@ class_name PlayerJumping extends State
 
 @export var player: Player
 
+@export var footsteps_audio: AudioStreamPlayer3D
+
 
 func enter() -> void:
 	player.jump_timestamp = Time.get_ticks_msec()
 	
 	player.coyote_jump_possible = false
 	player.coyote_slide_possible = false
+	
+	footsteps_audio.play()
 
 
 func update_physics_state() -> void:

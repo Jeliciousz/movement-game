@@ -5,6 +5,10 @@ class_name PlayerSliding extends State
 
 @export var player_collider: CollisionShape3D
 
+@export var slide_audio: AudioStreamPlayer3D
+
+@export var standing_area: Area3D
+
 
 @onready var base_collider_height: float = player_collider.shape.height
 
@@ -18,12 +22,7 @@ func enter() -> void:
 	
 	player.coyote_slide_possible = false
 	
-	# Slide Jumping
-	if InputBuffer.is_action_buffered("jump"):
-		player.coyote_jump_possible = false
-		player.slide_jump()
-		transition.emit(&"PlayerAirborne")
-		return
+	slide_audio.play()
 
 
 func exit() -> void:
@@ -40,19 +39,37 @@ func update_physics_state() -> void:
 		return
 	
 	if Time.get_ticks_msec() - player.slide_timestamp > player.slide_duration:
-		transition.emit(&"PlayerGrounded")
+		if standing_area.has_overlapping_bodies():
+			transition.emit(&"PlayerCrouching")
+		else:
+			transition.emit(&"PlayerGrounded")
+		return
+	
+	var speed = player.velocity.length()
+	
+	if speed < player.slide_stop_speed_threshold:
+		if standing_area.has_overlapping_bodies():
+			transition.emit(&"PlayerCrouching")
+		else:
+			transition.emit(&"PlayerGrounded")
 		return
 	
 	# Slide Jumping
-	if InputBuffer.is_action_buffered("jump"):
-		player.coyote_jump_possible = false
-		player.slide_jump()
-		transition.emit(&"PlayerAirborne")
+	if Time.get_ticks_msec() - player.slide_timestamp >= player.slide_jump_cooldown_duration and InputBuffer.is_action_buffered("jump"):
+		if standing_area.has_overlapping_bodies():
+			transition.emit(&"PlayerCrouching")
+		else:
+			player.coyote_jump_possible = false
+			player.slide_jump()
+			transition.emit(&"PlayerAirborne")
 		return
 	
 	# Slide Cancel
-	if InputBuffer.is_action_buffered("crouch"):
-		transition.emit(&"PlayerGrounded")
+	if Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cancel_cooldown_duration and InputBuffer.is_action_buffered("crouch"):
+		if standing_area.has_overlapping_bodies():
+			transition.emit(&"PlayerCrouching")
+		else:
+			transition.emit(&"PlayerGrounded")
 		return
 
 

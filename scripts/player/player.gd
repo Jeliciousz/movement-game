@@ -5,9 +5,9 @@ class_name Player extends CharacterBody3D
 
 ## The acceleration applied opposite of the player's velocity while not moving.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_friction: float = 40
-## The acceleration (m/s/s) always applied opposite and proportional to the player's velocity.
+## The acceleration (m/s/s) applied opposite and proportional to the player's velocity.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.15
-## The downwards acceleration (m/s/s).
+## The acceleration (m/s/s) applied downwards.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_gravity: float = 30
 
 @export_group("Movement", "move_")
@@ -16,15 +16,17 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var move_speed: float = 4
 ## How quickly the player accelerates (m/s/s).
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var move_acceleration: float = 80
-## What [member top_speed] is multiplied by while moving backwards.
+## What [member move_speed] is multiplied by while moving backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_backwards_multiplier: float = 0.5
+## What [member physics_friction] is multiplied by while moving faster than top speed (only applied when friction goes against movement direction).
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_top_speed_friction_multiplier: float = 0.5
 
 @export_subgroup("Air Control", "air_")
 
 ## The fastest speed (m/s) the player can reach while airborne.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_speed: float = 1.5
 ## How quickly the player accelerates (m/s/s) while airborne.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var air_acceleration: float = 30
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var air_acceleration: float = 25
 
 @export_subgroup("Sprinting", "sprint_")
 
@@ -48,27 +50,27 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_power: float = 8
 ## The speed (m/s) applied in the movement direction when jumping.
 @export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_horizontal_power: float = 1.5
-## What [member jump_power] is multiplied by when jumping while not moving.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_standing_multiplier: float = 1.1
-## What [member horizontal_jump_power] is multiplied by when jumping backwards.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_backwards_multiplier: float = 0.1
 ## The time (milliseconds) a jump lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_duration: int = 0
-## What [member gravity] is multiplied by while jumping.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_gravity_multiplier: float = 0.75
 ## The time (milliseconds) after leaving the ground that the player can coyote jump during.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_coyote_duration: int = 125
+## What [member jump_power] is multiplied by when jumping while not moving.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_standing_multiplier: float = 1.1
+## What [member jump_horizontal_power] is multiplied by when jumping backwards.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_backwards_multiplier: float = 0.1
+## What [member physics_gravity] is multiplied by while jumping.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_gravity_multiplier: float = 0.75
 
 @export_subgroup("Speed Jumping", "jump_")
 
 ## The speed (m/s) needed to achieve base jump power.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_min_speed: float = 4
 ## The speed (m/s) needed to achieve max jump power.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_speed: float = 9
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_speed: float = 8
 ## The speed (m/s) applied upwards when jumping at max speed.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_power: float = 10
 ## The speed (m/s) applied in the movement direction when jumping at max speed.
-@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 2
+@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 0.85
 
 @export_subgroup("Air Jumping", "air_jump_")
 
@@ -81,59 +83,69 @@ class_name Player extends CharacterBody3D
 
 ## The speed (m/s) applied in the direction the player is moving when sliding.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_power: float = 6
-## The time (in milliseconds) a slide lasts.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_duration: int = 800
+## The time (milliseconds) a slide lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_duration: int = 1000
 ## The speed (m/s) the player must have while sprinting to slide instead of crouch.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_speed_threshold: float = 2
-## The time (in milliseconds) that must pass between slides.
-@export_range(0, 1, 0.05, "or_greater", "suffix:ms") var slide_cooldown_duration: int = 250
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_start_speed_threshold: float = 2
+## The speed (m/s) the player will stop sliding at.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_stop_speed_threshold: float = 4
 ## The acceleration applied opposite of the player's velocity while sliding and not moving.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var slide_friction: float = 4
 ## How quickly the player accelerates (m/s/s) while sliding.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var slide_acceleration: float = 16
+## The time (milliseconds) that must pass between slides.
+@export_range(0, 1, 0.05, "or_greater", "suffix:ms") var slide_cooldown_duration: int = 350
 ## The time (milliseconds) after leaving the ground that the player can coyote slide during.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_coyote_duration: int = 125
+## The time (milliseconds) that must pass after sliding before the player can jump.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_jump_cooldown_duration: int = 250
+## The time (milliseconds) that must pass after after sliding before the player can cancel the slide.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cancel_cooldown_duration: int = 500
 
 @export_subgroup("Slide Jumping", "slide_jump_")
 
 ## The speed (m/s) applied upwards when slide jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 12
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 14
 ## The speed (m/s) applied in the slide direction when slide jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_horizontal_power: float = -4
 
-# @export_group("Wall-Running")
+@export_group("Wall-Running")
 
-# ## The highest speed (m/s) the player can reach while wall-running.
-# @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
-# ## How quickly the player accelerates (m/s/s) while wall-running.
-# @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
-# ## The speed (m/s) applied perpendicular to the wall when wall-jumping.
-# @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 8
-# ## The time (in milliseconds) a wallrun lasts.
-# @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
-# ## What the speed going into a wall gets multiplied by when wall-running.
-# @export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.95
-# ## The acceleration applied opposite of the player's vertical velocity while wall-running (before duration runs out).
-# @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 15
-# ## What [member air_resistence] is multiplied by while wall-running.
-# @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.85
-# ## What [member friction] is multiplied by while wall-running (friction is applied after duration runs out).
-# @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.15
-# ## What [member gravity] is multiplied by while wall-running (gravity is applied after duration runs out).
-# @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.25
-# ## The speed (m/s) the player must have to start wall-running.
-# @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
-# ## The speed (m/s) the player must maintain to keep wall-running.
-# @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
-# ## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
-# @export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(5)
+## The highest speed (m/s) the player can reach while wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
+## How quickly the player accelerates (m/s/s) while wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
+## The speed (m/s) applied upwards when wall-jumping.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_power: float = 9
+## The speed (m/s) applied in the velocity direction when wall-jumping.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_horizontal_power: float = -6
+## The speed (m/s) applied perpendicular to the wall when wall-jumping.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 12
+## The time (milliseconds) a wallrun lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
+## What the speed going into a wall gets multiplied by when wall-running.
+@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 1
+## The acceleration (m/s/s) applied downwards (gravity is applied after duration runs out).
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_gravity: float = 15
+## The acceleration applied opposite of the player's horizontal velocity while wall-running (before duration runs out).
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_friction: float = 6
+## The acceleration applied opposite of the player's vertical velocity while wall-running (before duration runs out).
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 25
+## The acceleration (m/s/s) applied opposite and proportional to the player's velocity while wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_air_resistence: float = 0.10
+## The speed (m/s) the player must have to start wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 0
+## The speed (m/s) the player must maintain to keep wall-running.
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 0
+## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
+@export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(0)
 
 @export_group("Air-Dashing", "air_dash_")
 ## The speed (m/s) applied in the direction the player is looking when air-dashing.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_power: float = 12
 ## The speed (m/s) applied upwards when air-dashing.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_vertical_power: float = 2
-## The time (in milliseconds) an air-dash lasts.
+## The time (milliseconds) an air-dash lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var air_dash_duration: int = 350
 ## The speed (m/s) applied opposite to the player's velocity at the end of an air-dash.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_end_power: float = 4
@@ -150,10 +162,11 @@ var colliding_velocity: Vector3 = Vector3.ZERO
 var is_sprinting: bool = true
 
 var airborne_timestamp: int = 0
+var grounded_timestamp: int = 0
 var jump_timestamp: int = 0
 var crouch_timestamp: int = 0
 var slide_timestamp: int = 0
-# var wallrun_timestamp: int = 0
+var wallrun_timestamp: int = 0
 var air_dash_timestamp: int = 0
 
 var coyote_jump_possible: bool = false
@@ -161,7 +174,8 @@ var coyote_slide_possible: bool = false
 var air_jumps: int = 0
 var air_dashes: int = 0
 
-# var wallrun_wall_normal: Vector3 = Vector3.ZERO
+var wallrun_wall_normal: Vector3 = Vector3.ZERO
+var wallrun_wall_parallel: Vector3 = Vector3.ZERO
 
 ## Returns how much the player is moving backwards.[br]
 ## 0: Player is strafing or moving forwards[br]
@@ -178,7 +192,14 @@ func get_look_direction() -> Vector3:
 
 func _physics_process(delta: float) -> void:
 	colliding_velocity = velocity
+	
 	move_and_slide()
+	
+	if not is_on_floor():
+		velocity = get_real_velocity()
+		floor_block_on_wall = false
+	else:
+		floor_block_on_wall = true
 
 
 
@@ -197,14 +218,7 @@ func add_air_resistence(delta: float, air_resistence: float) -> void:
 
 
 func add_friction(delta: float, friction: float, top_speed: float) -> void:
-	# If player is faster than the top speed they can move at, it just applies friction ignoring movement direction
-	var current_speed = velocity.length()
-	
-	if current_speed > top_speed:
-		set_velocity(velocity.move_toward(velocity.limit_length(top_speed), friction * delta))
-		return
-	
-	# Otherwise, it applies friction only when it doesn't go against the player's movement direction
+	# Only apply friction when it doesn't go against the player's movement direction
 	
 	var velocity_direction = velocity.normalized()
 	
@@ -213,6 +227,17 @@ func add_friction(delta: float, friction: float, top_speed: float) -> void:
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
 	var friction_product = minf(friction_direction.dot(move_direction) + 1, 1)
+	
+	# If player is faster than the top speed they can move at, it will always apply friction. a reduced amount if going against the movement direction
+	var current_speed = velocity.length()
+	
+	if current_speed > top_speed:
+		var scaled_friction_product = lerpf(move_top_speed_friction_multiplier, 1, friction_product)
+		
+		set_velocity(velocity.move_toward(velocity.limit_length(top_speed), friction * delta * scaled_friction_product))
+		return
+	
+	# Otherwise, it only applies friction if it doesn't go against the movement direction
 	
 	velocity = velocity.move_toward(Vector3.ZERO, friction * friction_product * delta)
 
@@ -294,3 +319,13 @@ func slide_jump() -> void:
 	velocity.y = slide_jump_power
 	
 	add_velocity(slide_jump_horizontal_power, velocity.normalized())
+
+
+func wall_jump() -> void:
+	velocity.y = 0
+	
+	velocity.y += wallrun_jump_power
+	
+	add_velocity(wallrun_jump_horizontal_power, Vector3(velocity.x, 0, velocity.z).normalized())
+	
+	add_velocity(wallrun_kick_power, wallrun_wall_normal)
