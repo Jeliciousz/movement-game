@@ -134,11 +134,9 @@ class_name Player extends CharacterBody3D
 ## The acceleration (m/s/s) applied opposite and proportional to the player's velocity while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_air_resistence: float = 0.10
 ## The speed (m/s) the player must have to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 0
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 5
 ## The speed (m/s) the player must maintain to keep wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 0
-## What the minimum angle (in radians) from the velocity direction to the wall normal needs to be to start wall-running.
-@export_range(0, 180, 1, "radians_as_degrees") var wallrun_minimum_angle_threshold: float = deg_to_rad(0)
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 3
 
 @export_group("Air-Dashing", "air_dash_")
 ## The speed (m/s) applied in the direction the player is looking when air-dashing.
@@ -175,7 +173,7 @@ var air_jumps: int = 0
 var air_dashes: int = 0
 
 var wallrun_wall_normal: Vector3 = Vector3.ZERO
-var wallrun_wall_parallel: Vector3 = Vector3.ZERO
+var wallrun_run_direction: Vector3 = Vector3.ZERO
 
 ## Returns how much the player is moving backwards.[br]
 ## 0: Player is strafing or moving forwards[br]
@@ -262,7 +260,7 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	#	If the player moves perpendicular to the direction they're already going, it will change the direction of their velocity, while keeping the same speed
 	#
 	#	-Jeliciousz
-
+	
 	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
 	add_velocity(acceleration * delta, move_direction)
 	var new_horizontal_speed = Vector2(velocity.x, velocity.z).length()
@@ -274,7 +272,7 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 		return
 	
 	var limited_velocity: Vector2
-
+	
 	if old_horizontal_speed <= top_speed:
 		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed)
 	else:

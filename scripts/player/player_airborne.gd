@@ -5,6 +5,9 @@ class_name PlayerAirborne extends State
 
 
 func wallrun_check() -> bool:
+	if not player.is_sprinting:
+		return false
+	
 	var horizontal_speed: float = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
 	
 	if horizontal_speed < player.wallrun_start_speed_threshold:
@@ -24,13 +27,12 @@ func wallrun_check() -> bool:
 	if wall_normal.y < 0:
 		return false
 	
-	var horizontal_velocity_direction: Vector3 = Vector3(player.colliding_velocity.x, 0, player.colliding_velocity.z).normalized()
-	
-	if horizontal_velocity_direction.angle_to(-wall_normal) < player.wallrun_minimum_angle_threshold:
-		return false
-	
 	player.wallrun_wall_normal = wall_normal
-	player.wallrun_wall_parallel = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+	player.wallrun_run_direction = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+	
+	if player.wallrun_run_direction.dot(player.get_look_direction()) < 0:
+		player.wallrun_run_direction *= -1
+	
 	player.velocity = player.velocity.normalized() * horizontal_speed * player.wallrun_speed_conversion_multiplier
 	
 	return true
