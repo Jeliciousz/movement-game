@@ -124,7 +124,7 @@ class_name Player extends CharacterBody3D
 ## The time (milliseconds) a wallrun lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
 ## What the speed going into a wall gets multiplied by when wall-running.
-@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 1
+@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.98
 ## The acceleration (m/s/s) applied downwards (gravity is applied after duration runs out).
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_gravity: float = 15
 ## The acceleration applied opposite of the player's horizontal velocity while wall-running (before duration runs out).
@@ -136,7 +136,7 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) the player must have to start wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
 ## The speed (m/s) the player must maintain to keep wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 3
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
 
 @export_group("Air-Dashing", "air_dash_")
 ## The speed (m/s) applied in the direction the player is looking when air-dashing.
