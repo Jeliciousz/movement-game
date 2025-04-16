@@ -137,6 +137,8 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
 ## The speed (m/s) the player must maintain to keep wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
+## The maximum angle (radians) the player can turn on a curved wall when wall-running. (Note: Because the player's collider is circular and can collide with the corners of walls, the angle between last frame's wall normal, and the current frame's wall normal will likely be much smaller than expected.)
+@export_range(0, 180, 0.05, "radians_as_degrees") var wallrun_max_turn_angle: float = deg_to_rad(15)
 
 @export_group("Air-Dashing", "air_dash_")
 ## The speed (m/s) applied in the direction the player is looking when air-dashing.
@@ -352,3 +354,12 @@ func wall_jump() -> void:
 	add_velocity(wallrun_jump_horizontal_power, Vector3(velocity.x, 0, velocity.z).normalized())
 	
 	add_velocity(wallrun_kick_power, wallrun_wall_normal)
+
+
+
+## This is used to update the is_on_floor, is_on_wall, and is_on_ceiling methods when the player's position has been manually changed
+func update_surface_checks() -> void:
+	var player_velocity = velocity
+	velocity = Vector3.ZERO
+	move_and_slide()
+	velocity = player_velocity

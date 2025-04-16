@@ -7,9 +7,22 @@ class_name PlayerWallrunning extends State
 
 
 func still_on_wall_check() -> bool:
-	var horizontal_colliding_speed = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
+	if player.is_on_wall():
+		player.move_and_collide(player.wallrun_wall_normal * 0.1)
+		
+		player.update_surface_checks()
+		
+		if player.is_on_wall():
+			player.move_and_collide(player.wallrun_wall_normal * -0.1)
+			return true
+		
+		player.move_and_collide(player.wallrun_wall_normal * -0.1)
+		
+		player.update_surface_checks()
+		
+		return false
 	
-	var test = player.move_and_collide(-player.wallrun_wall_normal * horizontal_colliding_speed * 0.1, true)
+	var test = player.move_and_collide(-player.wallrun_wall_normal * 0.1, true)
 	
 	if not test:
 		return true
@@ -17,25 +30,17 @@ func still_on_wall_check() -> bool:
 	if not test.get_collider().is_in_group("WallrunBodies"):
 		return true
 	
-	player.move_and_collide(-player.wallrun_wall_normal * horizontal_colliding_speed * 0.1)
+	player.move_and_collide(-player.wallrun_wall_normal * 0.1)
 	
 	var wall_normal = Vector3(test.get_normal().x, 0, test.get_normal().z).normalized()
 	
 	if wall_normal.is_equal_approx(player.wallrun_wall_normal):
-		player.velocity.x = player.wallrun_run_direction.x * horizontal_colliding_speed
-		player.velocity.y = player.colliding_velocity.y
-		player.velocity.z = player.wallrun_run_direction.z * horizontal_colliding_speed
+		return false
+	
+	if player.wallrun_wall_normal.angle_to(wall_normal) >= player.wallrun_max_turn_angle:
 		return false
 	
 	player.wallrun_wall_normal = wall_normal
-	
-	#player.move_and_collide(player.wallrun_wall_normal * 0.01)
-	
-	# This is necessary to update the is_on_wall method
-	#var player_velocity = player.velocity
-	#player.velocity = Vector3.ZERO
-	#player.move_and_slide()
-	#player.velocity = player_velocity
 	
 	player.wallrun_run_direction = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
 	
@@ -43,10 +48,6 @@ func still_on_wall_check() -> bool:
 	
 	if player.wallrun_run_direction.dot(horizontal_velocity_direction) < 0:
 		player.wallrun_run_direction *= -1
-	
-	player.velocity.x = player.wallrun_run_direction.x * horizontal_colliding_speed
-	player.velocity.y = player.colliding_velocity.y
-	player.velocity.z = player.wallrun_run_direction.z * horizontal_colliding_speed
 	
 	return false
 
@@ -66,7 +67,7 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if horizontal_velocity.normalized().dot(player.wallrun_run_direction) < 0:
+	if horizontal_velocity.normalized().dot(player.wallrun_run_direction) <= 0:
 		transition.emit(&"PlayerAirborne")
 		return
 	
@@ -74,9 +75,11 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	#if player.is_on_wall():
-	#	transition.emit(&"PlayerAirborne")
-	#	return
+	var horizontal_colliding_speed = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
+	
+	player.velocity.x = player.wallrun_run_direction.x * horizontal_colliding_speed
+	player.velocity.y = player.colliding_velocity.y
+	player.velocity.z = player.wallrun_run_direction.z * horizontal_colliding_speed
 	
 	if InputBuffer.is_action_buffered("jump"):
 		player.wall_jump()
