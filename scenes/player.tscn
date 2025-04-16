@@ -123,9 +123,10 @@ slide_audio = NodePath("../../SlideAudio")
 standing_area = NodePath("../../StandingArea")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
-[node name="PlayerWallrunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+[node name="PlayerWallrunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "move_input")]
 script = ExtResource("12_a8ls1")
 player = NodePath("../..")
+move_input = NodePath("../../MoveInput")
 
 [node name="PlayerAirdashing" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
 script = ExtResource("11_f1ej7")

@@ -3,6 +3,8 @@ class_name PlayerWallrunning extends State
 
 @export var player: Player
 
+@export var move_input: Node
+
 
 func still_on_wall_check() -> bool:
 	var horizontal_colliding_speed = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
@@ -91,8 +93,4 @@ func physics_update(delta: float) -> void:
 	else:
 		player.velocity.y = move_toward(player.velocity.y, 0, player.wallrun_vertical_friction * delta)
 		
-		var product = player.move_direction.dot(player.wallrun_run_direction)
-		
-		player.move_direction = player.wallrun_run_direction * product
-		
-		player.add_movement(delta, player.wallrun_top_speed, player.wallrun_acceleration)
+		player.add_wallrun_movement(delta)

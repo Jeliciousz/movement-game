@@ -4,12 +4,28 @@ extends Node
 @export var player: Player
 
 
-var input_axis: Vector2 = Vector2.ZERO
+enum { NORMAL, NULL_CANCELING }
+
+
+var nc_input_vector: Vector2 = Vector2.ZERO
+
+var movement_mode = NULL_CANCELING:
+	set(mode):
+		nc_input_vector = Vector2.ZERO
+		movement_mode = mode
 
 
 func _physics_process(delta: float) -> void:
-	#	This handles the movement inputs
-	#
+	match movement_mode:
+		NORMAL:
+			var vector = Input.get_vector("left", "right", "forward", "back")
+			player.move_direction = player.basis * Vector3(vector.x, 0, vector.y)
+		NULL_CANCELING:
+			null_canceling_movement()
+			player.move_direction = player.basis * Vector3(nc_input_vector.x, 0, nc_input_vector.y).normalized()
+
+
+func null_canceling_movement() -> void:
 	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
 	#
 	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
@@ -22,28 +38,24 @@ func _physics_process(delta: float) -> void:
 	#
 	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, but I designed this code myself
 	#
-	#	The vector is normalized and transformed by the player direction in the process step
-	#
 	#	-Jeliciousz
 	
 	if Input.is_action_just_pressed("back"):
-		input_axis.y = 1
+		nc_input_vector.y = 1
 	elif Input.is_action_just_released("back"):
-		input_axis.y = -float(Input.is_action_pressed("forward"))
+		nc_input_vector.y = -float(Input.is_action_pressed("forward"))
 	
 	if Input.is_action_just_pressed("forward"):
-		input_axis.y = -1
+		nc_input_vector.y = -1
 	elif Input.is_action_just_released("forward"):
-		input_axis.y = float(Input.is_action_pressed("back"))
+		nc_input_vector.y = float(Input.is_action_pressed("back"))
 	
 	if Input.is_action_just_pressed("left"):
-		input_axis.x = -1
+		nc_input_vector.x = -1
 	elif Input.is_action_just_released("left"):
-		input_axis.x = float(Input.is_action_pressed("right"))
+		nc_input_vector.x = float(Input.is_action_pressed("right"))
 	
 	if Input.is_action_just_pressed("right"):
-		input_axis.x = 1
+		nc_input_vector.x = 1
 	elif Input.is_action_just_released("right"):
-		input_axis.x = -float(Input.is_action_pressed("left"))
-	
-	player.move_direction = (player.basis * Vector3(input_axis.x, 0, input_axis.y)).normalized()
+		nc_input_vector.x = -float(Input.is_action_pressed("left"))

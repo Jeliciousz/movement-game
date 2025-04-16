@@ -134,7 +134,7 @@ class_name Player extends CharacterBody3D
 ## The acceleration (m/s/s) applied opposite and proportional to the player's velocity while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_air_resistence: float = 0.10
 ## The speed (m/s) the player must have to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 5
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
 ## The speed (m/s) the player must maintain to keep wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 3
 
@@ -275,6 +275,31 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	
 	if old_horizontal_speed <= top_speed:
 		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed)
+	else:
+		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(old_horizontal_speed)
+	
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.y
+
+
+func add_wallrun_movement(delta: float) -> void:
+	var axis = Input.get_axis("back", "forward")
+	var direction = wallrun_run_direction * axis
+	
+	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	add_velocity(wallrun_acceleration * delta, direction)
+	var new_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	
+	if new_horizontal_speed <= old_horizontal_speed:
+		return
+	
+	if new_horizontal_speed <= wallrun_top_speed:
+		return
+	
+	var limited_velocity: Vector2
+	
+	if old_horizontal_speed <= wallrun_top_speed:
+		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(wallrun_top_speed)
 	else:
 		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(old_horizontal_speed)
 	
