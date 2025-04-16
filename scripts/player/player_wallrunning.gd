@@ -8,18 +8,8 @@ class_name PlayerWallrunning extends State
 
 func still_on_wall_check() -> bool:
 	if player.is_on_wall():
-		player.move_and_collide(player.wallrun_wall_normal * 0.1)
-		
-		player.update_surface_checks()
-		
-		if player.is_on_wall():
-			player.move_and_collide(player.wallrun_wall_normal * -0.1)
+		if not player.get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
 			return true
-		
-		player.move_and_collide(player.wallrun_wall_normal * -0.1)
-		
-		player.update_surface_checks()
-		
 		return false
 	
 	var test = player.move_and_collide(-player.wallrun_wall_normal * 0.1, true)
@@ -37,8 +27,7 @@ func still_on_wall_check() -> bool:
 	if wall_normal.is_equal_approx(player.wallrun_wall_normal):
 		return false
 	
-	if player.wallrun_wall_normal.angle_to(wall_normal) >= player.wallrun_max_turn_angle:
-		return false
+	var horizontal_speed = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
 	
 	player.wallrun_wall_normal = wall_normal
 	

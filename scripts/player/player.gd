@@ -137,8 +137,6 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
 ## The speed (m/s) the player must maintain to keep wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
-## The maximum angle (radians) the player can turn on a curved wall when wall-running. (Note: Because the player's collider is circular and can collide with the corners of walls, the angle between last frame's wall normal, and the current frame's wall normal will likely be much smaller than expected.)
-@export_range(0, 180, 0.05, "radians_as_degrees") var wallrun_max_turn_angle: float = deg_to_rad(15)
 
 @export_group("Air-Dashing", "air_dash_")
 ## The speed (m/s) applied in the direction the player is looking when air-dashing.

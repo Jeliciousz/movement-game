@@ -19,12 +19,12 @@ func wallrun_check() -> bool:
 	if not player.get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
 		return false
 	
+	if player.get_wall_normal().y < 0:
+		return false
+	
 	var wall_normal = Vector3(player.get_wall_normal().x, 0, player.get_wall_normal().z).normalized()
 	
 	if wall_normal.is_equal_approx(player.wallrun_wall_normal):
-		return false
-	
-	if wall_normal.y < 0:
 		return false
 	
 	player.wallrun_wall_normal = wall_normal
@@ -33,17 +33,17 @@ func wallrun_check() -> bool:
 	if player.wallrun_run_direction.dot(player.get_look_direction()) < 0:
 		player.wallrun_run_direction *= -1
 	
-	player.velocity = player.velocity.normalized() * horizontal_speed * player.wallrun_speed_conversion_multiplier
+	var new_velocity: Vector3 = player.wallrun_run_direction * horizontal_speed * player.wallrun_speed_conversion_multiplier
+	
+	new_velocity.y = player.velocity.y
+	
+	player.velocity = new_velocity
 	
 	return true
 
 
 func enter() -> void:
 	player.airborne_timestamp = Time.get_ticks_msec()
-	
-	if wallrun_check():
-		transition.emit(&"PlayerWallrunning")
-		return
 	
 	var speed = player.velocity.length()
 	
