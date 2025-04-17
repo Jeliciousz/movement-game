@@ -15,7 +15,7 @@ func enter() -> void:
 	var speed = player.velocity.length()
 	
 	# Crouching
-	if (not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards())) and InputBuffer.is_action_buffered("slide-crouch"):
+	if (not player.slide_enabled or not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards())) and InputBuffer.is_action_buffered("slide-crouch"):
 		transition.emit(&"PlayerCrouching")
 		return
 	
@@ -37,6 +37,10 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
+	if player.velocity.y > 0:
+		transition.emit(&"PlayerAirborne")
+		return
+	
 	# Sprinting
 	if Input.is_action_just_pressed("sprint"):
 		player.is_sprinting = not player.is_sprinting
@@ -44,7 +48,7 @@ func update_physics_state() -> void:
 	var speed = player.velocity.length()
 	
 	# Crouching
-	if (not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards())) and InputBuffer.is_action_buffered("slide-crouch"):
+	if (not player.slide_enabled or not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards())) and InputBuffer.is_action_buffered("slide-crouch"):
 		transition.emit(&"PlayerCrouching")
 		return
 	

@@ -12,7 +12,7 @@
 bounce = 0.75
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_qfnet"]
-radius = 0.3
+radius = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i7141"]
 albedo_color = Color(0.8, 0.8, 0.8, 1)
@@ -20,8 +20,8 @@ albedo_texture = ExtResource("7_i7141")
 
 [sub_resource type="SphereMesh" id="SphereMesh_qfnet"]
 material = SubResource("StandardMaterial3D_i7141")
-radius = 0.3
-height = 0.6
+radius = 0.4
+height = 0.8
 radial_segments = 16
 rings = 8
 

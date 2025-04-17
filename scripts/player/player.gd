@@ -81,6 +81,8 @@ class_name Player extends CharacterBody3D
 
 @export_group("Sliding", "slide_")
 
+## Whether or not the player can slide.
+@export var slide_enabled: bool = false
 ## The speed (m/s) applied in the direction the player is moving when sliding.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_power: float = 6
 ## The time (milliseconds) a slide lasts.
@@ -111,6 +113,8 @@ class_name Player extends CharacterBody3D
 
 @export_group("Wall-Running")
 
+## Whether or not the player can wall-run.
+@export var wallrun_enabled: bool = true
 ## The highest speed (m/s) the player can reach while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
 ## How quickly the player accelerates (m/s/s) while wall-running.
@@ -183,7 +187,12 @@ func get_amount_moving_backwards() -> float:
 
 
 func get_look_direction() -> Vector3:
-	return -transform.basis.z
+	return -global_basis.z
+
+func get_camera_look_direction() -> Vector3:
+	var camera = $Head/Camera
+	
+	return -camera.global_basis.z
 
 
 # This is called after the state machine has finished processing for the physics tick

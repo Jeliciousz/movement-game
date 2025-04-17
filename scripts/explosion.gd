@@ -7,10 +7,15 @@ extends Area3D
 
 
 @onready var collision_shape = $CollisionShape
+@onready var explosion_audio = $ExplosionAudio
+
+
+var exploded: bool = false
 
 
 func _physics_process(delta: float) -> void:
-	explode()
+	if not exploded:
+		explode()
 
 
 func explode() -> void:
@@ -47,4 +52,6 @@ func explode() -> void:
 			
 			body.velocity += direction * power
 	
-	queue_free()
+	explosion_audio.play()
+	
+	exploded = true

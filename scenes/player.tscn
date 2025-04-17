@@ -201,7 +201,7 @@ fov = 90.0
 [node name="ViewmodelBase" type="Node3D" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, -0.2, -0.15)
 
-[node name="rocketlauncher" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera/ViewmodelBase" instance=ExtResource("14_a38lo")]
+[node name="RocketLauncher" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera/ViewmodelBase" instance=ExtResource("14_a38lo")]
 
 [node name="Hud" type="Control" parent="."]
 layout_mode = 3

@@ -1,9 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://dmlvcup0oypeu"]
+[gd_scene load_steps=7 format=3 uid="uid://dmlvcup0oypeu"]
 
 [ext_resource type="Script" uid="uid://bvsevbubnon83" path="res://scripts/explosion.gd" id="1_17npe"]
+[ext_resource type="AudioStream" uid="uid://dnur7jvmxvprr" path="res://assets/sounds/weapons/explode1.wav" id="2_3el85"]
+[ext_resource type="AudioStream" uid="uid://dtdvcvnmi65ga" path="res://assets/sounds/weapons/explode2.wav" id="3_hbmxj"]
+[ext_resource type="AudioStream" uid="uid://r1i1uh8w3y7m" path="res://assets/sounds/weapons/explode3.wav" id="4_xfoey"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_3oo6d"]
 radius = 3.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_v8gpv"]
+streams_count = 3
+stream_0/stream = ExtResource("2_3el85")
+stream_1/stream = ExtResource("3_hbmxj")
+stream_2/stream = ExtResource("4_xfoey")
 
 [node name="Explosion" type="Area3D"]
 collision_layer = 0
@@ -12,3 +21,10 @@ script = ExtResource("1_17npe")
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_3oo6d")
+
+[node name="ExplosionAudio" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_v8gpv")
+attenuation_model = 3
+volume_db = -12.0
+max_distance = 25.0
+attenuation_filter_cutoff_hz = 20500.0
