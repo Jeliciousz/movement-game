@@ -3,7 +3,7 @@ extends Node
 
 const BUFFER_WINDOW: int = 100
 
-const buffered_actions: Array[String] = ["jump", "crouch"]
+const buffered_actions: Array[String] = ["jump", "slide-crouch"]
 
 
 var action_timestamps: Dictionary[String, int] = {}

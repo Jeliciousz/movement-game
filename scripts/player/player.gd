@@ -8,7 +8,7 @@ class_name Player extends CharacterBody3D
 ## The acceleration (m/s/s) applied opposite and proportional to the player's velocity.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.15
 ## The acceleration (m/s/s) applied downwards.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_gravity: float = 30
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_gravity: float = 25
 
 @export_group("Movement", "move_")
 
@@ -47,7 +47,7 @@ class_name Player extends CharacterBody3D
 @export_group("Jumping", "jump_")
 
 ## The speed (m/s) applied upwards when jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_power: float = 8
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_power: float = 6.6
 ## The speed (m/s) applied in the movement direction when jumping.
 @export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_horizontal_power: float = 1.5
 ## The time (milliseconds) a jump lasts.
@@ -68,7 +68,7 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) needed to achieve max jump power.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_speed: float = 8
 ## The speed (m/s) applied upwards when jumping at max speed.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_power: float = 10
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_power: float = 8.3
 ## The speed (m/s) applied in the movement direction when jumping at max speed.
 @export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 0.85
 
@@ -105,7 +105,7 @@ class_name Player extends CharacterBody3D
 @export_subgroup("Slide Jumping", "slide_jump_")
 
 ## The speed (m/s) applied upwards when slide jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 14
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 11.6
 ## The speed (m/s) applied in the slide direction when slide jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_horizontal_power: float = -4
 
@@ -116,7 +116,7 @@ class_name Player extends CharacterBody3D
 ## How quickly the player accelerates (m/s/s) while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
 ## The speed (m/s) applied upwards when wall-jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_power: float = 9
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_power: float = 7.5
 ## The speed (m/s) applied in the velocity direction when wall-jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_horizontal_power: float = -6
 ## The speed (m/s) applied perpendicular to the wall when wall-jumping.
@@ -142,7 +142,7 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) applied in the direction the player is looking when air-dashing.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_power: float = 12
 ## The speed (m/s) applied upwards when air-dashing.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_vertical_power: float = 2
+@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_vertical_power: float = 1.6
 ## The time (milliseconds) an air-dash lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var air_dash_duration: int = 350
 ## The speed (m/s) applied opposite to the player's velocity at the end of an air-dash.

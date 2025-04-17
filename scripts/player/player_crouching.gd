@@ -36,7 +36,7 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if not standing_area.has_overlapping_bodies() and not Input.is_action_pressed("crouch"):
+	if not standing_area.has_overlapping_bodies() and not Input.is_action_pressed("slide-crouch"):
 		transition.emit(&"PlayerGrounded")
 		return
 	

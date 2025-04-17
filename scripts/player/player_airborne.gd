@@ -48,7 +48,7 @@ func enter() -> void:
 	var speed = player.velocity.length()
 	
 	# Coyote Sliding
-	if player.coyote_slide_possible and Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and player.is_sprinting and not player.move_direction.is_zero_approx() and is_zero_approx(player.get_amount_moving_backwards()) and speed >= player.slide_start_speed_threshold and InputBuffer.is_action_buffered("crouch"):
+	if player.coyote_slide_possible and player.is_sprinting and not player.move_direction.is_zero_approx() and is_zero_approx(player.get_amount_moving_backwards()) and speed >= player.slide_start_speed_threshold and Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
 		player.velocity.y = 0
 		player.add_velocity(player.slide_power, player.move_direction)
 		transition.emit(&"PlayerSliding")
@@ -85,7 +85,7 @@ func update_physics_state() -> void:
 	var speed = player.velocity.length()
 	
 	# Coyote Sliding
-	if player.coyote_slide_possible and Time.get_ticks_msec() - player.airborne_timestamp <= player.slide_coyote_duration and Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and is_zero_approx(player.get_amount_moving_backwards()) and player.is_sprinting and not player.move_direction.is_zero_approx() and is_zero_approx(player.get_amount_moving_backwards()) and speed >= player.slide_start_speed_threshold and InputBuffer.is_action_buffered("crouch"):
+	if player.coyote_slide_possible and Time.get_ticks_msec() - player.airborne_timestamp <= player.slide_coyote_duration and player.is_sprinting and not player.move_direction.is_zero_approx() and is_zero_approx(player.get_amount_moving_backwards()) and speed >= player.slide_start_speed_threshold and Time.get_ticks_msec() - player.slide_timestamp > player.slide_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
 		player.velocity.y = 0
 		player.add_velocity(player.slide_power, player.move_direction)
 		transition.emit(&"PlayerSliding")

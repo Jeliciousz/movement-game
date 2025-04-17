@@ -54,7 +54,7 @@ rings = 2
 viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
 
 [node name="Player" type="CharacterBody3D"]
-process_physics_priority = 1
+process_physics_priority = 2
 collision_layer = 2
 wall_min_slide_angle = 0.0872665
 floor_stop_on_slope = false
@@ -84,7 +84,23 @@ script = ExtResource("2_g2els")
 player = NodePath("..")
 head = NodePath("../Head")
 
+[node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_camera", "player_footsteps_audio")]
+script = ExtResource("2_a8ls1")
+player = NodePath("..")
+player_state_machine = NodePath("../StateMachine")
+player_head = NodePath("../Head")
+player_camera = NodePath("../Head/Camera")
+player_footsteps_audio = NodePath("../FootstepsAudio")
+
+[node name="ViewmodelController" type="Node" parent="." node_paths=PackedStringArray("world_camera", "viewmodel_camera", "viewmodel_base", "player")]
+script = ExtResource("14_4ni07")
+world_camera = NodePath("../Head/Camera")
+viewmodel_camera = NodePath("../ViewmodelTexture/ViewmodelViewport/ViewmodelCamera")
+viewmodel_base = NodePath("../ViewmodelTexture/ViewmodelViewport/ViewmodelCamera/ViewmodelBase")
+player = NodePath("..")
+
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+process_physics_priority = 1
 script = ExtResource("3_qhqgy")
 initial_state = NodePath("PlayerSpawning")
 
@@ -133,22 +149,6 @@ script = ExtResource("11_f1ej7")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
-[node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_camera", "player_footsteps_audio")]
-process_physics_priority = -1
-script = ExtResource("2_a8ls1")
-player = NodePath("..")
-player_state_machine = NodePath("../StateMachine")
-player_head = NodePath("../Head")
-player_camera = NodePath("../Head/Camera")
-player_footsteps_audio = NodePath("../FootstepsAudio")
-
-[node name="ViewmodelController" type="Node" parent="." node_paths=PackedStringArray("world_camera", "viewmodel_camera", "viewmodel_base", "player")]
-script = ExtResource("14_4ni07")
-world_camera = NodePath("../Head/Camera")
-viewmodel_camera = NodePath("../ViewmodelTexture/ViewmodelViewport/ViewmodelCamera")
-viewmodel_base = NodePath("../ViewmodelTexture/ViewmodelViewport/ViewmodelCamera/ViewmodelBase")
-player = NodePath("..")
-
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
@@ -194,6 +194,7 @@ render_target_update_mode = 4
 script = ExtResource("15_l71n6")
 
 [node name="ViewmodelCamera" type="Camera3D" parent="ViewmodelTexture/ViewmodelViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 cull_mask = 2
 fov = 90.0
 
