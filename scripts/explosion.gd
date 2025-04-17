@@ -34,11 +34,7 @@ func explode(max_power: float, min_power) -> void:
 			
 			var distance = global_position.distance_to(other_position)
 			
-			print_debug(distance)
-			
 			var weight = ease(clampf(distance / explosion_radius, 0, 1), 4)
-			
-			print_debug(weight)
 			
 			var power = lerpf(max_power, min_power, weight)
 			
