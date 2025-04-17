@@ -1,14 +1,19 @@
 extends Area3D
 
 
+@export var max_power: float = 12
+
+@export var min_power: float = 3
+
+
 @onready var collision_shape = $CollisionShape
 
 
-func _process(delta: float) -> void:
-	DebugDraw3D.draw_sphere(global_position, collision_shape.shape.radius, Color.RED)
+func _physics_process(delta: float) -> void:
+	explode()
 
 
-func explode(max_power: float, min_power) -> void:
+func explode() -> void:
 	for body in get_overlapping_bodies():
 		var explosion_radius = collision_shape.shape.radius
 		
