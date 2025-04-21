@@ -24,8 +24,8 @@ func wallrun_check() -> bool:
 	
 	var wall_normal = Vector3(player.get_wall_normal().x, 0, player.get_wall_normal().z).normalized()
 	
-	#if wall_normal.is_equal_approx(player.wallrun_wall_normal):
-	#	return false
+	if wall_normal.is_equal_approx(player.wallrun_wall_normal):
+		return false
 	
 	player.wallrun_wall_normal = wall_normal
 	player.wallrun_run_direction = player.wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
