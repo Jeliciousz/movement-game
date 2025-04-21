@@ -3,8 +3,9 @@ extends Node3D
 
 @export var fire_interval: int = 800
 
+@export var raycast: RayCast3D
 
-@onready var raycast: RayCast3D = $"../RayCast"
+
 @onready var fire_sound: AudioStreamPlayer3D = $FireSound
 
 
@@ -16,7 +17,7 @@ var last_fired_timestamp: int = 0
 func _physics_process(delta: float) -> void:
 	if Time.get_ticks_msec() - last_fired_timestamp > fire_interval and Input.is_action_pressed("primary fire"):
 		var projectile: StaticBody3D = rocket.instantiate()
-		projectile.launch_speed = 18
+		projectile.launch_speed = 21
 		
 		projectile.position = raycast.global_position + raycast.global_basis * Vector3(0, -0.3, 0)
 		projectile.basis = raycast.global_basis

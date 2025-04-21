@@ -5,8 +5,6 @@ extends Node
 
 @export var viewmodel_camera: Camera3D
 
-@export var viewmodel_base: Node3D
-
 @export var player: Player
 
 

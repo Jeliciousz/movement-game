@@ -426,24 +426,10 @@ sides = 16
 material = ExtResource("4_71j4m")
 
 [node name="WallrunWall" type="CSGBox3D" parent="." groups=["WallrunBodies"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 5.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 5, 0)
 use_collision = true
 collision_mask = 0
-size = Vector3(0.51, 1, 13.25)
-material = ExtResource("6_i7141")
-
-[node name="WallrunWallTopMargin" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 4.1, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(0.5, 1.4, 13.25)
-material = ExtResource("6_i7141")
-
-[node name="WallrunWallBottomMargin" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 6.2, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(0.5, 0.8, 13.25)
+size = Vector3(0.5, 3.2, 13.25)
 material = ExtResource("6_i7141")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]

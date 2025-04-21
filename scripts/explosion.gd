@@ -32,7 +32,7 @@ func explode() -> void:
 			
 			var direction = global_position.direction_to(other_position)
 			
-			body.linear_velocity += direction * damage * 0.15
+			body.linear_velocity += direction * damage * 0.16 * 1.35
 		elif body is Player:
 			var collision_shape = body.get_node("CollisionShape")
 			
@@ -47,7 +47,12 @@ func explode() -> void:
 			
 			var direction = global_position.direction_to(other_position)
 			
-			body.velocity += direction * damage * 0.15
+			var knockback = direction * damage * 0.16
+			
+			if not body.is_on_floor(): #or body.state_machine.current_state.name == &"PlayerWallrunning"
+				knockback *= 1.35
+			
+			body.velocity += knockback
 			
 			body.state_machine.on_child_transition(&"PlayerAirborne")
 	
