@@ -37,10 +37,6 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if player.velocity.y > 0:
-		transition.emit(&"PlayerAirborne")
-		return
-	
 	# Sprinting
 	if Input.is_action_just_pressed("sprint"):
 		player.is_sprinting = not player.is_sprinting

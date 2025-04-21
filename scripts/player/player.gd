@@ -114,7 +114,7 @@ class_name Player extends CharacterBody3D
 @export_group("Wall-Running")
 
 ## Whether or not the player can wall-run.
-@export var wallrun_enabled: bool = true
+@export var wallrun_enabled: bool = false
 ## The highest speed (m/s) the player can reach while wall-running.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
 ## How quickly the player accelerates (m/s/s) while wall-running.
@@ -155,6 +155,9 @@ class_name Player extends CharacterBody3D
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var air_dash_gravity_multiplier: float = 0.15
 ## The amount of times the player can air-dash before touching the ground.
 @export_range(0, 100, 1, "or_greater") var air_dash_limit: int = 0
+
+
+@onready var state_machine: StateMachine = $StateMachine
 
 
 var move_direction: Vector3 = Vector3.ZERO
@@ -280,15 +283,15 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	if new_horizontal_speed <= top_speed:
 		return
 	
-	var limited_velocity: Vector2
+	var limited_velocity: Vector3
 	
 	if old_horizontal_speed <= top_speed:
-		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(top_speed)
+		limited_velocity = Vector3(velocity.x, 0, velocity.z).limit_length(top_speed)
 	else:
-		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(old_horizontal_speed)
+		limited_velocity = Vector3(velocity.x, 0, velocity.z).limit_length(old_horizontal_speed)
 	
 	velocity.x = limited_velocity.x
-	velocity.z = limited_velocity.y
+	velocity.z = limited_velocity.z
 
 
 func add_wallrun_movement(delta: float) -> void:

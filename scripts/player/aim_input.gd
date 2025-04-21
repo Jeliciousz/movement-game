@@ -20,7 +20,7 @@ extends Node
 ## Mouse settings.
 @export_subgroup("Mouse")
 
-@export_range(0.01, 1.00) var mouse_sensitivity: float = 0.5
+@export_range(0.01, 1.00, 0.01, "or_greater") var mouse_sensitivity: float = 0.5
 
 
 ## Camera pitch clamping.

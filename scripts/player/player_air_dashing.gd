@@ -66,7 +66,7 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerAirborne")
 		return
 	
-	if wallrun_check():
+	if player.wallrun_enabled and wallrun_check():
 		transition.emit(&"PlayerWallrunning")
 		return
 	

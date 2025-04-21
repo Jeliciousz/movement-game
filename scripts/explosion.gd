@@ -1,9 +1,10 @@
 extends Area3D
 
 
-@export var max_power: float = 12
-
-@export var min_power: float = 3
+## The base amount of damage that the explosion will deal.
+@export_range(0, 100, 1, "or_greater") var base_damage: float = 90
+## How much the damage is reduced by proportionally to the distance to the explosion (% of base damage per meter).
+@export var splash_reduction: float = 0.17
 
 
 @onready var collision_shape = $CollisionShape
@@ -27,13 +28,11 @@ func explode() -> void:
 			
 			var distance = global_position.distance_to(other_position)
 			
-			var weight = ease(clampf(distance / explosion_radius, 0, 1), 4)
-			
-			var power = lerpf(max_power, min_power, weight)
+			var damage = base_damage * (1 - minf(splash_reduction * distance, 1))
 			
 			var direction = global_position.direction_to(other_position)
 			
-			body.linear_velocity += direction * power
+			body.linear_velocity += direction * damage * 0.15
 		elif body is Player:
 			var collision_shape = body.get_node("CollisionShape")
 			
@@ -44,13 +43,13 @@ func explode() -> void:
 			
 			var distance = global_position.distance_to(other_position)
 			
-			var weight = ease(clampf(distance / explosion_radius, 0, 1), 4)
-			
-			var power = lerpf(max_power, min_power, weight)
+			var damage = base_damage * (1 - minf(splash_reduction * distance, 1))
 			
 			var direction = global_position.direction_to(other_position)
 			
-			body.velocity += direction * power
+			body.velocity += direction * damage * 0.15
+			
+			body.state_machine.on_child_transition(&"PlayerAirborne")
 	
 	explosion_audio.play()
 	

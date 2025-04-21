@@ -21,9 +21,9 @@
 [ext_resource type="Script" uid="uid://ddkrabut4oyga" path="res://scripts/player/player_air_dashing.gd" id="11_f1ej7"]
 [ext_resource type="Script" uid="uid://uw3hgbieer2y" path="res://scripts/player/player_wallrunning.gd" id="12_a8ls1"]
 [ext_resource type="Script" uid="uid://del78g01mkplr" path="res://scripts/viewmodel_controller.gd" id="14_4ni07"]
-[ext_resource type="PackedScene" uid="uid://cujegp7i3nmbg" path="res://scenes/rocketlauncher.tscn" id="14_a38lo"]
 [ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/viewmodel_viewport.gd" id="15_l71n6"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
+[ext_resource type="PackedScene" uid="uid://dotrhi4kwkha5" path="res://scenes/rocket_launcher.tscn" id="21_l71n6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e5uuo"]
 radius = 0.4
@@ -56,6 +56,7 @@ viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
 [node name="Player" type="CharacterBody3D"]
 process_physics_priority = 2
 collision_layer = 2
+collision_mask = 9
 wall_min_slide_angle = 0.0872665
 floor_stop_on_slope = false
 floor_constant_speed = true
@@ -84,19 +85,10 @@ script = ExtResource("2_g2els")
 player = NodePath("..")
 head = NodePath("../Head")
 
-[node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_camera", "player_footsteps_audio")]
-script = ExtResource("2_a8ls1")
-player = NodePath("..")
-player_state_machine = NodePath("../StateMachine")
-player_head = NodePath("../Head")
-player_camera = NodePath("../Head/Camera")
-player_footsteps_audio = NodePath("../FootstepsAudio")
-
-[node name="ViewmodelController" type="Node" parent="." node_paths=PackedStringArray("world_camera", "viewmodel_camera", "viewmodel_base", "player")]
+[node name="ViewmodelController" type="Node" parent="." node_paths=PackedStringArray("world_camera", "viewmodel_camera", "player")]
 script = ExtResource("14_4ni07")
 world_camera = NodePath("../Head/Camera")
 viewmodel_camera = NodePath("../ViewmodelTexture/ViewmodelViewport/ViewmodelCamera")
-viewmodel_base = NodePath("../ViewmodelTexture/ViewmodelViewport/ViewmodelCamera/ViewmodelBase")
 player = NodePath("..")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
@@ -149,6 +141,15 @@ script = ExtResource("11_f1ej7")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
+[node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_camera", "player_footsteps_audio")]
+process_physics_priority = 2
+script = ExtResource("2_a8ls1")
+player = NodePath("..")
+player_state_machine = NodePath("../StateMachine")
+player_head = NodePath("../Head")
+player_camera = NodePath("../Head/Camera")
+player_footsteps_audio = NodePath("../FootstepsAudio")
+
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
@@ -198,10 +199,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 cull_mask = 2
 fov = 90.0
 
-[node name="ViewmodelBase" type="Node3D" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, -0.2, -0.15)
+[node name="RayCast" type="RayCast3D" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera"]
+target_position = Vector3(0, 0, -50)
+collision_mask = 41
+hit_from_inside = true
 
-[node name="RocketLauncher" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera/ViewmodelBase" instance=ExtResource("14_a38lo")]
+[node name="RocketLauncher2" parent="ViewmodelTexture/ViewmodelViewport/ViewmodelCamera" instance=ExtResource("21_l71n6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, -0.2, -0.15)
 
 [node name="Hud" type="Control" parent="."]
 layout_mode = 3
