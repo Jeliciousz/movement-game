@@ -34,9 +34,8 @@ version_control/autoload_on_startup=true
 
 [global_group]
 
-WallrunBodies="Walls that can be run on"
+WallrunBodies="Walls that can be run on."
 PlayerSpawnNodes="Points the player can spawn at."
-OtherPlayers=""
 
 [input]
 
@@ -107,9 +106,14 @@ reload={
 
 [layer_names]
 
+3d_render/layer_1="World"
+3d_render/layer_2="Viewmodel"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Player"
-3d_physics/layer_3="Physics Nodes"
+3d_physics/layer_3="Teammates"
+3d_physics/layer_4="Enemies"
+3d_physics/layer_5="Physics Detail Nodes"
+3d_physics/layer_6="Physics Game Nodes"
 
 [physics]
 
