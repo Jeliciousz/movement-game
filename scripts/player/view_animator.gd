@@ -5,8 +5,6 @@ extends Node
 
 @export var player: Player
 
-@export var player_state_machine: StateMachine
-
 @export var player_head: Node3D
 
 @export var player_camera: Camera3D
@@ -71,18 +69,28 @@ func _physics_process(delta: float) -> void:
 	
 	var player_speed = player.velocity.length()
 	
-	match player_state_machine.current_state.name:
-		&"PlayerCrouching":
-			head_target_position = Vector3(0, standing_head_y * player.crouch_height_multiplier, 0)
+	
+	
+	match player.active_state:
+		player.States.Grounded:
+			if player.active_stance == player.Stances.Crouching:
+				head_target_position = Vector3(0, standing_head_y * player.crouch_height_multiplier, 0)
+			else:
+				head_target_position = Vector3(0, standing_head_y, 0)
 			
 			camera_target_rotation = Vector3(0, 0, -(player.transform.basis.inverse() * player.velocity).x * PI * tilt_strafing)
 			
-			if player_speed < 1:
+			if player_speed < 1 or player.move_direction.is_zero_approx():
 				head_bob_t = 0
 			else:
-				head_bob_t += delta * player_speed * (head_bob_speed / player.crouch_height_multiplier)
-				
-				head_target_position.y += sin(head_bob_t * PI * 2) * (head_bob_height / player.crouch_height_multiplier)
+				if player.active_stance == player.Stances.Crouching:
+					head_bob_t += delta * player_speed * (head_bob_speed / player.crouch_height_multiplier)
+					
+					head_target_position.y += sin(head_bob_t * PI * 2) * (head_bob_height / player.crouch_height_multiplier)
+				else:
+					head_bob_t += delta * player_speed * head_bob_speed
+					
+					head_target_position.y += sin(head_bob_t * PI * 2) * head_bob_height
 				
 				if head_target_position.y - last_head_y <= 0:
 					footstep_taken = false
@@ -91,35 +99,16 @@ func _physics_process(delta: float) -> void:
 					footstep_taken = true
 				
 				last_head_y = head_target_position.y
-		&"PlayerSliding":
+		player.States.Sliding:
 			head_target_position = Vector3(0, standing_head_y * player.crouch_height_multiplier, 0)
 			
 			camera_target_rotation = Vector3(-(player.transform.basis.inverse() * player.velocity).z * PI * tilt_sliding_forward, 0, (player.transform.basis.inverse() * player.velocity).x * PI * tilt_sliding_horizontal)
-		&"PlayerGrounded":
-			head_target_position = Vector3(0, standing_head_y, 0)
-			
-			camera_target_rotation = Vector3(0, 0, -(player.transform.basis.inverse() * player.velocity).x * PI * tilt_strafing)
-			
-			if player_speed < 1:
-				head_bob_t = 0
-			else:
-				head_bob_t += delta * player_speed * head_bob_speed
-				
-				head_target_position.y += sin(head_bob_t * PI * 2) * head_bob_height
-				
-				if head_target_position.y - last_head_y <= 0:
-					footstep_taken = false
-				elif not footstep_taken:
-					player_footsteps_audio.play()
-					footstep_taken = true
-				
-				last_head_y = head_target_position.y
-		&"PlayerWallrunning":
+		player.States.Wallrunning:
 			head_target_position = Vector3(0, standing_head_y, 0)
 			
 			camera_target_rotation = Vector3(0, 0, -(player.transform.basis.inverse() * player.wallrun_wall_normal).x * PI * wallrun_tilt)
 			
-			if player_speed < 1:
+			if player_speed < 1 or player.move_direction.is_zero_approx():
 				head_bob_t = 0
 			else:
 				head_bob_t += delta * player_speed * head_bob_speed * wallrun_headbob_multiplier
@@ -134,7 +123,10 @@ func _physics_process(delta: float) -> void:
 				
 				last_head_y = head_target_position.y
 		_:
-			head_target_position = Vector3(0, standing_head_y, 0)
+			if player.active_stance == player.Stances.Crouching:
+				head_target_position = Vector3(0, standing_head_y * player.crouch_height_multiplier, 0)
+			else:
+				head_target_position = Vector3(0, standing_head_y, 0)
 			
 			camera_target_rotation = Vector3(0, 0, -(player.transform.basis.inverse() * player.velocity).x * PI * tilt_strafing)
 	

@@ -1,9 +1,9 @@
 extends Node
 
 
-const BUFFER_WINDOW: int = 100
+const BUFFER_WINDOW: int = 200
 
-const buffered_actions: Array[String] = ["jump", "slide-crouch"]
+const buffered_actions: Array[String] = ["jump", "slide"]
 
 
 var action_timestamps: Dictionary[String, int] = {}

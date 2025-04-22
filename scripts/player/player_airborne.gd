@@ -35,7 +35,7 @@ func wallrun_check() -> bool:
 	if player.wallrun_run_direction.dot(player.get_look_direction()) < 0:
 		player.wallrun_run_direction *= -1
 	
-	var new_velocity: Vector3 = player.wallrun_run_direction * horizontal_speed * player.wallrun_speed_conversion_multiplier
+	var new_velocity: Vector3 = player.wallrun_run_direction * horizontal_speed
 	
 	new_velocity.y = player.velocity.y
 	
@@ -67,11 +67,6 @@ func enter() -> void:
 	if player.air_jumps < player.air_jump_limit and InputBuffer.is_action_buffered("jump"):
 		player.air_jump()
 		transition.emit(&"PlayerJumping")
-		return
-	
-	# Air Dashing
-	if player.air_dashes < player.air_dash_limit and Input.is_action_just_pressed("sprint"):
-		transition.emit(&"PlayerAirdashing")
 		return
 
 
@@ -113,24 +108,8 @@ func update_physics_state() -> void:
 		player.air_jump()
 		transition.emit(&"PlayerJumping")
 		return
-	
-	# Air Dashing
-	if player.air_dashes < player.air_dash_limit and Input.is_action_just_pressed("sprint"):
-		transition.emit(&"PlayerAirdashing")
-		return
 	 
 	if grapple_hook_raycast.is_colliding() and Input.is_action_just_pressed("secondary fire"):
 		player.grapple_hook_point = grapple_hook_raycast.get_collider().position
 		transition.emit(&"PlayerGrappling")
 		return
-
-
-func physics_update(delta: float) -> void:
-	var backwards_multiplier = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
-	
-	var top_speed: float = player.air_speed * backwards_multiplier
-	var acceleration: float = player.air_acceleration * backwards_multiplier
-	
-	player.add_air_resistence(delta, player.physics_air_resistence)
-	player.add_gravity(delta, player.physics_gravity)
-	player.add_movement(delta, top_speed, acceleration)

@@ -42,7 +42,8 @@ func _unhandled_input(event: InputEvent)-> void:
 		if event is InputEventKey:
 			if event.is_action_pressed("ui_cancel"):
 				get_tree().quit()
-				
+				return
+		
 		if event is InputEventMouseButton:
 			if event.button_index == 1:
 				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -56,11 +57,11 @@ func _unhandled_input(event: InputEvent)-> void:
 		return
 	
 	if event is InputEventMouseMotion:
-		aim_look(event)
+		aim(event)
 
 
-## Handles aim look with the mouse.
-func aim_look(event: InputEventMouseMotion) -> void:
+## Handles aiming with the mouse.
+func aim(event: InputEventMouseMotion) -> void:
 	var viewport_transform: Transform2D = get_tree().root.get_final_transform()
 	var motion: Vector2 = event.xformed_by(viewport_transform).relative
 	var radians_per_unit: float = deg_to_rad(0.2)

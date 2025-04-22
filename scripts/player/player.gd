@@ -1,230 +1,702 @@
 class_name Player extends CharacterBody3D
 
 
-@export_group("Physics")
+@export_group("Physics", "physics_")
 
-## The acceleration applied opposite of the player's velocity while not moving.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_friction: float = 40
-## The acceleration (m/s/s) applied opposite and proportional to the player's velocity.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.15
-## The acceleration (m/s/s) applied downwards.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var physics_gravity: float = 30
+## The acceleration applied against the direction of the player's velocity.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_friction: float = 40
+
+## The acceleration applied opposite and proportional to the player's velocity.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.15
+
+## The acceleration applied downwards.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_gravity: float = 30
+
+
+@export_group("Coyote Time", "coyote_")
+
+## Is there coyote time?
+@export var coyote_enabled: bool = true
+
+## How long coyote time lasts.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 200
+
 
 @export_group("Movement", "move_")
 
-## The fastest speed (m/s) the player can reach.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var move_speed: float = 4
-## How quickly the player accelerates (m/s/s).
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var move_acceleration: float = 80
-## What [member move_speed] is multiplied by while moving backwards.
+## How fast the player can move.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var move_speed: float = 4
+
+## How quickly the player accelerates.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var move_acceleration: float = 80
+
+## How quickly the player can move backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_backwards_multiplier: float = 0.5
-## What [member physics_friction] is multiplied by while moving faster than top speed (only applied when friction goes against movement direction).
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_top_speed_friction_multiplier: float = 0.5
+
+## How much friction is applied against the direction the player is moving.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_friction_multiplier: float = 0.5
+
 
 @export_subgroup("Air Control", "air_")
 
-## The fastest speed (m/s) the player can reach while airborne.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_speed: float = 1.5
-## How quickly the player accelerates (m/s/s) while airborne.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var air_acceleration: float = 25
+## How fast the player can move in the air.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 1.5
 
-@export_subgroup("Sprinting", "sprint_")
+## How quickly the player accelerates in the air.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 25
 
-## The highest speed (m/s) the player can reach while sprinting.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var sprint_speed: float = 7
-## How quickly the player accelerates (m/s/s) while sprinting.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var sprint_acceleration: float = 100
-
-@export_group("Crouching", "crouch_")
-
-## The highest speed (m/s) the player can reach while crouching.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var crouch_speed: float = 2
-## How quickly the player accelerates (m/s/s) while crouching.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 40
-## What the player's collision height is multiplied by while crouching.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_height_multiplier: float = 0.5
 
 @export_group("Jumping", "jump_")
 
-## The speed (m/s) applied upwards when jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_power: float = 8
-## The speed (m/s) applied in the movement direction when jumping.
-@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_horizontal_power: float = 1.5
-## The time (milliseconds) a jump lasts.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_duration: int = 350
-## The time (milliseconds) after leaving the ground that the player can coyote jump during.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_coyote_duration: int = 125
-## What [member jump_power] is multiplied by when jumping while not moving.
+## Can the player jump?
+@export var jump_enabled: bool = true
+
+## How high the player jumps.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_power: float = 8
+
+## How high the player can jump while standing still.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_standing_multiplier: float = 1.1
-## What [member jump_horizontal_power] is multiplied by when jumping backwards.
+
+## How far the player jumps in the direction they're moving.
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_horizontal_power: float = 1.5
+
+## How far the player can jump backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_backwards_multiplier: float = 0.1
-## What [member physics_gravity] is multiplied by while jumping.
+
+## How long the player can jump for.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var jump_duration: int = 350
+
+## How much gravity is applied while the player is jumping.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_gravity_multiplier: float = 0.8
 
-@export_subgroup("Speed Jumping", "jump_")
 
-## The speed (m/s) needed to achieve base jump power.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_min_speed: float = 4
-## The speed (m/s) needed to achieve max jump power.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_speed: float = 8
-## The speed (m/s) applied upwards when jumping at max speed.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_power: float = 10
-## The speed (m/s) applied in the movement direction when jumping at max speed.
-#@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 0.85
-@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 1.5
+@export_subgroup("Speed Jumping", "speed_jump_")
+
+## Can the player speed jump?
+@export var speed_jump_enabled: bool = true
+
+## The speed at or below which the player has base jump power.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_base_speed: float = 4
+
+## The speed at or above which the player has max jump power.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_speed: float = 8
+
+## How high the player jumps at max speed.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_power: float = 10
+
+## How far the player jumps in the direction they're moving at max speed.
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_power: float = 1.5
+
 
 @export_subgroup("Air Jumping", "air_jump_")
 
-## The speed (m/s) applied in the movement direction when air jumping.
-@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var air_jump_horizontal_power: float = 9
-## The amount of times the player can jump in the air before touching the ground.
-@export_range(0, 100, 1, "or_greater") var air_jump_limit: int = 0
+## Can the player air jump?
+@export var air_jump_enabled: bool = false
+
+## How far the player jumps in the direction they're moving while airborne.
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var air_jump_horizontal_power: float = 8
+
+## How many times the player can air jump before touching the ground.
+@export_range(0, 100, 1, "or_greater") var air_jump_limit: int = 1
+
+
+@export_group("Sprinting", "sprint_")
+
+## Can the player sprint?
+@export var sprint_enabled: bool = true
+
+## How fast the player can move while sprinting.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var sprint_speed: float = 7
+
+## How quickly the player accelerates while sprinting.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var sprint_acceleration: float = 100
+
+
+@export_group("Crouching", "crouch_")
+
+## Can the player crouch?
+@export var crouch_enabled: bool = true
+
+## How tall the player is while crouching.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var crouch_height_multiplier: float = 0.5
+
+## How fast the player can move while crouching.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var crouch_speed: float = 2
+
+## How quickly the player accelerates while crouching.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 40
+
+## How many times the player can crouch in the air before touching the ground.
+@export_range(0, 100, 1, "or_greater") var crouch_air_limit: int = 1
+
 
 @export_group("Sliding", "slide_")
 
-## Whether or not the player can slide.
+## Can the player slide?
 @export var slide_enabled: bool = true
-## The speed (m/s) applied in the direction the player is moving when sliding.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_power: float = 6
-## The time (milliseconds) a slide lasts.
+
+## How fast the player slides.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_power: float = 6
+
+## How long the player can slide for.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_duration: int = 1000
-## The speed (m/s) the player must have while sprinting to slide instead of crouch.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_start_speed_threshold: float = 2
-## The speed (m/s) the player will stop sliding at.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_stop_speed_threshold: float = 4
-## The acceleration applied opposite of the player's velocity while sliding and not moving.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var slide_friction: float = 4
-## How quickly the player accelerates (m/s/s) while sliding.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var slide_acceleration: float = 16
-## The time (milliseconds) that must pass between slides.
-@export_range(0, 1, 0.05, "or_greater", "suffix:ms") var slide_cooldown_duration: int = 350
-## The time (milliseconds) after leaving the ground that the player can coyote slide during.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_coyote_duration: int = 125
-## The time (milliseconds) that must pass after sliding before the player can jump.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_jump_cooldown_duration: int = 250
-## The time (milliseconds) that must pass after after sliding before the player can cancel the slide.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cancel_cooldown_duration: int = 500
+
+## How quickly the player accelerates while sliding.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var slide_acceleration: float = 16
+
+## How much friction is applied while sliding.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var slide_friction_multiplier: float = 0.1
+
+## How fast the player must be moving to slide.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_start_speed: float = 5
+
+## How fast the player must be until they stop sliding.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_stop_speed: float = 4
+
+## How long the player must wait after a slide until they can slide again.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cooldown: int = 350
+
+
+@export_subgroup("Slide Canceling", "slide_cancel_")
+
+## Can the player slide cancel?
+@export var slide_cancel_enabled: bool = true
+
+## How long the player must wait after starting a slide until they can slide cancel.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cancel_delay: int = 350
+
 
 @export_subgroup("Slide Jumping", "slide_jump_")
 
-## The speed (m/s) applied upwards when slide jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_power: float = 14
-## The speed (m/s) applied in the slide direction when slide jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var slide_jump_horizontal_power: float = -4
+## Can the player slide jump?
+@export var slide_jump_enabled: bool = true
+
+## How high the player jumps while sliding.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_power: float = 14
+
+## How far the player jumps in the direction they're moving while sliding.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_horizontal_power: float = -3
+
+## How long the player must wait after starting a slide until they can slide jump.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_jump_delay: int = 250
+
 
 @export_group("Wall-Running")
 
-## Whether or not the player can wall-run.
+## Can the player wall-run?
 @export var wallrun_enabled: bool = true
-## The highest speed (m/s) the player can reach while wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
-## How quickly the player accelerates (m/s/s) while wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
-## The speed (m/s) applied upwards when wall-jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_power: float = 9
-## The speed (m/s) applied in the velocity direction when wall-jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_horizontal_power: float = -6
-## The time (milliseconds) after leaving a wallrun that the player can coyote walljump during.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_jump_coyote_duration: int = 125
-## The speed (m/s) applied perpendicular to the wall when wall-jumping.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 12
-## The time (milliseconds) a wallrun lasts.
+
+## The fast the player can move while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_top_speed: float = 8
+
+## How quickly the player accelerates while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80
+
+## How long the player can wall-run for until they start sliding.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
-## What the speed going into a wall gets multiplied by when wall-running.
-@export_range(0, 1, 0.05, "suffix:×") var wallrun_speed_conversion_multiplier: float = 0.98
-## The acceleration (m/s/s) applied downwards (gravity is applied after duration runs out).
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_gravity: float = 15
-## The acceleration applied opposite of the player's horizontal velocity while wall-running (before duration runs out).
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_friction: float = 6
-## The acceleration applied opposite of the player's vertical velocity while wall-running (before duration runs out).
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 25
-## The acceleration (m/s/s) applied opposite and proportional to the player's velocity while wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s/s") var wallrun_air_resistence: float = 0.10
-## The speed (m/s) the player must have to start wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_start_speed_threshold: float = 3
-## The speed (m/s) the player must maintain to keep wall-running.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_stop_speed_threshold: float = 2
 
-@export_group("Air-Dashing", "air_dash_")
-## The speed (m/s) applied in the direction the player is looking when air-dashing.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_power: float = 12
-## The speed (m/s) applied upwards when air-dashing.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_vertical_power: float = 2
-## The time (milliseconds) an air-dash lasts.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var air_dash_duration: int = 350
-## The speed (m/s) applied opposite to the player's velocity at the end of an air-dash.
-@export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var air_dash_end_power: float = 4
-## What [member gravity] is multiplied by while air-dashing.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var air_dash_gravity_multiplier: float = 0.15
-## The amount of times the player can air-dash before touching the ground.
-@export_range(0, 100, 1, "or_greater") var air_dash_limit: int = 0
+## The acceleration applied against the direction of the velocity in the vertical axis while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 25
+
+## How much air resistence is applied while wall-running.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
+
+## How much gravity is applied while sliding on a wall.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
+
+## How much friction is applied while sliding on a wall.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_friction_multiplier: float = 0.15
+
+## How fast the player must be to start wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_start_speed: float = 3
+
+## How fast the player must be until they stop wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_stop_speed: float = 2
+
+## How long the player must wait after a wallrun until they can wallrun again.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_cooldown: int = 200
 
 
-@onready var state_machine: StateMachine = $StateMachine
+@export_group("Wall-Jumping", "walljump_")
 
+## How high the player jumps while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_power: float = 9
+
+## How far the player jumps forwards while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_power: float = -6
+
+## How far the player jumps away from the wall while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_power: float = 12
+
+
+@onready var head: Node3D = $Head
+
+@onready var collision_shape: CollisionShape3D = $CollisionShape
+
+@onready var uncrouch_area: Area3D = $UncrouchArea
+
+@onready var airborne_uncrouch_area: Area3D = $AirborneUncrouchArea
+
+@onready var standing_height: float = collision_shape.shape.height
+
+@onready var standing_head_y: float = head.position.y
+
+@onready var footsteps_audio: AudioStreamPlayer3D = $FootstepsAudio
+
+@onready var slide_audio: AudioStreamPlayer3D = $SlideAudio
+
+
+enum States {Grounded, Airborne, Jumping, Sliding, Wallrunning}
+
+enum Stances {Standing, Crouching, Sprinting}
+
+
+var move_input_vector: Vector2 = Vector2.ZERO
 
 var move_direction: Vector3 = Vector3.ZERO
 
 var colliding_velocity: Vector3 = Vector3.ZERO
 
-var is_sprinting: bool = true
+
+var active_state: States
+
+var active_stance: Stances = Stances.Sprinting
+
+var last_stance: Stances = Stances.Standing
+
 
 var airborne_timestamp: int = 0
-var grounded_timestamp: int = 0
-var jump_timestamp: int = 0
 var crouch_timestamp: int = 0
+var jump_timestamp: int = 0
 var slide_timestamp: int = 0
 var wallrun_timestamp: int = 0
-var air_dash_timestamp: int = 0
 
-var coyote_jump_possible: bool = false
-var coyote_slide_possible: bool = false
-var coyote_walljump_possible: bool = false
+var coyote_jump_active: bool = false
+var coyote_slide_active: bool = false
+var coyote_walljump_active: bool = false
+
 var air_jumps: int = 0
-var air_dashes: int = 0
+var air_crouches: int = 0
 
 var wallrun_wall_normal: Vector3 = Vector3.ZERO
 var wallrun_run_direction: Vector3 = Vector3.ZERO
 
 var grapple_hook_point: Vector3 = Vector3.ZERO
 
+
 ## Returns how much the player is moving backwards.[br]
 ## 0: Player is strafing or moving forwards[br]
+## 0 - 1: Player is moving diagonally backwards[br]
 ## 1: Player is moving directly backwards
 func get_amount_moving_backwards() -> float:
-	return maxf(0, move_direction.dot(transform.basis.z))
+	return maxf(0, move_direction.dot(basis.z))
 
 
-func get_look_direction() -> Vector3:
-	return -global_basis.z
+## Returns the forward direction of the player.
+func get_forward_direction() -> Vector3:
+	return -basis.z
 
-func get_camera_look_direction() -> Vector3:
-	var camera = $Head/Camera
+
+## Returns the looking direction of the player.
+func get_looking_direction() -> Vector3:
+	return -head.global_basis.z
+
+
+func _ready() -> void:
+	random_spawn()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
+	#
+	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
+	#	This happens a lot in fast-paced games
+	#	But when opposing movement keys cancel each other out, it makes the player stand still in the small amount of time between pushing the new key, and releasing the old key
+	#	This is the opposite of what the player wants: to keep moving
+	#
+	#	To fix this, I wrote it so that new inputs overwrite the previous ones, instead of canceling them out
+	#	Then when the new input is released, it'll go back to the old input if it's still pressed, and only if it isn't, will it go to 0
+	#
+	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, similar to Razer's snap tap, but I designed this code myself
+	#
+	#	-Jeliciousz
 	
-	return -camera.global_basis.z
+	if Input.is_action_just_pressed("forward"):
+		move_input_vector.y = -1
+	elif Input.is_action_just_released("forward"):
+		move_input_vector.y = 1 if Input.is_action_pressed("back") else 0
+	elif Input.is_action_just_pressed("back"):
+		move_input_vector.y = 1
+	elif Input.is_action_just_released("back"):
+		move_input_vector.y = -1 if Input.is_action_pressed("forward") else 0
+	
+	if Input.is_action_just_pressed("right"):
+		move_input_vector.x = 1
+	elif Input.is_action_just_released("right"):
+		move_input_vector.x = -1 if Input.is_action_pressed("left") else 0
+	elif Input.is_action_just_pressed("left"):
+		move_input_vector.x = -1
+	elif Input.is_action_just_released("left"):
+		move_input_vector.x = 1 if Input.is_action_pressed("right") else 0
 
-
-# This is called after the state machine has finished processing for the physics tick
 
 func _physics_process(delta: float) -> void:
-	colliding_velocity = velocity
+	move_direction = basis * Vector3(move_input_vector.x, 0, move_input_vector.y).normalized()
 	
+	match active_state:
+		States.Grounded:
+			grounded_state_checks()
+		States.Airborne:
+			airborne_state_checks()
+		States.Jumping:
+			jumping_state_checks()
+		States.Sliding:
+			sliding_state_checks()
+	
+	match active_state:
+		States.Grounded:
+			grounded_state_update(delta)
+		States.Airborne:
+			airborne_state_update(delta)
+		States.Jumping:
+			jumping_state_update(delta)
+		States.Sliding:
+			sliding_state_update(delta)
+	
+	floor_block_on_wall = is_on_floor()
+	colliding_velocity = velocity
 	move_and_slide()
 	
 	if not is_on_floor():
 		velocity = get_real_velocity()
-		floor_block_on_wall = false
+
+
+## This is used to update the is_on_floor, is_on_wall, and is_on_ceiling methods when the player's position has been manually changed
+func update_surface_checks() -> void:
+	var player_velocity = velocity
+	velocity = Vector3.ZERO
+	move_and_slide()
+	velocity = player_velocity
+
+
+func random_spawn() -> void:
+	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints").filter(func(node): return node is PlayerSpawnPoint)
+	
+	if not spawn_nodes.is_empty():
+		var spawn_node: Node3D = spawn_nodes.pick_random()
+		
+		position = spawn_node.position
+		velocity = Vector3.ZERO
+		
+		rotation.y = spawn_node.rotation.y
+		head.rotation.x = spawn_node.rotation.x
+	
+	move_and_slide()
+	
+	if is_on_floor():
+		enter_grounded_state()
 	else:
-		floor_block_on_wall = true
+		enter_airborne_state()
 
 
+func enter_grounded_state() -> void:
+	active_state = States.Grounded
+	
+	coyote_jump_active = true
+	coyote_slide_active = true
+	coyote_walljump_active = false
+	
+	air_jumps = 0
+	air_crouches = 0
+	wallrun_wall_normal = Vector3.ZERO
+	
+	footsteps_audio.play()
 
-func add_velocity(power: float, direction: Vector3) -> void:
-	velocity += direction * power
+
+func enter_airborne_state() -> void:
+	active_state = States.Airborne
+	airborne_timestamp = Time.get_ticks_msec()
+
+
+func enter_jumping_state() -> void:
+	active_state = States.Jumping
+	jump_timestamp = Time.get_ticks_msec()
+	
+	coyote_jump_active = false
+	
+	footsteps_audio.play()
+
+
+func enter_sliding_state() -> void:
+	active_state = States.Sliding
+	slide_timestamp = Time.get_ticks_msec()
+	
+	coyote_slide_active = false
+	
+	slide_audio.play()
+
+
+func exit_jumping_state() -> void:
+	jump_timestamp = Time.get_ticks_msec()
+
+
+func exit_sliding_state() -> void:
+	slide_timestamp = Time.get_ticks_msec()
+
+
+func grounded_state_checks() -> void:
+	match active_stance:
+		Stances.Standing:
+			if sprint_enabled and Input.is_action_just_pressed("sprint"):
+				active_stance = Stances.Sprinting
+				last_stance = Stances.Standing
+			
+			elif crouch_enabled and Input.is_action_pressed("crouch"):
+				crouch()
+				last_stance = Stances.Standing
+			
+		Stances.Sprinting:
+			if not sprint_enabled or Input.is_action_just_pressed("sprint"):
+				active_stance = Stances.Standing
+				last_stance = Stances.Sprinting
+			
+			elif crouch_enabled and Input.is_action_pressed("crouch"):
+				crouch()
+				last_stance = Stances.Sprinting
+			
+		Stances.Crouching:
+			if not (crouch_enabled and Input.is_action_pressed("crouch")) and attempt_uncrouch():
+				last_stance = Stances.Crouching
+	
+	if not is_on_floor():
+		enter_airborne_state()
+		airborne_state_checks()
+		return
+	
+	if slide_enabled and not move_direction.is_zero_approx() and is_zero_approx(get_amount_moving_backwards()) and velocity.length() >= slide_start_speed and Time.get_ticks_msec() - slide_timestamp >= slide_cooldown and InputBuffer.is_action_buffered("slide"):
+		crouch()
+		last_stance = Stances.Sprinting
+		
+		velocity.y = 0
+		velocity += move_direction * slide_power
+		
+		enter_sliding_state()
+		return
+	
+	if jump_enabled and InputBuffer.is_action_buffered("jump"):
+		if active_stance != Stances.Crouching:
+			jump()
+			enter_jumping_state()
+			return
+		elif coyote_enabled and Time.get_ticks_msec() - crouch_timestamp <= coyote_duration:
+			jump()
+			enter_jumping_state()
+			return
+
+
+func airborne_state_checks() -> void:
+	match active_stance:
+		Stances.Standing:
+			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
+				crouch()
+				last_stance = Stances.Standing
+				air_crouches += 1
+		Stances.Sprinting:
+			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
+				crouch()
+				last_stance = Stances.Sprinting
+				air_crouches += 1
+		Stances.Crouching:
+			if not (crouch_enabled and Input.is_action_pressed("crouch")) and attempt_uncrouch():
+				last_stance = Stances.Crouching
+	
+	if is_on_floor():
+		enter_grounded_state()
+		grounded_state_checks()
+		return
+	
+	if coyote_enabled and Time.get_ticks_msec() - airborne_timestamp <= coyote_duration:
+		if slide_enabled and coyote_slide_active and not move_direction.is_zero_approx() and is_zero_approx(get_amount_moving_backwards()) and velocity.length() >= slide_start_speed and Time.get_ticks_msec() - slide_timestamp >= slide_cooldown and InputBuffer.is_action_buffered("slide"):
+			crouch()
+			last_stance = Stances.Sprinting
+			
+			velocity.y = 0
+			velocity += move_direction * slide_power
+			
+			enter_sliding_state()
+			return
+		
+		if jump_enabled and coyote_jump_active and InputBuffer.is_action_buffered("jump"):
+			velocity.y = 0
+			jump()
+			
+			enter_jumping_state()
+			return
+	
+	if air_jump_enabled and air_jumps < air_jump_limit and InputBuffer.is_action_buffered("jump"):
+		air_jump()
+		
+		enter_jumping_state()
+		return
+
+
+func jumping_state_checks() -> void:
+	match active_stance:
+		Stances.Standing:
+			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
+				crouch()
+				last_stance = Stances.Standing
+				air_crouches += 1
+		Stances.Sprinting:
+			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
+				crouch()
+				last_stance = Stances.Sprinting
+				air_crouches += 1
+		Stances.Crouching:
+			if not (crouch_enabled and Input.is_action_pressed("crouch")) and attempt_uncrouch():
+				last_stance = Stances.Crouching
+	
+	if is_on_floor():
+		exit_jumping_state()
+		enter_grounded_state()
+		grounded_state_checks()
+		return
+	
+	if not jump_enabled or not Input.is_action_pressed("jump") or Time.get_ticks_msec() - jump_timestamp >= jump_duration:
+		exit_jumping_state()
+		enter_airborne_state()
+		airborne_state_checks()
+		return
+
+
+func sliding_state_checks() -> void:
+	if not is_on_floor():
+		exit_sliding_state()
+		enter_airborne_state()
+		airborne_state_checks()
+		return
+	
+	if Time.get_ticks_msec() - slide_timestamp > slide_duration or Vector2(velocity.x, velocity.z).length() < slide_stop_speed:
+		exit_sliding_state()
+		enter_grounded_state()
+		grounded_state_checks()
+		return
+	
+	if slide_jump_enabled and Time.get_ticks_msec() - slide_timestamp >= slide_jump_delay and InputBuffer.is_action_buffered("jump"):
+		slide_jump()
+		exit_sliding_state()
+		enter_jumping_state()
+		return
+	
+	if slide_cancel_enabled and Time.get_ticks_msec() - slide_timestamp >= slide_cancel_delay and InputBuffer.is_action_buffered("slide"):
+		exit_sliding_state()
+		enter_grounded_state()
+		grounded_state_checks()
+		return
+
+
+func grounded_state_update(delta: float) -> void:
+	var backwards_multiplier: float = lerpf(1, move_backwards_multiplier, get_amount_moving_backwards())
+	
+	var top_speed: float
+	var acceleration: float
+	
+	match active_stance:
+		Stances.Standing:
+			top_speed = move_speed
+			acceleration = move_acceleration
+		Stances.Crouching:
+			top_speed = crouch_speed
+			acceleration = crouch_acceleration
+		Stances.Sprinting:
+			top_speed = sprint_speed
+			acceleration = sprint_acceleration
+	
+	top_speed *= backwards_multiplier
+	acceleration *= backwards_multiplier
+	
+	add_air_resistence(delta, physics_air_resistence)
+	add_friction(delta, physics_friction, top_speed)
+	add_movement(delta, top_speed, acceleration)
+
+
+func airborne_state_update(delta: float) -> void:
+	var backwards_multiplier: float = lerpf(1, move_backwards_multiplier, get_amount_moving_backwards())
+	
+	var top_speed: float = air_speed * backwards_multiplier
+	var acceleration: float = air_acceleration * backwards_multiplier
+	
+	add_air_resistence(delta, physics_air_resistence)
+	add_gravity(delta, physics_gravity)
+	add_movement(delta, top_speed, acceleration)
+
+
+func jumping_state_update(delta: float) -> void:
+	var backwards_multiplier: float = lerpf(1, move_backwards_multiplier, get_amount_moving_backwards())
+	
+	var top_speed: float = air_speed * backwards_multiplier
+	var acceleration: float = air_acceleration * backwards_multiplier
+	var gravity: float = physics_gravity * jump_gravity_multiplier
+	
+	add_air_resistence(delta, physics_air_resistence)
+	add_gravity(delta, gravity)
+	add_movement(delta, top_speed, acceleration)
+
+
+func sliding_state_update(delta: float) -> void:
+	var friction: float = physics_friction * slide_friction_multiplier
+	
+	add_air_resistence(delta, physics_air_resistence)
+	add_friction(delta, friction, 0)
+	add_movement(delta, 0, slide_acceleration)
+
+
+func crouch() -> void:
+	if active_stance == Stances.Crouching:
+		return
+	
+	active_stance = Stances.Crouching
+	crouch_timestamp = Time.get_ticks_msec()
+	
+	collision_shape.shape.height = standing_height * crouch_height_multiplier
+	collision_shape.position.y = standing_height * crouch_height_multiplier / 2
+	
+	if active_state == States.Airborne or active_state == States.Jumping:
+		position.y += standing_height / 2
+		head.position.y -= standing_height / 2
+
+
+func attempt_uncrouch() -> bool:
+	if active_stance != Stances.Crouching:
+		return true
+	
+	if active_state == States.Airborne or active_state == States.Jumping:
+		if not airborne_uncrouch_area.has_overlapping_bodies():
+			active_stance = last_stance
+			crouch_timestamp = Time.get_ticks_msec()
+			
+			collision_shape.shape.height = standing_height
+			collision_shape.position.y = standing_height / 2
+			
+			position.y -= standing_height / 2
+			head.position.y += standing_height / 2
+			
+			return true
+	
+	if not uncrouch_area.has_overlapping_bodies():
+		active_stance = last_stance
+		crouch_timestamp = Time.get_ticks_msec()
+		
+		collision_shape.shape.height = standing_height
+		collision_shape.position.y = standing_height / 2
+		
+		return true
+	
+	return false
 
 
 func add_gravity(delta: float, gravity: float) -> void:
-	add_velocity(gravity * delta, Vector3.DOWN)
+	velocity += Vector3.DOWN * gravity * delta
 
 
 func add_air_resistence(delta: float, air_resistence: float) -> void:
@@ -234,21 +706,17 @@ func add_air_resistence(delta: float, air_resistence: float) -> void:
 
 
 func add_friction(delta: float, friction: float, top_speed: float) -> void:
-	# Only apply friction when it doesn't go against the player's movement direction
-	
-	var velocity_direction = velocity.normalized()
-	
-	var friction_direction = -velocity_direction
+	var friction_direction = -velocity.normalized()
 	
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
 	var friction_product = minf(friction_direction.dot(move_direction) + 1, 1)
 	
-	# If player is faster than the top speed they can move at, it will always apply friction. a reduced amount if going against the movement direction
+	# If player is faster than the top speed they can move at, it will always apply friction. A reduced amount if going against the movement direction
 	var current_speed = velocity.length()
 	
 	if current_speed > top_speed:
-		var scaled_friction_product = lerpf(move_top_speed_friction_multiplier, 1, friction_product)
+		var scaled_friction_product = lerpf(move_friction_multiplier, 1, friction_product)
 		
 		set_velocity(velocity.move_toward(velocity.limit_length(top_speed), friction * delta * scaled_friction_product))
 		return
@@ -280,7 +748,7 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	#	-Jeliciousz
 	
 	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
-	add_velocity(acceleration * delta, move_direction)
+	velocity += move_direction * acceleration * delta
 	var new_horizontal_speed = Vector2(velocity.x, velocity.z).length()
 	
 	if new_horizontal_speed <= old_horizontal_speed:
@@ -301,11 +769,10 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 
 
 func add_wallrun_movement(delta: float) -> void:
-	var axis = Input.get_axis("back", "forward")
-	var direction = wallrun_run_direction * axis
+	var direction = wallrun_run_direction * move_input_vector.y
 	
 	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
-	add_velocity(wallrun_acceleration * delta, direction)
+	velocity += direction * wallrun_acceleration * delta
 	var new_horizontal_speed = Vector2(velocity.x, velocity.z).length()
 	
 	if new_horizontal_speed <= old_horizontal_speed:
@@ -331,14 +798,14 @@ func jump() -> void:
 	
 	# Speed Jumping
 	var current_horizontal_speed = Vector2(velocity.x, velocity.z).length()
-	var weight: float = clampf((current_horizontal_speed - jump_min_speed) / (jump_max_speed - jump_min_speed), 0, 1)
+	var weight: float = clampf((current_horizontal_speed - speed_jump_base_speed) / (speed_jump_max_speed - speed_jump_base_speed), 0, 1)
 	
-	var power = lerpf(jump_power, jump_max_power, weight) * standing_multiplier
-	var horizontal_power = lerpf(jump_horizontal_power, jump_max_horizontal_power, weight) * backwards_multiplier
+	var power = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
+	var horizontal_power = lerpf(jump_horizontal_power, speed_jump_max_horizontal_power, weight) * backwards_multiplier
 	
 	velocity.y += power
 	
-	add_velocity(horizontal_power, move_direction)
+	velocity += move_direction * horizontal_power
 
 
 func air_jump() -> void:
@@ -348,34 +815,27 @@ func air_jump() -> void:
 	var backwards_multiplier = lerpf(1, jump_backwards_multiplier, get_amount_moving_backwards())
 	var standing_multiplier = lerpf(jump_standing_multiplier, 1, move_direction.length())
 	
-	var power = jump_power * standing_multiplier
+	# Speed Jumping
+	var current_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var weight: float = clampf((current_horizontal_speed - speed_jump_base_speed) / (speed_jump_max_speed - speed_jump_base_speed), 0, 1)
+	
+	var power = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
 	var horizontal_power = air_jump_horizontal_power * backwards_multiplier
 	
 	velocity.y = power
 	
-	add_velocity(horizontal_power, move_direction)
+	velocity += move_direction * horizontal_power
 
 
 func slide_jump() -> void:
-	velocity.y = slide_jump_power
+	velocity.y += slide_jump_power
 	
-	add_velocity(slide_jump_horizontal_power, velocity.normalized())
+	velocity += velocity.normalized() * slide_jump_horizontal_power
 
 
 func wall_jump() -> void:
-	velocity.y = 0
+	velocity.y += walljump_power
 	
-	velocity.y += wallrun_jump_power
+	velocity += Vector3(velocity.x, 0, velocity.z).normalized() * walljump_horizontal_power
 	
-	add_velocity(wallrun_jump_horizontal_power, Vector3(velocity.x, 0, velocity.z).normalized())
-	
-	add_velocity(wallrun_kick_power, wallrun_wall_normal)
-
-
-
-## This is used to update the is_on_floor, is_on_wall, and is_on_ceiling methods when the player's position has been manually changed
-func update_surface_checks() -> void:
-	var player_velocity = velocity
-	velocity = Vector3.ZERO
-	move_and_slide()
-	velocity = player_velocity
+	velocity += wallrun_wall_normal * walljump_kick_power
