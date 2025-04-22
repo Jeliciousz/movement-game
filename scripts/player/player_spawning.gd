@@ -17,7 +17,7 @@ func enter() -> void:
 
 
 func random_spawn() -> void:
-	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnNodes").filter(func(node): return node is Node3D)
+	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints").filter(func(node): return node is PlayerSpawnPoint)
 	
 	if spawn_nodes.is_empty():
 		return

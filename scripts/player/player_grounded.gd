@@ -9,18 +9,19 @@ func enter() -> void:
 	player.air_dashes = 0
 	player.coyote_jump_possible = true
 	player.coyote_slide_possible = true
+	player.coyote_walljump_possible = false
 	player.wallrun_wall_normal = Vector3.ZERO
 	player.grounded_timestamp = Time.get_ticks_msec()
 	
 	var speed = player.velocity.length()
 	
 	# Crouching
-	if (not player.slide_enabled or not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards())) and InputBuffer.is_action_buffered("slide-crouch"):
+	if (not player.slide_enabled or not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards()) or speed < player.slide_start_speed_threshold) and InputBuffer.is_action_buffered("slide-crouch"):
 		transition.emit(&"PlayerCrouching")
 		return
 	
 	# Sliding
-	if speed >= player.slide_start_speed_threshold and Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
+	if Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
 		player.add_velocity(player.slide_power, player.move_direction)
 		transition.emit(&"PlayerSliding")
 		return
@@ -44,12 +45,12 @@ func update_physics_state() -> void:
 	var speed = player.velocity.length()
 	
 	# Crouching
-	if (not player.slide_enabled or not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards())) and InputBuffer.is_action_buffered("slide-crouch"):
+	if (not player.slide_enabled or not player.is_sprinting or player.move_direction.is_zero_approx() or not is_zero_approx(player.get_amount_moving_backwards()) or speed < player.slide_start_speed_threshold) and InputBuffer.is_action_buffered("slide-crouch"):
 		transition.emit(&"PlayerCrouching")
 		return
 	
 	# Sliding
-	if speed >= player.slide_start_speed_threshold and Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
+	if Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
 		player.add_velocity(player.slide_power, player.move_direction)
 		transition.emit(&"PlayerSliding")
 		return

@@ -61,11 +61,11 @@ func update_physics_state() -> void:
 		else:
 			player.coyote_jump_possible = false
 			player.slide_jump()
-			transition.emit(&"PlayerAirborne")
+			transition.emit(&"PlayerJumping")
 		return
 	
 	# Slide Cancel
-	if Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cancel_cooldown_duration and InputBuffer.is_action_buffered("crouch"):
+	if Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cancel_cooldown_duration and InputBuffer.is_action_buffered("slide-crouch"):
 		if standing_area.has_overlapping_bodies():
 			transition.emit(&"PlayerCrouching")
 		else:

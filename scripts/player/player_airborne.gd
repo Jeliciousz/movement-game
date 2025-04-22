@@ -3,6 +3,8 @@ class_name PlayerAirborne extends State
 
 @export var player: Player
 
+@export var grapple_hook_raycast: RayCast3D
+
 
 func wallrun_check() -> bool:
 	if not player.is_sprinting:
@@ -98,6 +100,14 @@ func update_physics_state() -> void:
 		transition.emit(&"PlayerJumping")
 		return
 	
+	# Coyote Wall-Jumping
+	if player.coyote_walljump_possible and Time.get_ticks_msec() - player.airborne_timestamp <= player.wallrun_jump_coyote_duration and InputBuffer.is_action_buffered("jump"):
+		player.velocity.y = 0
+		player.coyote_walljump_possible = false
+		player.wall_jump()
+		transition.emit(&"PlayerJumping")
+		return
+	
 	# Air Jumping
 	if player.air_jumps < player.air_jump_limit and InputBuffer.is_action_buffered("jump"):
 		player.air_jump()
@@ -107,6 +117,11 @@ func update_physics_state() -> void:
 	# Air Dashing
 	if player.air_dashes < player.air_dash_limit and Input.is_action_just_pressed("sprint"):
 		transition.emit(&"PlayerAirdashing")
+		return
+	 
+	if grapple_hook_raycast.is_colliding() and Input.is_action_just_pressed("secondary fire"):
+		player.grapple_hook_point = grapple_hook_raycast.get_collider().position
+		transition.emit(&"PlayerGrappling")
 		return
 
 

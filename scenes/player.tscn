@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=31 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -21,8 +21,10 @@
 [ext_resource type="Script" uid="uid://ddkrabut4oyga" path="res://scripts/player/player_air_dashing.gd" id="11_f1ej7"]
 [ext_resource type="Script" uid="uid://uw3hgbieer2y" path="res://scripts/player/player_wallrunning.gd" id="12_a8ls1"]
 [ext_resource type="Script" uid="uid://del78g01mkplr" path="res://scripts/viewmodel_controller.gd" id="14_4ni07"]
+[ext_resource type="Script" uid="uid://cgvvagaeq4hyg" path="res://scripts/player/player_grappling.gd" id="14_l71n6"]
 [ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/viewmodel_viewport.gd" id="15_l71n6"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
+[ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/themes/hud.tres" id="22_ke2ow"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l71n6"]
 margin = 0.01
@@ -55,6 +57,7 @@ viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
 
 [node name="Player" type="CharacterBody3D"]
 process_physics_priority = 2
+top_level = true
 collision_layer = 2
 collision_mask = 9
 wall_min_slide_angle = 0.0872665
@@ -106,9 +109,10 @@ metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 script = ExtResource("4_dqkch")
 player = NodePath("../..")
 
-[node name="PlayerAirborne" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+[node name="PlayerAirborne" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "grapple_hook_raycast")]
 script = ExtResource("5_qlg0r")
 player = NodePath("../..")
+grapple_hook_raycast = NodePath("../../Head/GrappleHookRaycast")
 
 [node name="PlayerJumping" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "footsteps_audio")]
 script = ExtResource("6_tuyoq")
@@ -141,6 +145,10 @@ script = ExtResource("11_f1ej7")
 player = NodePath("../..")
 metadata/_custom_type_script = "uid://wx6d0ggtlpd6"
 
+[node name="PlayerGrappling" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+script = ExtResource("14_l71n6")
+player = NodePath("../..")
+
 [node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_state_machine", "player_head", "player_camera", "player_footsteps_audio")]
 process_physics_priority = 2
 script = ExtResource("2_a8ls1")
@@ -154,9 +162,16 @@ player_footsteps_audio = NodePath("../FootstepsAudio")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 
 [node name="Camera" type="Camera3D" parent="Head"]
-cull_mask = 1048573
+cull_mask = 1048569
 current = true
 fov = 120.0
+
+[node name="GrappleHookRaycast" type="RayCast3D" parent="Head"]
+target_position = Vector3(0, 0, -50)
+collision_mask = 64
+hit_from_inside = true
+collide_with_areas = true
+collide_with_bodies = false
 
 [node name="FootstepsAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamRandomizer_l71n6")
@@ -174,6 +189,7 @@ attenuation_filter_cutoff_hz = 20500.0
 
 [node name="MeshInstance" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+layers = 4
 cast_shadow = 3
 gi_mode = 0
 mesh = SubResource("CapsuleMesh_y4r1p")
@@ -206,6 +222,7 @@ collision_mask = 41
 hit_from_inside = true
 
 [node name="Hud" type="Control" parent="."]
+z_index = 1
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -220,22 +237,26 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Spedometer" type="Label" parent="Hud" node_paths=PackedStringArray("player")]
+[node name="PanelContainer" type="PanelContainer" parent="Hud"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = 161.0
-offset_right = 20.0
-offset_bottom = 184.0
+offset_left = -43.0
+offset_top = 160.0
+offset_right = 43.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("22_ke2ow")
+
+[node name="Spedometer" type="Label" parent="Hud/PanelContainer" node_paths=PackedStringArray("player")]
+layout_mode = 2
 horizontal_alignment = 1
 script = ExtResource("8_smehm")
-player = NodePath("../..")
+player = NodePath("../../..")
 
 [node name="FPS Counter" type="Label" parent="Hud"]
 layout_mode = 1

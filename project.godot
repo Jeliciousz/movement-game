@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="FPS"
-run/main_scene="uid://cn808y3swtcaf"
+run/main_scene="uid://dpgsmifow0gcw"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
 [autoload]
@@ -35,7 +35,7 @@ version_control/autoload_on_startup=true
 [global_group]
 
 WallrunBodies="Walls that can be run on."
-PlayerSpawnNodes="Points the player can spawn at."
+PlayerSpawnPoints="Points the player can spawn at."
 
 [input]
 
@@ -108,12 +108,14 @@ reload={
 
 3d_render/layer_1="World"
 3d_render/layer_2="Viewmodel"
+3d_render/layer_3="Player"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Teammates"
 3d_physics/layer_4="Enemies"
-3d_physics/layer_5="Physics Detail Nodes"
-3d_physics/layer_6="Physics Game Nodes"
+3d_physics/layer_5="PhysicsDetailNodes"
+3d_physics/layer_6="PhysicsGameNodes"
+3d_physics/layer_7="GrappleHookPoints"
 
 [physics]
 
@@ -127,8 +129,8 @@ common/physics_interpolation=true
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-textures/default_filters/anisotropic_filtering_level=3
-anti_aliasing/quality/msaa_3d=1
-textures/decals/filter=5
-textures/light_projectors/filter=5
+anti_aliasing/screen_space_roughness_limiter/enabled=false
+occlusion_culling/occlusion_rays_per_thread=2048
 lightmapping/denoising/denoiser=1
+anti_aliasing/quality/use_taa=true
+occlusion_culling/use_occlusion_culling=true

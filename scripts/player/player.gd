@@ -70,7 +70,8 @@ class_name Player extends CharacterBody3D
 ## The speed (m/s) applied upwards when jumping at max speed.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var jump_max_power: float = 10
 ## The speed (m/s) applied in the movement direction when jumping at max speed.
-@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 0.85
+#@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 0.85
+@export_range(0, 10, 0.05, "or_greater", "suffix:m/s") var jump_max_horizontal_power: float = 1.5
 
 @export_subgroup("Air Jumping", "air_jump_")
 
@@ -123,6 +124,8 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_power: float = 9
 ## The speed (m/s) applied in the velocity direction when wall-jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_jump_horizontal_power: float = -6
+## The time (milliseconds) after leaving a wallrun that the player can coyote walljump during.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_jump_coyote_duration: int = 125
 ## The speed (m/s) applied perpendicular to the wall when wall-jumping.
 @export_range(0, 100, 0.05, "or_greater", "suffix:m/s") var wallrun_kick_power: float = 12
 ## The time (milliseconds) a wallrun lasts.
@@ -176,11 +179,14 @@ var air_dash_timestamp: int = 0
 
 var coyote_jump_possible: bool = false
 var coyote_slide_possible: bool = false
+var coyote_walljump_possible: bool = false
 var air_jumps: int = 0
 var air_dashes: int = 0
 
 var wallrun_wall_normal: Vector3 = Vector3.ZERO
 var wallrun_run_direction: Vector3 = Vector3.ZERO
+
+var grapple_hook_point: Vector3 = Vector3.ZERO
 
 ## Returns how much the player is moving backwards.[br]
 ## 0: Player is strafing or moving forwards[br]

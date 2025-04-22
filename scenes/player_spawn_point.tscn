@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfxvtov6w54ia"]
+
+[ext_resource type="Script" uid="uid://dsvssjokslbat" path="res://scripts/player_spawn_point.gd" id="1_g6wl4"]
+[ext_resource type="Texture2D" uid="uid://kesqmbyq75ca" path="res://assets/textures/kenney_board-game-icons/PNG/Double (128px)/character.png" id="2_rm2f0"]
+
+[node name="PlayerSpawnPoint" type="Node3D" groups=["PlayerSpawnPoints"]]
+top_level = true
+script = ExtResource("1_g6wl4")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+pixel_size = 0.001
+billboard = 1
+double_sided = false
+fixed_size = true
+texture = ExtResource("2_rm2f0")

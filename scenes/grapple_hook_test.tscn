@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://r687ikb388ck"]
+
+[ext_resource type="PackedScene" uid="uid://ci1w3nu04vyw8" path="res://scenes/player.tscn" id="1_2xim0"]
+[ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/environments/main-environment.tres" id="2_ierut"]
+[ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/floor.tres" id="3_24a8b"]
+[ext_resource type="PackedScene" uid="uid://cqkeqglbsx1tw" path="res://scenes/grapple_hook_point.tscn" id="4_ierut"]
+
+[node name="GrappleHookTest" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("1_2xim0")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_ierut")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.847465, 0.401876, -0.346841, 1.06083e-08, 0.653368, 0.757041, 0.530851, -0.641566, 0.553706, 0, 0, 0)
+layers = 3
+
+[node name="PlayerSpawn" type="Node3D" parent="." groups=["PlayerSpawnPoints"]]
+top_level = true
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(50, 1, 50)
+material = ExtResource("3_24a8b")
+
+[node name="Ceiling" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 25.5, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(50, 1, 50)
+material = ExtResource("3_24a8b")
+
+[node name="Wall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, 24.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(50, 25, 1)
+material = ExtResource("3_24a8b")
+
+[node name="Wall2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.5, -24.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(50, 25, 1)
+material = ExtResource("3_24a8b")
+
+[node name="Wall3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 12.5, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 25, 48)
+material = ExtResource("3_24a8b")
+
+[node name="Wall4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.5, 12.5, 0)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 25, 48)
+material = ExtResource("3_24a8b")
+
+[node name="GrappleHookPoint" parent="." instance=ExtResource("4_ierut")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
