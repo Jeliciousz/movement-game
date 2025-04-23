@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bfxvtov6w54ia"]
 
-[ext_resource type="Script" uid="uid://dsvssjokslbat" path="res://scripts/player_spawn_point.gd" id="1_g6wl4"]
+[ext_resource type="Script" uid="uid://dsvssjokslbat" path="res://scripts/player/player_spawn_point.gd" id="1_g6wl4"]
 [ext_resource type="Texture2D" uid="uid://kesqmbyq75ca" path="res://assets/textures/kenney_board-game-icons/PNG/Double (128px)/character.png" id="2_rm2f0"]
 
 [node name="PlayerSpawnPoint" type="Node3D" groups=["PlayerSpawnPoints"]]

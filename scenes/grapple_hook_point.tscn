@@ -1,20 +1,30 @@
-[gd_scene load_steps=3 format=3 uid="uid://cqkeqglbsx1tw"]
+[gd_scene load_steps=5 format=3 uid="uid://cqkeqglbsx1tw"]
+
+[ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/grapple_hook_point.gd" id="1_v2vg0"]
+[ext_resource type="Texture2D" uid="uid://ccqi8h0hrkxon" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair131.png" id="1_vlkll"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_2xim0"]
-radius = 2.0
+radius = 3.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_2xim0"]
 radius = 0.25
 height = 0.5
 
 [node name="GrappleHookPoint" type="Area3D"]
+process_priority = -3
 top_level = true
 collision_layer = 64
 collision_mask = 0
+script = ExtResource("1_v2vg0")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_2xim0")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_2xim0")
 skeleton = NodePath("")
+
+[node name="IndicatorSprite" type="Sprite3D" parent="."]
+visible = false
+billboard = 1
+texture = ExtResource("1_vlkll")

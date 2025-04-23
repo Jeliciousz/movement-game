@@ -1,22 +1,18 @@
-[gd_scene load_steps=26 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=22 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
 [ext_resource type="Script" uid="uid://b64xddq5uht26" path="res://scripts/player/view_animator.gd" id="2_a8ls1"]
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
 [ext_resource type="AudioStream" uid="uid://okhvtvkbf4eg" path="res://assets/sounds/player/footsteps/tile2.wav" id="3_i4ail"]
-[ext_resource type="Script" uid="uid://byetn4r2o80jg" path="res://scripts/state_machine.gd" id="3_qhqgy"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
 [ext_resource type="AudioStream" uid="uid://nixfol2hcs07" path="res://assets/sounds/player/footsteps/tile4.wav" id="5_4ni07"]
-[ext_resource type="Script" uid="uid://np4wci38gpwk" path="res://scripts/player/player_airborne.gd" id="5_qlg0r"]
 [ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/hud/fps_counter.gd" id="7_smehm"]
 [ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/hud/spedometer.gd" id="8_smehm"]
 [ext_resource type="Texture2D" uid="uid://b1jqlqil8ffd7" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair002.png" id="11_d2wvv"]
-[ext_resource type="Script" uid="uid://uw3hgbieer2y" path="res://scripts/player/player_wallrunning.gd" id="12_a8ls1"]
-[ext_resource type="Script" uid="uid://cgvvagaeq4hyg" path="res://scripts/player/player_grappling.gd" id="14_l71n6"]
 [ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/player/viewmodel/viewmodel_viewport.gd" id="15_l71n6"]
 [ext_resource type="Script" uid="uid://dy0ilnerqu2pn" path="res://scripts/player/viewmodel/viewmodel_camera.gd" id="17_31cv2"]
-[ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/debug_info.gd" id="19_4ni07"]
+[ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/hud/debug_info.gd" id="19_4ni07"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
 [ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/themes/hud.tres" id="22_ke2ow"]
 
@@ -71,25 +67,6 @@ script = ExtResource("2_g2els")
 player = NodePath("..")
 head = NodePath("../Head")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
-process_mode = 4
-script = ExtResource("3_qhqgy")
-initial_state = NodePath("")
-
-[node name="PlayerAirborne" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "grapple_hook_raycast")]
-script = ExtResource("5_qlg0r")
-player = NodePath("../..")
-grapple_hook_raycast = NodePath("../../Head/Camera/GrappleHookRayCast")
-
-[node name="PlayerWallrunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("player", "move_input")]
-script = ExtResource("12_a8ls1")
-player = NodePath("../..")
-move_input = NodePath("")
-
-[node name="PlayerGrappling" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
-script = ExtResource("14_l71n6")
-player = NodePath("../..")
-
 [node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_head", "player_camera", "player_footsteps_audio")]
 script = ExtResource("2_a8ls1")
 player = NodePath("..")
@@ -105,13 +82,13 @@ cull_mask = 1048573
 current = true
 fov = 120.0
 
-[node name="WeaponRayCast" type="RayCast3D" parent="Head/Camera"]
+[node name="WeaponRaycast" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -200)
 collision_mask = 41
 hit_from_inside = true
 
-[node name="GrappleHookRayCast" type="RayCast3D" parent="Head/Camera"]
-target_position = Vector3(0, 0, -50)
+[node name="GrappleHookRaycast" type="RayCast3D" parent="Head/Camera"]
+target_position = Vector3(0, 0, -12)
 collision_mask = 64
 hit_from_inside = true
 collide_with_areas = true

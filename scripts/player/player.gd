@@ -34,7 +34,7 @@ class_name Player extends CharacterBody3D
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_backwards_multiplier: float = 0.5
 
 ## How much friction is applied against the direction the player is moving.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_friction_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_friction_multiplier: float = 0.75
 
 
 @export_subgroup("Air Control", "air_")
@@ -126,8 +126,14 @@ class_name Player extends CharacterBody3D
 ## How quickly the player accelerates while crouching.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 40
 
+
+@export_subgroup("Air Crouching", "air_crouch_")
+
+## Can the player crouch in the air?
+@export var air_crouch_enabled: bool = false
+
 ## How many times the player can crouch in the air before touching the ground.
-@export_range(0, 100, 1, "or_greater") var crouch_air_limit: int = 1
+@export_range(0, 100, 1, "or_greater") var air_crouch_limit: int = 1
 
 
 @export_group("Sliding", "slide_")
@@ -199,7 +205,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 25
 
 ## How much air resistence is applied while wall-running.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.75
 
 ## How much gravity is applied while sliding on a wall.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
@@ -219,6 +225,9 @@ class_name Player extends CharacterBody3D
 
 @export_group("Wall-Jumping", "walljump_")
 
+## Can the player wall-jump?
+@export var walljump_enabled: bool = true
+
 ## How high the player jumps while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_power: float = 9
 
@@ -227,6 +236,21 @@ class_name Player extends CharacterBody3D
 
 ## How far the player jumps away from the wall while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_power: float = 12
+
+
+@export_group("Grapple Hooking", "grapple_hook_")
+
+## Can the player grapple hook?
+@export var grapple_hook_enabled: bool = true
+
+## How fast the player is pulled towards the grapple point when grapple hooking.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_power: float = 8
+
+## How far from the grapple point the player must be to start being pulled towards the grapple point.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_min_distance: float = 2
+
+## How far from the grapple point the player must be to be pulled towards it at max speed.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 10
 
 
 @onready var head: Node3D = $Head
@@ -245,8 +269,10 @@ class_name Player extends CharacterBody3D
 
 @onready var slide_audio: AudioStreamPlayer3D = $SlideAudio
 
+@onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
 
-enum States {Grounded, Airborne, Jumping, Sliding, Wallrunning}
+
+enum States {Grounded, Airborne, Jumping, Sliding, WallRunning, GrappleHooking}
 
 enum Stances {Standing, Crouching, Sprinting}
 
@@ -263,6 +289,8 @@ var active_state: States
 var active_stance: Stances = Stances.Sprinting
 
 var last_stance: Stances = Stances.Standing
+
+var crouch_direction: int
 
 
 var airborne_timestamp: int = 0
@@ -281,7 +309,7 @@ var air_crouches: int = 0
 var wallrun_wall_normal: Vector3 = Vector3.ZERO
 var wallrun_run_direction: Vector3 = Vector3.ZERO
 
-var grapple_hook_point: Vector3 = Vector3.ZERO
+var grapple_hook_point: GrappleHookPoint
 
 
 ## Returns how much the player is moving backwards.[br]
@@ -300,6 +328,11 @@ func get_forward_direction() -> Vector3:
 ## Returns the looking direction of the player.
 func get_looking_direction() -> Vector3:
 	return -head.global_basis.z
+
+
+## Returns the position of the player's center of mass.
+func get_center_of_mass() -> Vector3:
+	return collision_shape.global_position
 
 
 func _ready() -> void:
@@ -352,6 +385,10 @@ func _physics_process(delta: float) -> void:
 			jumping_state_checks()
 		States.Sliding:
 			sliding_state_checks()
+		States.WallRunning:
+			wallrunning_state_checks()
+		States.GrappleHooking:
+			grapplehooking_state_checks()
 	
 	match active_state:
 		States.Grounded:
@@ -362,6 +399,10 @@ func _physics_process(delta: float) -> void:
 			jumping_state_update(delta)
 		States.Sliding:
 			sliding_state_update(delta)
+		States.WallRunning:
+			wallrunning_state_update(delta)
+		States.GrappleHooking:
+			grapplehooking_state_update(delta)
 	
 	floor_block_on_wall = is_on_floor()
 	colliding_velocity = velocity
@@ -369,34 +410,6 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
 		velocity = get_real_velocity()
-
-
-## This is used to update the is_on_floor, is_on_wall, and is_on_ceiling methods when the player's position has been manually changed
-func update_surface_checks() -> void:
-	var player_velocity = velocity
-	velocity = Vector3.ZERO
-	move_and_slide()
-	velocity = player_velocity
-
-
-func random_spawn() -> void:
-	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints").filter(func(node): return node is PlayerSpawnPoint)
-	
-	if not spawn_nodes.is_empty():
-		var spawn_node: Node3D = spawn_nodes.pick_random()
-		
-		position = spawn_node.position
-		velocity = Vector3.ZERO
-		
-		rotation.y = spawn_node.rotation.y
-		head.rotation.x = spawn_node.rotation.x
-	
-	move_and_slide()
-	
-	if is_on_floor():
-		enter_grounded_state()
-	else:
-		enter_airborne_state()
 
 
 func enter_grounded_state() -> void:
@@ -408,14 +421,136 @@ func enter_grounded_state() -> void:
 	
 	air_jumps = 0
 	air_crouches = 0
-	wallrun_wall_normal = Vector3.ZERO
+	
+	if grapple_hook_point:
+		grapple_hook_point.indicator_sprite.hide()
+		grapple_hook_point = null
 	
 	footsteps_audio.play()
+	
+	grounded_immediate_state_checks()
+
+
+func grounded_immediate_state_checks() -> void:
+	if slide_enabled and not move_direction.is_zero_approx() and is_zero_approx(get_amount_moving_backwards()) and velocity.length() >= slide_start_speed and Time.get_ticks_msec() - slide_timestamp >= slide_cooldown and InputBuffer.is_action_buffered("slide"):
+		crouch()
+		last_stance = Stances.Sprinting
+		
+		velocity.y = 0
+		velocity += move_direction * slide_power
+		
+		enter_sliding_state()
+		return
+	
+	if jump_enabled and InputBuffer.is_action_buffered("jump"):
+		if active_stance != Stances.Crouching:
+			jump()
+			
+			enter_jumping_state()
+			return
+		elif coyote_enabled and Time.get_ticks_msec() - crouch_timestamp <= coyote_duration:
+			jump()
+			
+			enter_jumping_state()
+			return
 
 
 func enter_airborne_state() -> void:
 	active_state = States.Airborne
 	airborne_timestamp = Time.get_ticks_msec()
+	
+	airborne_immediate_state_checks()
+
+
+func airborne_immediate_state_checks() -> void:
+	if wallrun_enabled and wallrun_checks():
+		wallrun_wall_normal = Vector3(get_wall_normal().x, 0, get_wall_normal().z).normalized()
+		wallrun_run_direction = wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+		
+		if wallrun_run_direction.dot(get_forward_direction()) < 0:
+			wallrun_run_direction *= -1
+		
+		var new_velocity: Vector3 = wallrun_run_direction * Vector2(colliding_velocity.x, colliding_velocity.z).length()
+		
+		velocity.x = new_velocity.x
+		velocity.z = new_velocity.z
+		
+		enter_wallrunning_state()
+		return
+	
+	if coyote_enabled and Time.get_ticks_msec() - airborne_timestamp <= coyote_duration:
+		if slide_enabled and coyote_slide_active and not move_direction.is_zero_approx() and is_zero_approx(get_amount_moving_backwards()) and velocity.length() >= slide_start_speed and Time.get_ticks_msec() - slide_timestamp >= slide_cooldown and InputBuffer.is_action_buffered("slide"):
+			crouch()
+			last_stance = Stances.Sprinting
+			
+			velocity.y = 0
+			velocity += move_direction * slide_power
+			
+			enter_sliding_state()
+			return
+		
+		if walljump_enabled and coyote_walljump_active and InputBuffer.is_action_buffered("jump"):
+			wall_jump()
+			
+			coyote_walljump_active = false
+			enter_jumping_state()
+			return
+		
+		if jump_enabled and coyote_jump_active and InputBuffer.is_action_buffered("jump"):
+			velocity.y = 0
+			jump()
+			
+			enter_jumping_state()
+			return
+	
+	if air_jump_enabled and air_jumps < air_jump_limit and InputBuffer.is_action_buffered("jump"):
+		air_jump()
+		
+		enter_jumping_state()
+		return
+	
+	if grapple_hook_enabled:
+		var grapple_hook_points: Array[GrappleHookPoint] = []
+		
+		while grapple_hook_raycast.is_colliding():
+			if grapple_hook_raycast.get_collider() is GrappleHookPoint:
+				grapple_hook_points.push_back(grapple_hook_raycast.get_collider())
+			
+			grapple_hook_raycast.add_exception(grapple_hook_raycast.get_collider())
+			grapple_hook_raycast.force_raycast_update()
+		
+		grapple_hook_raycast.clear_exceptions()
+		
+		if grapple_hook_points.is_empty():
+			if grapple_hook_point:
+				grapple_hook_point.indicator_sprite.hide()
+				grapple_hook_point = null
+		else:
+			var highest_proximity_to_crosshair: float = -1
+			
+			var highest_proximity_point: GrappleHookPoint
+			
+			for i in grapple_hook_points.size():
+				var proximity_to_crosshair: float = position.direction_to(grapple_hook_points[i].position).dot(get_looking_direction())
+				
+				if proximity_to_crosshair > highest_proximity_to_crosshair:
+					highest_proximity_to_crosshair = proximity_to_crosshair
+					highest_proximity_point = grapple_hook_points[i]
+			
+			if grapple_hook_point:
+				grapple_hook_point.indicator_sprite.hide()
+			
+			grapple_hook_point = highest_proximity_point
+			
+			grapple_hook_point.indicator_sprite.show()
+		
+		if grapple_hook_point and Input.is_action_just_pressed("secondary fire"):
+			enter_grapplehooking_state()
+			return
+	
+	elif grapple_hook_point:
+		grapple_hook_point.indicator_sprite.hide()
+		grapple_hook_point = null
 
 
 func enter_jumping_state() -> void:
@@ -423,8 +558,22 @@ func enter_jumping_state() -> void:
 	jump_timestamp = Time.get_ticks_msec()
 	
 	coyote_jump_active = false
+	coyote_slide_active = false
+	
+	if grapple_hook_point:
+		grapple_hook_point.indicator_sprite.hide()
+		grapple_hook_point = null
 	
 	footsteps_audio.play()
+	
+	jumping_immediate_state_checks()
+
+
+func jumping_immediate_state_checks() -> void:
+	if not jump_enabled or not Input.is_action_pressed("jump") or velocity.y < 0 or Time.get_ticks_msec() - jump_timestamp >= jump_duration:
+		exit_jumping_state()
+		enter_airborne_state()
+		return
 
 
 func enter_sliding_state() -> void:
@@ -433,7 +582,57 @@ func enter_sliding_state() -> void:
 	
 	coyote_slide_active = false
 	
+	if grapple_hook_point:
+		grapple_hook_point.indicator_sprite.hide()
+		grapple_hook_point = null
+	
 	slide_audio.play()
+	
+	sliding_immediate_state_checks()
+
+
+func sliding_immediate_state_checks() -> void:
+	if not slide_enabled or Time.get_ticks_msec() - slide_timestamp > slide_duration or velocity.length() < slide_stop_speed:
+		exit_sliding_state()
+		enter_grounded_state()
+		return
+	
+	if slide_jump_enabled and Time.get_ticks_msec() - slide_timestamp >= slide_jump_delay and InputBuffer.is_action_buffered("jump"):
+		slide_jump()
+		exit_sliding_state()
+		enter_jumping_state()
+		return
+	
+	if slide_cancel_enabled and Time.get_ticks_msec() - slide_timestamp >= slide_cancel_delay and InputBuffer.is_action_buffered("slide"):
+		exit_sliding_state()
+		enter_grounded_state()
+		return
+
+
+func enter_wallrunning_state() -> void:
+	active_state = States.WallRunning
+	wallrun_timestamp = Time.get_ticks_msec()
+	
+	coyote_walljump_active = true
+	
+	if grapple_hook_point:
+		grapple_hook_point.indicator_sprite.hide()
+		grapple_hook_point = null
+	
+	wallrunning_immediate_state_checks()
+
+
+func enter_grapplehooking_state() -> void:
+	active_state = States.GrappleHooking
+
+
+func wallrunning_immediate_state_checks() -> void:
+	if walljump_enabled and InputBuffer.is_action_buffered("jump"):
+		wall_jump()
+		
+		coyote_walljump_active = false
+		enter_jumping_state()
+		return
 
 
 func exit_jumping_state() -> void:
@@ -470,128 +669,123 @@ func grounded_state_checks() -> void:
 	
 	if not is_on_floor():
 		enter_airborne_state()
-		airborne_state_checks()
 		return
 	
-	if slide_enabled and not move_direction.is_zero_approx() and is_zero_approx(get_amount_moving_backwards()) and velocity.length() >= slide_start_speed and Time.get_ticks_msec() - slide_timestamp >= slide_cooldown and InputBuffer.is_action_buffered("slide"):
-		crouch()
-		last_stance = Stances.Sprinting
-		
-		velocity.y = 0
-		velocity += move_direction * slide_power
-		
-		enter_sliding_state()
-		return
-	
-	if jump_enabled and InputBuffer.is_action_buffered("jump"):
-		if active_stance != Stances.Crouching:
-			jump()
-			enter_jumping_state()
-			return
-		elif coyote_enabled and Time.get_ticks_msec() - crouch_timestamp <= coyote_duration:
-			jump()
-			enter_jumping_state()
-			return
+	grounded_immediate_state_checks()
 
 
 func airborne_state_checks() -> void:
+	airborne_update_stance()
+	
+	if is_on_floor():
+		enter_grounded_state()
+		return
+	
+	airborne_immediate_state_checks()
+
+
+func airborne_update_stance() -> void:
 	match active_stance:
 		Stances.Standing:
-			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
+			if air_crouch_enabled and air_crouches < air_crouch_limit and Input.is_action_pressed("crouch"):
 				crouch()
 				last_stance = Stances.Standing
 				air_crouches += 1
 		Stances.Sprinting:
-			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
+			if air_crouch_enabled and air_crouches < air_crouch_limit and Input.is_action_pressed("crouch"):
 				crouch()
 				last_stance = Stances.Sprinting
 				air_crouches += 1
 		Stances.Crouching:
 			if not (crouch_enabled and Input.is_action_pressed("crouch")) and attempt_uncrouch():
 				last_stance = Stances.Crouching
-	
-	if is_on_floor():
-		enter_grounded_state()
-		grounded_state_checks()
-		return
-	
-	if coyote_enabled and Time.get_ticks_msec() - airborne_timestamp <= coyote_duration:
-		if slide_enabled and coyote_slide_active and not move_direction.is_zero_approx() and is_zero_approx(get_amount_moving_backwards()) and velocity.length() >= slide_start_speed and Time.get_ticks_msec() - slide_timestamp >= slide_cooldown and InputBuffer.is_action_buffered("slide"):
-			crouch()
-			last_stance = Stances.Sprinting
-			
-			velocity.y = 0
-			velocity += move_direction * slide_power
-			
-			enter_sliding_state()
-			return
-		
-		if jump_enabled and coyote_jump_active and InputBuffer.is_action_buffered("jump"):
-			velocity.y = 0
-			jump()
-			
-			enter_jumping_state()
-			return
-	
-	if air_jump_enabled and air_jumps < air_jump_limit and InputBuffer.is_action_buffered("jump"):
-		air_jump()
-		
-		enter_jumping_state()
-		return
 
 
 func jumping_state_checks() -> void:
-	match active_stance:
-		Stances.Standing:
-			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
-				crouch()
-				last_stance = Stances.Standing
-				air_crouches += 1
-		Stances.Sprinting:
-			if crouch_enabled and air_crouches < crouch_air_limit and Input.is_action_pressed("crouch"):
-				crouch()
-				last_stance = Stances.Sprinting
-				air_crouches += 1
-		Stances.Crouching:
-			if not (crouch_enabled and Input.is_action_pressed("crouch")) and attempt_uncrouch():
-				last_stance = Stances.Crouching
+	airborne_update_stance()
 	
 	if is_on_floor():
 		exit_jumping_state()
 		enter_grounded_state()
-		grounded_state_checks()
 		return
 	
-	if not jump_enabled or not Input.is_action_pressed("jump") or Time.get_ticks_msec() - jump_timestamp >= jump_duration:
-		exit_jumping_state()
-		enter_airborne_state()
-		airborne_state_checks()
-		return
+	jumping_immediate_state_checks()
 
 
 func sliding_state_checks() -> void:
 	if not is_on_floor():
 		exit_sliding_state()
 		enter_airborne_state()
-		airborne_state_checks()
 		return
 	
-	if Time.get_ticks_msec() - slide_timestamp > slide_duration or Vector2(velocity.x, velocity.z).length() < slide_stop_speed:
-		exit_sliding_state()
+	sliding_immediate_state_checks()
+
+
+func wallrunning_state_checks() -> void:
+	match active_stance:
+		Stances.Standing:
+			active_stance = Stances.Sprinting
+			last_stance = Stances.Standing
+		Stances.Crouching:
+			last_stance = Stances.Sprinting
+			if attempt_uncrouch():
+				last_stance = Stances.Crouching
+	
+	if is_on_floor():
 		enter_grounded_state()
-		grounded_state_checks()
 		return
 	
-	if slide_jump_enabled and Time.get_ticks_msec() - slide_timestamp >= slide_jump_delay and InputBuffer.is_action_buffered("jump"):
-		slide_jump()
-		exit_sliding_state()
-		enter_jumping_state()
+	var wall_normal: Vector3
+	
+	if not is_on_wall():
+		var test = move_and_collide(-wallrun_wall_normal * 0.1, true)
+		
+		if not (test and test.get_collider().is_in_group("WallrunBodies")):
+			enter_airborne_state()
+			return
+		
+		move_and_collide(-wallrun_wall_normal * 0.1)
+		
+		wall_normal = Vector3(test.get_normal().x, 0, test.get_normal().z).normalized()
+	else:
+		if not get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
+			enter_airborne_state()
+			return
+		
+		wall_normal = get_wall_normal()
+	
+	if wall_normal != wallrun_wall_normal:
+		wallrun_wall_normal = Vector3(wall_normal.x, 0, wall_normal.z).normalized()
+		
+		wallrun_run_direction = wallrun_wall_normal.rotated(Vector3.UP, deg_to_rad(90))
+		
+		if wallrun_run_direction.dot(Vector3(velocity.x, 0, velocity.z).normalized()) < 0:
+			wallrun_run_direction *= -1
+		
+		var horizontal_colliding_speed = Vector2(colliding_velocity.x, colliding_velocity.z).length()
+		
+		velocity.x = wallrun_run_direction.x * horizontal_colliding_speed
+		velocity.y = colliding_velocity.y
+		velocity.z = wallrun_run_direction.z * horizontal_colliding_speed
+	
+	var horizontal_velocity: Vector3 = Vector3(velocity.x, 0, velocity.z)
+	
+	if horizontal_velocity.length() < wallrun_stop_speed or horizontal_velocity.dot(wallrun_run_direction) <= 0:
+		enter_airborne_state()
 		return
 	
-	if slide_cancel_enabled and Time.get_ticks_msec() - slide_timestamp >= slide_cancel_delay and InputBuffer.is_action_buffered("slide"):
-		exit_sliding_state()
+	wallrunning_immediate_state_checks()
+
+
+func grapplehooking_state_checks() -> void:
+	airborne_update_stance()
+	
+	if is_on_floor():
 		enter_grounded_state()
-		grounded_state_checks()
+		return
+	
+	if Input.is_action_just_released("secondary fire"):
+		enter_airborne_state()
 		return
 
 
@@ -651,6 +845,75 @@ func sliding_state_update(delta: float) -> void:
 	add_movement(delta, 0, slide_acceleration)
 
 
+func wallrunning_state_update(delta: float) -> void:
+	var air_resistence: float = physics_air_resistence * wallrun_air_resistence_multiplier
+	var friction: float = physics_friction * wallrun_friction_multiplier
+	var gravity: float = physics_gravity * wallrun_gravity_multiplier
+	
+	add_air_resistence(delta, air_resistence)
+	
+	if Time.get_ticks_msec() - wallrun_timestamp > wallrun_duration:
+		add_friction(delta, friction, wallrun_top_speed)
+		add_gravity(delta, gravity)
+	else:
+		velocity.y = move_toward(velocity.y, 0, wallrun_vertical_friction * delta)
+		
+		add_wallrun_movement(delta)
+
+
+func grapplehooking_state_update(delta: float) -> void:
+	var backwards_multiplier = lerpf(1, move_backwards_multiplier, get_amount_moving_backwards())
+	
+	var top_speed: float = air_speed * backwards_multiplier
+	var acceleration: float = air_acceleration * backwards_multiplier
+	
+	add_air_resistence(delta, physics_air_resistence)
+	add_gravity(delta, physics_gravity)
+	add_movement(delta, top_speed, acceleration)
+	
+	var direction_from_grapple: Vector3 = grapple_hook_point.position.direction_to(get_center_of_mass())
+	
+	velocity += -direction_from_grapple * maxf(0, velocity.dot(direction_from_grapple))
+	
+	var distance_from_grapple: float = grapple_hook_point.position.distance_to(get_center_of_mass())
+	
+	var weight: float = clampf((distance_from_grapple - grapple_hook_min_distance) / (grapple_hook_max_distance - grapple_hook_min_distance), 0, 1)
+	
+	var power: float = lerpf(0, grapple_hook_power, weight)
+	
+	velocity += -direction_from_grapple * maxf(0, (power - velocity.dot(-direction_from_grapple)))
+	
+	DebugDraw3D.draw_line(get_center_of_mass(), grapple_hook_point.position, Color.BLACK)
+
+
+func random_spawn() -> void:
+	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints").filter(func(node): return node is PlayerSpawnPoint)
+	
+	if not spawn_nodes.is_empty():
+		var spawn_node: Node3D = spawn_nodes.pick_random()
+		
+		position = spawn_node.position
+		velocity = Vector3.ZERO
+		
+		rotation.y = spawn_node.rotation.y
+		head.rotation.x = spawn_node.rotation.x
+	
+	move_and_slide()
+	
+	if is_on_floor():
+		enter_grounded_state()
+	else:
+		enter_airborne_state()
+
+
+## This is used to update the is_on_floor, is_on_wall, and is_on_ceiling methods when the player's position has been manually changed
+func update_surface_checks() -> void:
+	var player_velocity = velocity
+	velocity = Vector3.ZERO
+	move_and_slide()
+	velocity = player_velocity
+
+
 func crouch() -> void:
 	if active_stance == Stances.Crouching:
 		return
@@ -664,13 +927,16 @@ func crouch() -> void:
 	if active_state == States.Airborne or active_state == States.Jumping:
 		position.y += standing_height / 2
 		head.position.y -= standing_height / 2
+		crouch_direction = 1
+	else:
+		crouch_direction = 0
 
 
 func attempt_uncrouch() -> bool:
 	if active_stance != Stances.Crouching:
 		return true
 	
-	if active_state == States.Airborne or active_state == States.Jumping:
+	if crouch_direction == 1:
 		if not airborne_uncrouch_area.has_overlapping_bodies():
 			active_stance = last_stance
 			crouch_timestamp = Time.get_ticks_msec()
@@ -693,6 +959,25 @@ func attempt_uncrouch() -> bool:
 		return true
 	
 	return false
+
+
+func wallrun_checks() -> bool:
+	if Time.get_ticks_msec() - wallrun_timestamp < wallrun_cooldown:
+		return false
+	
+	if not is_on_wall():
+		return false
+	
+	if get_wall_normal().y < 0:
+		return false
+	
+	if not get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
+		return false
+	
+	if Vector2(colliding_velocity.x, colliding_velocity.z).length() < wallrun_start_speed:
+		return false
+	
+	return true
 
 
 func add_gravity(delta: float, gravity: float) -> void:
@@ -769,7 +1054,7 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 
 
 func add_wallrun_movement(delta: float) -> void:
-	var direction = wallrun_run_direction * move_input_vector.y
+	var direction = wallrun_run_direction * -move_input_vector.y
 	
 	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
 	velocity += direction * wallrun_acceleration * delta
@@ -834,7 +1119,7 @@ func slide_jump() -> void:
 
 
 func wall_jump() -> void:
-	velocity.y += walljump_power
+	velocity.y = walljump_power
 	
 	velocity += Vector3(velocity.x, 0, velocity.z).normalized() * walljump_horizontal_power
 	
