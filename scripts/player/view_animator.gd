@@ -9,7 +9,7 @@ extends Node
 
 @export var player_camera: Camera3D
 
-@export var player_footsteps_audio: AudioStreamPlayer3D
+@export var player_footsteps_audio: AudioStreamPlayer
 
 @export_group("Head Bob", "head_bob_")
 

@@ -246,11 +246,11 @@ class_name Player extends CharacterBody3D
 ## How fast the player is pulled towards the grapple point when grapple hooking.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_power: float = 8
 
-## How far from the grapple point the player must be to start being pulled towards the grapple point.
+## How far from the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_min_distance: float = 2
 
-## How far from the grapple point the player must be to be pulled towards it at max speed.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 10
+## How clost to the grapple point the player must be to grapple to it.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 15
 
 
 @onready var head: Node3D = $Head
@@ -265,11 +265,15 @@ class_name Player extends CharacterBody3D
 
 @onready var standing_head_y: float = head.position.y
 
-@onready var footsteps_audio: AudioStreamPlayer3D = $FootstepsAudio
-
-@onready var slide_audio: AudioStreamPlayer3D = $SlideAudio
-
 @onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
+
+@onready var footsteps_audio: AudioStreamPlayer = $FootstepsAudio
+
+@onready var slide_audio: AudioStreamPlayer = $SlideAudio
+
+@onready var grapple_hook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
+
+@onready var grapple_hook_fire_audio: AudioStreamPlayer = $GrappleHookFireAudio
 
 
 enum States {Grounded, Airborne, Jumping, Sliding, WallRunning, GrappleHooking}
@@ -422,9 +426,7 @@ func enter_grounded_state() -> void:
 	air_jumps = 0
 	air_crouches = 0
 	
-	if grapple_hook_point:
-		grapple_hook_point.indicator_sprite.hide()
-		grapple_hook_point = null
+	clear_grapple_hook_point()
 	
 	footsteps_audio.play()
 	
@@ -513,18 +515,17 @@ func airborne_immediate_state_checks() -> void:
 		var grapple_hook_points: Array[GrappleHookPoint] = []
 		
 		while grapple_hook_raycast.is_colliding():
-			if grapple_hook_raycast.get_collider() is GrappleHookPoint:
-				grapple_hook_points.push_back(grapple_hook_raycast.get_collider())
+			var collider: CollisionObject3D = grapple_hook_raycast.get_collider()
+			if collider is GrappleHookPoint and collider.position.distance_to(position) > grapple_hook_min_distance:
+				grapple_hook_points.push_back(collider)
 			
-			grapple_hook_raycast.add_exception(grapple_hook_raycast.get_collider())
+			grapple_hook_raycast.add_exception(collider)
 			grapple_hook_raycast.force_raycast_update()
 		
 		grapple_hook_raycast.clear_exceptions()
 		
 		if grapple_hook_points.is_empty():
-			if grapple_hook_point:
-				grapple_hook_point.indicator_sprite.hide()
-				grapple_hook_point = null
+			clear_grapple_hook_point()
 		else:
 			var highest_proximity_to_crosshair: float = -1
 			
@@ -537,20 +538,28 @@ func airborne_immediate_state_checks() -> void:
 					highest_proximity_to_crosshair = proximity_to_crosshair
 					highest_proximity_point = grapple_hook_points[i]
 			
-			if grapple_hook_point:
-				grapple_hook_point.indicator_sprite.hide()
-			
-			grapple_hook_point = highest_proximity_point
-			
-			grapple_hook_point.indicator_sprite.show()
+			if grapple_hook_point != highest_proximity_point:
+				clear_grapple_hook_point()
+				grapple_hook_point = highest_proximity_point
 		
-		if grapple_hook_point and Input.is_action_just_pressed("secondary fire"):
-			enter_grapplehooking_state()
-			return
+		if grapple_hook_point:
+			if grapple_hook_point.position.distance_to(position) <= grapple_hook_max_distance:
+				if grapple_hook_point.active != 1:
+					grapple_hook_point.active = 1
+					
+					grapple_hook_indicator_audio.play()
+				
+				if Input.is_action_just_pressed("secondary fire"):
+					grapple_hook_fire_audio.play()
+					
+					enter_grapplehooking_state()
+					return
+			else:
+				if not grapple_hook_point.too_far_indicator_sprite.visible:
+					grapple_hook_point.active = 2
 	
-	elif grapple_hook_point:
-		grapple_hook_point.indicator_sprite.hide()
-		grapple_hook_point = null
+	else:
+		clear_grapple_hook_point()
 
 
 func enter_jumping_state() -> void:
@@ -560,9 +569,7 @@ func enter_jumping_state() -> void:
 	coyote_jump_active = false
 	coyote_slide_active = false
 	
-	if grapple_hook_point:
-		grapple_hook_point.indicator_sprite.hide()
-		grapple_hook_point = null
+	clear_grapple_hook_point()
 	
 	footsteps_audio.play()
 	
@@ -582,9 +589,7 @@ func enter_sliding_state() -> void:
 	
 	coyote_slide_active = false
 	
-	if grapple_hook_point:
-		grapple_hook_point.indicator_sprite.hide()
-		grapple_hook_point = null
+	clear_grapple_hook_point()
 	
 	slide_audio.play()
 	
@@ -615,15 +620,15 @@ func enter_wallrunning_state() -> void:
 	
 	coyote_walljump_active = true
 	
-	if grapple_hook_point:
-		grapple_hook_point.indicator_sprite.hide()
-		grapple_hook_point = null
+	clear_grapple_hook_point()
 	
 	wallrunning_immediate_state_checks()
 
 
 func enter_grapplehooking_state() -> void:
 	active_state = States.GrappleHooking
+	
+	grapple_hook_point.active = 0
 
 
 func wallrunning_immediate_state_checks() -> void:
@@ -641,6 +646,10 @@ func exit_jumping_state() -> void:
 
 func exit_sliding_state() -> void:
 	slide_timestamp = Time.get_ticks_msec()
+
+
+func exit_grapplehooking_state() -> void:
+	grapple_hook_point.active = 1
 
 
 func grounded_state_checks() -> void:
@@ -781,10 +790,12 @@ func grapplehooking_state_checks() -> void:
 	airborne_update_stance()
 	
 	if is_on_floor():
+		exit_grapplehooking_state()
 		enter_grounded_state()
 		return
 	
 	if Input.is_action_just_released("secondary fire"):
+		exit_grapplehooking_state()
 		enter_airborne_state()
 		return
 
@@ -978,6 +989,12 @@ func wallrun_checks() -> bool:
 		return false
 	
 	return true
+
+
+func clear_grapple_hook_point() -> void:
+	if grapple_hook_point:
+		grapple_hook_point.active = 0
+		grapple_hook_point = null
 
 
 func add_gravity(delta: float, gravity: float) -> void:
