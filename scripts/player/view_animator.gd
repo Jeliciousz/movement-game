@@ -74,8 +74,8 @@ func _physics_process(delta: float) -> void:
 	else:
 		head_target_position = Vector3(0, standing_head_y, 0)
 	
-	match player.active_state:
-		player.States.Grounded:
+	match player.state_machine.active_state_name:
+		&"Grounded":
 			camera_target_rotation = Vector3(0, 0, -(player.transform.basis.inverse() * player.velocity).x * PI * tilt_strafing)
 			
 			if player_speed < 1 or player.move_direction.is_zero_approx():
@@ -97,9 +97,9 @@ func _physics_process(delta: float) -> void:
 					footstep_taken = true
 				
 				last_head_y = head_target_position.y
-		player.States.Sliding:
+		&"Sliding":
 			camera_target_rotation = Vector3(-(player.transform.basis.inverse() * player.velocity).z * PI * tilt_sliding_forward, 0, (player.transform.basis.inverse() * player.velocity).x * PI * tilt_sliding_horizontal)
-		player.States.WallRunning:
+		&"WallRunning":
 			camera_target_rotation = Vector3(0, 0, -(player.transform.basis.inverse() * player.wallrun_wall_normal).x * PI * wallrun_tilt)
 			
 			if player_speed < 1 or player.move_direction.is_zero_approx():

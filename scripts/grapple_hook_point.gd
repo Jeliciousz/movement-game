@@ -8,17 +8,20 @@ class_name GrappleHookPoint extends Area3D
 @onready var too_far_indicator_sprite: Sprite3D = $TooFarIndicatorSprite
 
 
-var active: int = 0
+enum {NotTargeted, Targeted, InvalidTarget}
+
+
+var targeted := NotTargeted
 
 
 func _process(delta: float) -> void:
-	match active:
-		0:
+	match targeted:
+		NotTargeted:
 			indicator_sprite.hide()
 			too_far_indicator_sprite.hide()
-		1:
+		Targeted:
 			indicator_sprite.show()
 			too_far_indicator_sprite.hide()
-		2:
+		InvalidTarget:
 			indicator_sprite.hide()
 			too_far_indicator_sprite.show()

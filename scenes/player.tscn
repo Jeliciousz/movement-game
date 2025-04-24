@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=38 format=3 uid="uid://ci1w3nu04vyw8"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -6,17 +6,49 @@
 [ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
 [ext_resource type="AudioStream" uid="uid://okhvtvkbf4eg" path="res://assets/sounds/player/footsteps/tile2.wav" id="3_i4ail"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
+[ext_resource type="Script" uid="uid://cpaw76w4abifk" path="res://scripts/player/state_machine/player_state_machine.gd" id="4_fulsm"]
 [ext_resource type="AudioStream" uid="uid://nixfol2hcs07" path="res://assets/sounds/player/footsteps/tile4.wav" id="5_4ni07"]
+[ext_resource type="Script" uid="uid://b3vho23i1k8ru" path="res://scripts/player/state_machine/player_state.gd" id="5_ke2ow"]
+[ext_resource type="Script" uid="uid://cgxt0qp2f6woe" path="res://scripts/player/state_machine/player_grounded_state.gd" id="6_ujl30"]
+[ext_resource type="Script" uid="uid://qs1s86l755ag" path="res://scripts/player/state_machine/player_airborne_state.gd" id="7_31cv2"]
 [ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/hud/fps_counter.gd" id="7_smehm"]
+[ext_resource type="Script" uid="uid://bmuaswe2r753e" path="res://scripts/player/state_machine/player_jumping_state.gd" id="8_pf23h"]
 [ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/hud/spedometer.gd" id="8_smehm"]
+[ext_resource type="Script" uid="uid://df2r1myc6egbv" path="res://scripts/player/state_machine/player_sliding_state.gd" id="9_dt7fs"]
+[ext_resource type="Script" uid="uid://c86h0mw7kqnm7" path="res://scripts/player/state_machine/player_wallrunning_state.gd" id="10_wqfne"]
 [ext_resource type="AudioStream" uid="uid://b7xmurbvikg55" path="res://assets/sounds/player/grapple/grapple_hook_indicator.ogg" id="11_a8ls1"]
 [ext_resource type="Texture2D" uid="uid://b1jqlqil8ffd7" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair002.png" id="11_d2wvv"]
+[ext_resource type="Script" uid="uid://cxwhpms3hkok5" path="res://scripts/player/state_machine/player_grapplehooking_state.gd" id="11_wnwbv"]
 [ext_resource type="AudioStream" uid="uid://b67ihi2sr2j5a" path="res://assets/sounds/player/grapple/grapple_hook_fire.wav" id="12_qfm1y"]
 [ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/player/viewmodel/viewmodel_viewport.gd" id="15_l71n6"]
 [ext_resource type="Script" uid="uid://dy0ilnerqu2pn" path="res://scripts/player/viewmodel/viewmodel_camera.gd" id="17_31cv2"]
 [ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/hud/debug_info.gd" id="19_4ni07"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
 [ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/themes/hud.tres" id="22_ke2ow"]
+
+[sub_resource type="Resource" id="Resource_gl8cc"]
+script = ExtResource("6_ujl30")
+metadata/_custom_type_script = "uid://cgxt0qp2f6woe"
+
+[sub_resource type="Resource" id="Resource_487ah"]
+script = ExtResource("7_31cv2")
+metadata/_custom_type_script = "uid://qs1s86l755ag"
+
+[sub_resource type="Resource" id="Resource_md1ol"]
+script = ExtResource("8_pf23h")
+metadata/_custom_type_script = "uid://bmuaswe2r753e"
+
+[sub_resource type="Resource" id="Resource_bj30b"]
+script = ExtResource("9_dt7fs")
+metadata/_custom_type_script = "uid://df2r1myc6egbv"
+
+[sub_resource type="Resource" id="Resource_jc3p3"]
+script = ExtResource("10_wqfne")
+metadata/_custom_type_script = "uid://c86h0mw7kqnm7"
+
+[sub_resource type="Resource" id="Resource_hax0n"]
+script = ExtResource("11_wnwbv")
+metadata/_custom_type_script = "uid://cxwhpms3hkok5"
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_l71n6"]
 viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
@@ -75,6 +107,18 @@ player = NodePath("..")
 player_head = NodePath("../Head")
 player_camera = NodePath("../Head/Camera")
 player_footsteps_audio = NodePath("../FootstepsAudio")
+
+[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("4_fulsm")
+states = Dictionary[StringName, ExtResource("5_ke2ow")]({
+&"Airborne": SubResource("Resource_487ah"),
+&"GrappleHooking": SubResource("Resource_hax0n"),
+&"Grounded": SubResource("Resource_gl8cc"),
+&"Jumping": SubResource("Resource_md1ol"),
+&"Sliding": SubResource("Resource_bj30b"),
+&"WallRunning": SubResource("Resource_jc3p3")
+})
+player = NodePath("..")
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
@@ -180,8 +224,6 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="DebugInfo" type="Label" parent="Hud" node_paths=PackedStringArray("player")]
-process_mode = 4
-visible = false
 layout_mode = 0
 offset_left = 6.0
 offset_top = 5.0

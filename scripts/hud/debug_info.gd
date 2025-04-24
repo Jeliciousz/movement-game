@@ -5,30 +5,14 @@ extends Label
 
 
 func _process(_delta: float) -> void:
-	var state: String
-	
-	match player.active_state:
-		player.States.Grounded:
-			state = "grounded"
-		player.States.Airborne:
-			state = "airborne"
-		player.States.Jumping:
-			state = "jumping"
-		player.States.Sliding:
-			state = "sliding"
-		player.States.WallRunning:
-			state = "wall-running"
-		player.States.GrappleHooking:
-			state = "grapple-hooking"
-	
 	var stance: String
 	
 	match player.active_stance:
 		player.Stances.Standing:
-			stance = "standing"
+			stance = "Standing"
 		player.Stances.Crouching:
-			stance = "crouching"
+			stance = "Crouching"
 		player.Stances.Sprinting:
-			stance = "sprinting"
+			stance = "Sprinting"
 	
-	text = "active state: %s\nactive stance: %s\ncoyote jump active: %s\ncoyote slide active: %s" % [state, stance, player.coyote_jump_active, player.coyote_slide_active]
+	text = "Active state: %s\nActive stance: %s\nCoyote jump active: %s\nCoyote slide active: %s\nCoyote wall-jump active: %s" % [player.state_machine.active_state_name, stance, player.coyote_jump_active, player.coyote_slide_active, player.coyote_walljump_active]
