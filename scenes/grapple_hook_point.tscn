@@ -27,7 +27,10 @@ skeleton = NodePath("")
 
 [node name="TargetedSprite" type="Sprite3D" parent="."]
 visible = false
-pixel_size = 0.001
+layers = 8
+cast_shadow = 0
+gi_mode = 0
+pixel_size = 0.0012
 billboard = 1
 no_depth_test = true
 fixed_size = true
@@ -35,6 +38,9 @@ texture = ExtResource("2_wc45q")
 
 [node name="InvalidTargetSprite" type="Sprite3D" parent="."]
 visible = false
+layers = 8
+cast_shadow = 0
+gi_mode = 0
 modulate = Color(1, 1, 1, 0.247059)
 pixel_size = 0.0007
 billboard = 1
