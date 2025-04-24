@@ -263,10 +263,6 @@ class_name Player extends CharacterBody3D
 
 @onready var airborne_uncrouch_area: Area3D = $AirborneUncrouchArea
 
-@onready var standing_height: float = collision_shape.shape.height
-
-@onready var standing_head_y: float = head.position.y
-
 @onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
 
 @onready var footsteps_audio: AudioStreamPlayer = $FootstepsAudio
@@ -276,6 +272,11 @@ class_name Player extends CharacterBody3D
 @onready var grapple_hook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
 
 @onready var grapple_hook_fire_audio: AudioStreamPlayer = $GrappleHookFireAudio
+
+
+@onready var standing_height: float = collision_shape.shape.height
+
+@onready var standing_head_y: float = head.position.y
 
 
 enum Stances {Standing, Crouching, Sprinting}
@@ -412,7 +413,7 @@ func spawn_random() -> void:
 		rotation.y = spawn_node.rotation.y
 		head.rotation.x = spawn_node.rotation.x
 	
-	move_and_slide()
+	update_surface_checks()
 	
 	if is_on_floor():
 		state_machine.transition(&"Grounded")
