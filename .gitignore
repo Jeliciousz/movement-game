@@ -5,3 +5,4 @@
 .vscode/
 *.tmp
 addons/*/libs/
+exports/
