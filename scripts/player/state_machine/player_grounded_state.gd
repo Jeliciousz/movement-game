@@ -57,6 +57,8 @@ func update_stance() -> void:
 			if player.sprint_enabled and Input.is_action_just_pressed("sprint"):
 				player.switch_stance(player.Stances.Sprinting)
 				return
+			elif player.crouch_enabled and Input.is_action_pressed("crouch"):
+				player.crouch()
 		
 		player.Stances.Crouching:
 			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
@@ -66,9 +68,7 @@ func update_stance() -> void:
 			if not player.sprint_enabled or Input.is_action_just_pressed("sprint"):
 				player.switch_stance(player.Stances.Standing)
 				return
-		
-		player.Stances.Standing, player.Stances.Sprinting:
-			if player.crouch_enabled and Input.is_action_pressed("crouch"):
+			elif player.crouch_enabled and Input.is_action_pressed("crouch"):
 				player.crouch()
 
 

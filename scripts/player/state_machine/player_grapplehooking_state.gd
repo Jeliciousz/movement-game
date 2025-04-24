@@ -50,11 +50,11 @@ func update(delta: float) -> void:
 
 func update_stance() -> void:
 	match player.active_stance:
-		player.Stances.Crouching:
-			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
-				player.attempt_uncrouch()
-		
 		player.Stances.Standing, player.Stances.Sprinting:
 			if player.air_crouch_enabled and player.air_crouches < player.air_crouch_limit and Input.is_action_pressed("crouch"):
 				player.crouch()
 				player.air_crouches += 1
+		
+		player.Stances.Crouching:
+			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
+				player.attempt_uncrouch()
