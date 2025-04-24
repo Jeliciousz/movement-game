@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://ci1w3nu04vyw8"]
+[gd_scene load_steps=38 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -127,6 +127,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 cull_mask = 1048573
 current = true
 fov = 120.0
+near = 0.005
 
 [node name="WeaponRaycast" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -200)
