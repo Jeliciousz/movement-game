@@ -1,6 +1,6 @@
 [gd_scene load_steps=36 format=4 uid="uid://dpgsmifow0gcw"]
 
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_dp8al"]
+[ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_dp8al"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_f1v6p"]
 [ext_resource type="LightmapGIData" uid="uid://bsjwea4q1m6tn" path="res://assets/lightmaps/world.lmbake" id="3_csbb7"]
 [ext_resource type="ArrayOccluder3D" uid="uid://cxrlm0h0pxtqe" path="res://assets/occluders/world.occ" id="4_mmplq"]

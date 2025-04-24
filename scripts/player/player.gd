@@ -333,23 +333,23 @@ func _unhandled_input(event: InputEvent) -> void:
 	#
 	#	-Jeliciousz
 	
-	if Input.is_action_just_pressed("forward"):
+	if Input.is_action_just_pressed("move_forward"):
 		move_input_vector.y = -1
-	elif Input.is_action_just_released("forward"):
-		move_input_vector.y = 1 if Input.is_action_pressed("back") else 0
-	elif Input.is_action_just_pressed("back"):
+	elif Input.is_action_just_released("move_forward"):
+		move_input_vector.y = 1 if Input.is_action_pressed("move_back") else 0
+	elif Input.is_action_just_pressed("move_back"):
 		move_input_vector.y = 1
-	elif Input.is_action_just_released("back"):
-		move_input_vector.y = -1 if Input.is_action_pressed("forward") else 0
+	elif Input.is_action_just_released("move_back"):
+		move_input_vector.y = -1 if Input.is_action_pressed("move_forward") else 0
 	
-	if Input.is_action_just_pressed("right"):
+	if Input.is_action_just_pressed("move_right"):
 		move_input_vector.x = 1
-	elif Input.is_action_just_released("right"):
-		move_input_vector.x = -1 if Input.is_action_pressed("left") else 0
-	elif Input.is_action_just_pressed("left"):
+	elif Input.is_action_just_released("move_right"):
+		move_input_vector.x = -1 if Input.is_action_pressed("move_left") else 0
+	elif Input.is_action_just_pressed("move_left"):
 		move_input_vector.x = -1
-	elif Input.is_action_just_released("left"):
-		move_input_vector.x = 1 if Input.is_action_pressed("right") else 0
+	elif Input.is_action_just_released("move_left"):
+		move_input_vector.x = 1 if Input.is_action_pressed("move_right") else 0
 
 
 func _physics_process(delta: float) -> void:
