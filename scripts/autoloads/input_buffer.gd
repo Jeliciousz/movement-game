@@ -1,7 +1,7 @@
 extends Node
 
 
-const BUFFER_WINDOW: int = 200
+const BUFFER_WINDOW: int = 125
 
 const buffered_actions: Array[String] = ["jump", "slide"]
 

@@ -19,7 +19,7 @@ class_name Player extends CharacterBody3D
 @export var coyote_enabled: bool = true
 
 ## How long coyote time lasts.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 200
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 125
 
 
 @export_group("Movement", "move_")
