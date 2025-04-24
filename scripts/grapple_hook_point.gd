@@ -14,7 +14,7 @@ enum {NotTargeted, Targeted, InvalidTarget}
 var targeted: int = NotTargeted
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	match targeted:
 		NotTargeted:
 			targeted_sprite.hide()

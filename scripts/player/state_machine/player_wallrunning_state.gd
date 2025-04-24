@@ -47,12 +47,12 @@ func physics_update(delta: float) -> void:
 
 func update_stance() -> void:
 	match player.active_stance:
-		player.Stances.Standing:
-			player.switch_stance(player.Stances.Sprinting)
+		player.Stances.STANDING:
+			player.switch_stance(player.Stances.SPRINTING)
 		
-		player.Stances.Crouching:
+		player.Stances.CROUCHING:
 			if player.attempt_uncrouch():
-				player.switch_stance(player.Stances.Sprinting)
+				player.switch_stance(player.Stances.SPRINTING)
 
 
 func handle_wallrunning() -> void:

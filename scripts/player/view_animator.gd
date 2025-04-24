@@ -69,7 +69,7 @@ func _physics_process(delta: float) -> void:
 	
 	var player_speed: float = player.velocity.length()
 	
-	if player.active_stance == player.Stances.Crouching:
+	if player.active_stance == player.Stances.CROUCHING:
 		head_target_position = Vector3(0, standing_head_y * player.crouch_height_multiplier, 0)
 	else:
 		head_target_position = Vector3(0, standing_head_y, 0)
@@ -81,7 +81,7 @@ func _physics_process(delta: float) -> void:
 			if player_speed < 1 or player.move_direction.is_zero_approx():
 				head_bob_t = 0
 			else:
-				if player.active_stance == player.Stances.Crouching:
+				if player.active_stance == player.Stances.CROUCHING:
 					head_bob_t += delta * player_speed * (head_bob_speed / player.crouch_height_multiplier)
 					
 					head_target_position.y += sin(head_bob_t * PI * 2) * (head_bob_height / player.crouch_height_multiplier)

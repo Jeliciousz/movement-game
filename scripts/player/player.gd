@@ -7,7 +7,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_friction: float = 40
 
 ## The acceleration applied opposite and proportional to the player's velocity.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.15
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.125
 
 ## The acceleration applied downwards.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_gravity: float = 30
@@ -43,7 +43,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 1.5
 
 ## How quickly the player accelerates in the air.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 25
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 40
 
 
 @export_group("Jumping", "jump_")
@@ -205,7 +205,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 25
 
 ## How much air resistence is applied while wall-running.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.75
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
 
 ## How much gravity is applied while sliding on a wall.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
@@ -276,7 +276,7 @@ class_name Player extends CharacterBody3D
 @onready var standing_head_y: float = head.position.y
 
 
-enum Stances {Standing, Crouching, Sprinting}
+enum Stances {STANDING, CROUCHING, SPRINTING}
 
 
 var move_input_vector: Vector2 = Vector2.ZERO
@@ -286,9 +286,9 @@ var move_direction: Vector3 = Vector3.ZERO
 var colliding_velocity: Vector3 = Vector3.ZERO
 
 
-var active_stance: Stances = Stances.Sprinting
+var active_stance: Stances = Stances.SPRINTING
 
-var last_stance: Stances = Stances.Standing
+var last_stance: Stances = Stances.STANDING
 
 var crouch_direction: int
 
@@ -318,7 +318,7 @@ func _ready() -> void:
 	spawn_random()
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _unhandled_input(_event: InputEvent) -> void:
 	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
 	#
 	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
@@ -427,10 +427,10 @@ func switch_stance(stance: Stances) -> void:
 
 
 func crouch() -> void:
-	if active_stance == Stances.Crouching:
+	if active_stance == Stances.CROUCHING:
 		return
 	
-	switch_stance(Stances.Crouching)
+	switch_stance(Stances.CROUCHING)
 	crouch_timestamp = Time.get_ticks_msec()
 	
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
@@ -445,7 +445,7 @@ func crouch() -> void:
 
 
 func attempt_uncrouch() -> bool:
-	if active_stance != Stances.Crouching:
+	if active_stance != Stances.CROUCHING:
 		return true
 	
 	if crouch_direction == 1 and not airborne_uncrouch_area.has_overlapping_bodies():

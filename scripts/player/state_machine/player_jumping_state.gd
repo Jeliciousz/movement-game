@@ -45,12 +45,12 @@ func physics_update(delta: float) -> void:
 
 func update_stance() -> void:
 	match player.active_stance:
-		player.Stances.Standing, player.Stances.Sprinting:
+		player.Stances.STANDING, player.Stances.SPRINTING:
 			if player.air_crouch_enabled and player.air_crouches < player.air_crouch_limit and Input.is_action_pressed("crouch"):
 				player.crouch()
 				player.air_crouches += 1
 		
-		player.Stances.Crouching:
+		player.Stances.CROUCHING:
 			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
 				player.attempt_uncrouch()
 
@@ -87,7 +87,7 @@ func handle_grapple_hooking() -> bool:
 	if Input.is_action_just_pressed("grapple_hook"):
 		player.grapple_hook_fire_audio.play()
 		
-		transition_func.call(&"Grapple Hooking")
+		transition_func.call(&"GrappleHooking")
 		
 		return true
 	

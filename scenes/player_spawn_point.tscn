@@ -8,6 +8,9 @@ top_level = true
 script = ExtResource("1_g6wl4")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
+layers = 8
+cast_shadow = 0
+gi_mode = 0
 pixel_size = 0.001
 billboard = 1
 double_sided = false

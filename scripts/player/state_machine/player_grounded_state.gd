@@ -33,13 +33,13 @@ func physics_update(delta: float) -> void:
 	var acceleration: float
 	
 	match player.active_stance:
-		player.Stances.Standing:
+		player.Stances.STANDING:
 			top_speed = player.move_speed
 			acceleration = player.move_acceleration
-		player.Stances.Crouching:
+		player.Stances.CROUCHING:
 			top_speed = player.crouch_speed
 			acceleration = player.crouch_acceleration
-		player.Stances.Sprinting:
+		player.Stances.SPRINTING:
 			top_speed = player.sprint_speed
 			acceleration = player.sprint_acceleration
 	
@@ -53,20 +53,20 @@ func physics_update(delta: float) -> void:
 
 func update_stance() -> void:
 	match player.active_stance:
-		player.Stances.Standing:
+		player.Stances.STANDING:
 			if player.sprint_enabled and Input.is_action_just_pressed("sprint"):
-				player.switch_stance(player.Stances.Sprinting)
+				player.switch_stance(player.Stances.SPRINTING)
 				return
 			elif player.crouch_enabled and Input.is_action_pressed("crouch"):
 				player.crouch()
 		
-		player.Stances.Crouching:
+		player.Stances.CROUCHING:
 			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
 				player.attempt_uncrouch()
 		
-		player.Stances.Sprinting:
+		player.Stances.SPRINTING:
 			if not player.sprint_enabled or Input.is_action_just_pressed("sprint"):
-				player.switch_stance(player.Stances.Standing)
+				player.switch_stance(player.Stances.STANDING)
 				return
 			elif player.crouch_enabled and Input.is_action_pressed("crouch"):
 				player.crouch()
@@ -75,7 +75,7 @@ func update_stance() -> void:
 func enter_state_checks() -> void:
 	if player.slide_enabled and slide_checks() and InputBuffer.is_action_buffered("slide"):
 		player.crouch()
-		player.last_stance = player.Stances.Sprinting
+		player.last_stance = player.Stances.SPRINTING
 		
 		player.velocity.y = 0
 		player.velocity += player.move_direction * player.slide_power
@@ -84,7 +84,7 @@ func enter_state_checks() -> void:
 		return
 	
 	if player.jump_enabled and InputBuffer.is_action_buffered("jump"):
-		if player.active_stance != player.Stances.Crouching:
+		if player.active_stance != player.Stances.CROUCHING:
 			player.jump()
 			
 			transition_func.call(&"Jumping")

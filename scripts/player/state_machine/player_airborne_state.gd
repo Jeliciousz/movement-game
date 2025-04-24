@@ -33,12 +33,12 @@ func physics_update(delta: float) -> void:
 
 func update_stance() -> void:
 	match player.active_stance:
-		player.Stances.Standing, player.Stances.Sprinting:
+		player.Stances.STANDING, player.Stances.SPRINTING:
 			if player.air_crouch_enabled and player.air_crouches < player.air_crouch_limit and Input.is_action_pressed("crouch"):
 				player.crouch()
 				player.air_crouches += 1
 		
-		player.Stances.Crouching:
+		player.Stances.CROUCHING:
 			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
 				player.attempt_uncrouch()
 
@@ -56,13 +56,13 @@ func enter_state_checks() -> void:
 		player.velocity.x = new_velocity.x
 		player.velocity.z = new_velocity.z
 		
-		transition_func.call(&"Wall Running")
+		transition_func.call(&"WallRunning")
 		return
 	
 	if player.coyote_enabled and Time.get_ticks_msec() - player.airborne_timestamp <= player.coyote_duration:
 		if player.slide_enabled and player.coyote_slide_active and slide_checks() and InputBuffer.is_action_buffered("slide"):
 			player.crouch()
-			player.last_stance = player.Stances.Sprinting
+			player.last_stance = player.Stances.SPRINTING
 			
 			player.velocity.y = 0
 			player.velocity += player.move_direction * player.slide_power
@@ -152,7 +152,7 @@ func handle_grapple_hooking() -> bool:
 	if Input.is_action_just_pressed("grapple_hook"):
 		player.grapple_hook_fire_audio.play()
 		
-		transition_func.call(&"Grapple Hooking")
+		transition_func.call(&"GrappleHooking")
 		
 		return true
 	

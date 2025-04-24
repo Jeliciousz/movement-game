@@ -44,17 +44,17 @@ func physics_update(delta: float) -> void:
 	player.velocity += -direction_from_grapple * maxf(0, (power - player.velocity.dot(-direction_from_grapple)))
 
 
-func update(delta: float) -> void:
+func update(_delta: float) -> void:
 	DebugDraw3D.draw_line(player.head.global_position + player.get_looking_direction() * 0.4, player.grapple_hook_point.position, Color.BLACK)
 
 
 func update_stance() -> void:
 	match player.active_stance:
-		player.Stances.Standing, player.Stances.Sprinting:
+		player.Stances.STANDING, player.Stances.SPRINTING:
 			if player.air_crouch_enabled and player.air_crouches < player.air_crouch_limit and Input.is_action_pressed("crouch"):
 				player.crouch()
 				player.air_crouches += 1
 		
-		player.Stances.Crouching:
+		player.Stances.CROUCHING:
 			if not (player.crouch_enabled and Input.is_action_pressed("crouch")):
 				player.attempt_uncrouch()
