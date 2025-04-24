@@ -37,7 +37,7 @@ func physics_update(delta: float) -> void:
 	
 	var distance_from_grapple: float = player.grapple_hook_point.position.distance_to(player.head.global_position)
 	
-	var weight: float = clampf((distance_from_grapple - player.grapple_hook_min_distance) / (player.grapple_hook_max_distance - player.grapple_hook_min_distance), 0, 1)
+	var weight: float = clampf((distance_from_grapple - player.standing_height) / (player.grapple_hook_max_distance - player.standing_height), 0, 1)
 	
 	var power: float = lerpf(0, player.grapple_hook_power, weight)
 	

@@ -246,10 +246,7 @@ class_name Player extends CharacterBody3D
 ## How fast the player is pulled towards the grapple point when grapple hooking.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_power: float = 8
 
-## How far from the grapple point the player must be to grapple to it.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_min_distance: float = 2
-
-## How clost to the grapple point the player must be to grapple to it.
+## How close to the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 15
 
 
