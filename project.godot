@@ -129,7 +129,6 @@ common/physics_interpolation=true
 
 [rendering]
 
-rendering_device/driver.windows="d3d12"
 anti_aliasing/screen_space_roughness_limiter/enabled=false
 occlusion_culling/occlusion_rays_per_thread=2048
 lightmapping/denoising/denoiser=1
