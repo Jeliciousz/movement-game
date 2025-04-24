@@ -4,6 +4,12 @@
 
 [resource]
 albedo_texture = ExtResource("1_wnn3i")
+metallic = 1.0
+roughness = 0.5
+clearcoat = 0.25
+clearcoat_roughness = 0.75
 uv1_triplanar = true
 uv1_triplanar_sharpness = 6.0
 uv1_world_triplanar = true
+texture_filter = 5
+grow_amount = 0.1

@@ -4,6 +4,8 @@
 
 [resource]
 albedo_texture = ExtResource("1_efo8q")
+roughness = 0.5
 uv1_triplanar = true
 uv1_triplanar_sharpness = 6.0
 uv1_world_triplanar = true
+texture_filter = 5
