@@ -316,6 +316,8 @@ var grapple_hook_point: GrappleHookPoint
 
 
 func _ready() -> void:
+	airborne_uncrouch_area.position.y -= (1 - crouch_height_multiplier) * standing_height
+	
 	spawn_random()
 
 
