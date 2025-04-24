@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://cqkeqglbsx1tw"]
 
 [ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/grapple_hook_point.gd" id="1_v2vg0"]
-[ext_resource type="Texture2D" uid="uid://ccqi8h0hrkxon" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair131.png" id="1_vlkll"]
-[ext_resource type="Texture2D" uid="uid://c5xl34tv5jst1" path="res://assets/textures/kenney_crosshair-pack/PNG/Outline Retina/crosshair120.png" id="3_wc45q"]
+[ext_resource type="Texture2D" uid="uid://c7yqxl0eho0vt" path="res://assets/textures/ui/grapple_hook_point_targeted.png" id="2_wc45q"]
+[ext_resource type="Texture2D" uid="uid://ccjhtl5n10o32" path="res://assets/textures/ui/grapple_hook_point_target_invalid.png" id="3_ejye6"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_2xim0"]
 radius = 3.0
@@ -25,19 +25,19 @@ shape = SubResource("SphereShape3D_2xim0")
 mesh = SubResource("SphereMesh_2xim0")
 skeleton = NodePath("")
 
-[node name="IndicatorSprite" type="Sprite3D" parent="."]
+[node name="TargetedSprite" type="Sprite3D" parent="."]
 visible = false
 pixel_size = 0.001
 billboard = 1
 no_depth_test = true
 fixed_size = true
-texture = ExtResource("1_vlkll")
+texture = ExtResource("2_wc45q")
 
-[node name="TooFarIndicatorSprite" type="Sprite3D" parent="."]
+[node name="InvalidTargetSprite" type="Sprite3D" parent="."]
 visible = false
 modulate = Color(1, 1, 1, 0.247059)
 pixel_size = 0.0007
 billboard = 1
 no_depth_test = true
 fixed_size = true
-texture = ExtResource("3_wc45q")
+texture = ExtResource("3_ejye6")

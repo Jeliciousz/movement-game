@@ -397,14 +397,14 @@ func get_center_of_mass() -> Vector3:
 
 ## This is used to update the is_on_floor, is_on_wall, and is_on_ceiling methods when the player's position has been manually changed
 func update_surface_checks() -> void:
-	var player_velocity = velocity
+	var player_velocity: Vector3 = velocity
 	velocity = Vector3.ZERO
 	move_and_slide()
 	velocity = player_velocity
 
 
 func spawn_random() -> void:
-	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints").filter(func(node): return node is PlayerSpawnPoint)
+	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group("PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint)
 	
 	if not spawn_nodes.is_empty():
 		var spawn_node: Node3D = spawn_nodes.pick_random()
@@ -423,7 +423,7 @@ func spawn_random() -> void:
 		state_machine.transition(&"Airborne")
 
 
-func switch_stance(stance: Stances):
+func switch_stance(stance: Stances) -> void:
 	if stance != active_stance:
 		last_stance = active_stance
 		active_stance = stance
@@ -495,8 +495,8 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	
 	var highest_proximity_point: GrappleHookPoint
 	
-	for i in grapple_hook_points.size():
-		var proximity_to_crosshair: float = position.direction_to(grapple_hook_points[i].position).dot(get_looking_direction())
+	for i: int in grapple_hook_points.size():
+		var proximity_to_crosshair: float = head.global_position.direction_to(grapple_hook_points[i].position).dot(get_looking_direction())
 		
 		if proximity_to_crosshair > highest_proximity_to_crosshair:
 			highest_proximity_to_crosshair = proximity_to_crosshair
@@ -516,25 +516,25 @@ func add_gravity(delta: float, gravity: float) -> void:
 
 
 func add_air_resistence(delta: float, air_resistence: float) -> void:
-	var current_speed = velocity.length()
+	var current_speed: float = velocity.length()
 	
-	set_velocity(velocity.move_toward(Vector3.ZERO, air_resistence * current_speed * delta))
+	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * current_speed * delta)
 
 
 func add_friction(delta: float, friction: float, top_speed: float) -> void:
-	var friction_direction = -velocity.normalized()
+	var friction_direction: Vector3 = -velocity.normalized()
 	
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
-	var friction_product = minf(friction_direction.dot(move_direction) + 1, 1)
+	var friction_product: float = minf(friction_direction.dot(move_direction) + 1, 1)
 	
 	# If player is faster than the top speed they can move at, it will always apply friction. A reduced amount if going against the movement direction
-	var current_speed = velocity.length()
+	var current_speed: float = velocity.length()
 	
 	if current_speed > top_speed:
-		var scaled_friction_product = lerpf(move_friction_multiplier, 1, friction_product)
+		var scaled_friction_product: float = lerpf(move_friction_multiplier, 1, friction_product)
 		
-		set_velocity(velocity.move_toward(velocity.limit_length(top_speed), friction * delta * scaled_friction_product))
+		velocity = velocity.move_toward(velocity.limit_length(top_speed), friction * delta * scaled_friction_product)
 		return
 	
 	# Otherwise, it only applies friction if it doesn't go against the movement direction
@@ -563,9 +563,9 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 	#
 	#	-Jeliciousz
 	
-	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var old_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	velocity += move_direction * acceleration * delta
-	var new_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var new_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	
 	if new_horizontal_speed <= old_horizontal_speed:
 		return
@@ -585,11 +585,11 @@ func add_movement(delta: float, top_speed: float, acceleration: float) -> void:
 
 
 func add_wallrun_movement(delta: float) -> void:
-	var direction = wallrun_run_direction * -move_input_vector.y
+	var direction: Vector3 = wallrun_run_direction * -move_input_vector.y
 	
-	var old_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var old_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	velocity += direction * wallrun_acceleration * delta
-	var new_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var new_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	
 	if new_horizontal_speed <= old_horizontal_speed:
 		return
@@ -609,15 +609,15 @@ func add_wallrun_movement(delta: float) -> void:
 
 
 func jump() -> void:
-	var backwards_multiplier = lerpf(1, jump_backwards_multiplier, get_amount_moving_backwards())
-	var standing_multiplier = lerpf(jump_standing_multiplier, 1, move_direction.length())
+	var backwards_multiplier: float = lerpf(1, jump_backwards_multiplier, get_amount_moving_backwards())
+	var standing_multiplier: float = lerpf(jump_standing_multiplier, 1, move_direction.length())
 	
 	# Speed Jumping
-	var current_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var current_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	var weight: float = clampf((current_horizontal_speed - speed_jump_base_speed) / (speed_jump_max_speed - speed_jump_base_speed), 0, 1)
 	
-	var power = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
-	var horizontal_power = lerpf(jump_horizontal_power, speed_jump_max_horizontal_power, weight) * backwards_multiplier
+	var power: float = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
+	var horizontal_power: float = lerpf(jump_horizontal_power, speed_jump_max_horizontal_power, weight) * backwards_multiplier
 	
 	velocity.y += power
 	
@@ -628,15 +628,15 @@ func air_jump() -> void:
 	velocity = Vector3.ZERO
 	air_jumps += 1
 	
-	var backwards_multiplier = lerpf(1, jump_backwards_multiplier, get_amount_moving_backwards())
-	var standing_multiplier = lerpf(jump_standing_multiplier, 1, move_direction.length())
+	var backwards_multiplier: float = lerpf(1, jump_backwards_multiplier, get_amount_moving_backwards())
+	var standing_multiplier: float = lerpf(jump_standing_multiplier, 1, move_direction.length())
 	
 	# Speed Jumping
-	var current_horizontal_speed = Vector2(velocity.x, velocity.z).length()
+	var current_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	var weight: float = clampf((current_horizontal_speed - speed_jump_base_speed) / (speed_jump_max_speed - speed_jump_base_speed), 0, 1)
 	
-	var power = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
-	var horizontal_power = air_jump_horizontal_power * backwards_multiplier
+	var power: float = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
+	var horizontal_power: float = air_jump_horizontal_power * backwards_multiplier
 	
 	velocity.y = power
 	

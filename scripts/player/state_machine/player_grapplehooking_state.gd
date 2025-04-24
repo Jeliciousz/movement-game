@@ -22,7 +22,7 @@ func state_checks() -> void:
 
 
 func physics_update(delta: float) -> void:
-	var backwards_multiplier = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
+	var backwards_multiplier: float = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
 	var top_speed: float = player.air_speed * backwards_multiplier
 	var acceleration: float = player.air_acceleration * backwards_multiplier
@@ -31,11 +31,11 @@ func physics_update(delta: float) -> void:
 	player.add_gravity(delta, player.physics_gravity)
 	player.add_movement(delta, top_speed, acceleration)
 	
-	var direction_from_grapple: Vector3 = player.grapple_hook_point.position.direction_to(player.get_center_of_mass())
+	var direction_from_grapple: Vector3 = player.grapple_hook_point.position.direction_to(player.head.global_position)
 	
 	player.velocity += -direction_from_grapple * maxf(0, player.velocity.dot(direction_from_grapple))
 	
-	var distance_from_grapple: float = player.grapple_hook_point.position.distance_to(player.get_center_of_mass())
+	var distance_from_grapple: float = player.grapple_hook_point.position.distance_to(player.head.global_position)
 	
 	var weight: float = clampf((distance_from_grapple - player.grapple_hook_min_distance) / (player.grapple_hook_max_distance - player.grapple_hook_min_distance), 0, 1)
 	
@@ -45,7 +45,7 @@ func physics_update(delta: float) -> void:
 
 
 func update(delta: float) -> void:
-	DebugDraw3D.draw_line(player.get_center_of_mass(), player.grapple_hook_point.position, Color.BLACK)
+	DebugDraw3D.draw_line(player.head.global_position + player.get_looking_direction() * 0.4, player.grapple_hook_point.position, Color.BLACK)
 
 
 func update_stance() -> void:

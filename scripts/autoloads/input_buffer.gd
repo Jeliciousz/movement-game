@@ -11,8 +11,8 @@ var action_timestamps: Dictionary[String, int] = {}
 var queued_for_erasure: Array[String] = []
 
 
-func _physics_process(delta: float) -> void:
-	for action in buffered_actions:
+func _physics_process(_delta: float) -> void:
+	for action: String in buffered_actions:
 		if Input.is_action_just_pressed(action):
 			action_timestamps[action] = Time.get_ticks_msec()
 			queued_for_erasure.erase(action)
@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 	if queued_for_erasure.is_empty():
 		return
 	
-	for action in queued_for_erasure:
+	for action: String in queued_for_erasure:
 		action_timestamps.erase(action)
 	
 	queued_for_erasure.clear()

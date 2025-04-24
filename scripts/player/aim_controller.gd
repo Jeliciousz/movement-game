@@ -33,7 +33,7 @@ extends Node
 @export_range(-89, 0, 1, "radians_as_degrees") var min_pitch: float = deg_to_rad(-89.5)
 
 
-func _ready():
+func _ready() -> void:
 	Input.set_use_accumulated_input(false)
 
 

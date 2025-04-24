@@ -18,6 +18,11 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 
 InputBuffer="*res://scripts/autoloads/input_buffer.gd"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=2
+gdscript/warnings/inferred_declaration=2
+
 [display]
 
 window/size/viewport_width=1280
@@ -104,7 +109,7 @@ interact={
 
 3d_render/layer_1="World"
 3d_render/layer_2="Viewmodel"
-3d_render/layer_3="Layer 3"
+3d_render/layer_3="Player"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Teammates"

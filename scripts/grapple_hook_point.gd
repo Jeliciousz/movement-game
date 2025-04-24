@@ -3,25 +3,25 @@ class_name GrappleHookPoint extends Area3D
 
 @onready var collision_shape: CollisionShape3D = $CollisionShape
 
-@onready var indicator_sprite: Sprite3D = $IndicatorSprite
+@onready var targeted_sprite: Sprite3D = $TargetedSprite
 
-@onready var too_far_indicator_sprite: Sprite3D = $TooFarIndicatorSprite
+@onready var invalid_target_sprite: Sprite3D = $InvalidTargetSprite
 
 
 enum {NotTargeted, Targeted, InvalidTarget}
 
 
-var targeted := NotTargeted
+var targeted: int = NotTargeted
 
 
 func _process(delta: float) -> void:
 	match targeted:
 		NotTargeted:
-			indicator_sprite.hide()
-			too_far_indicator_sprite.hide()
+			targeted_sprite.hide()
+			invalid_target_sprite.hide()
 		Targeted:
-			indicator_sprite.show()
-			too_far_indicator_sprite.hide()
+			targeted_sprite.show()
+			invalid_target_sprite.hide()
 		InvalidTarget:
-			indicator_sprite.hide()
-			too_far_indicator_sprite.show()
+			targeted_sprite.hide()
+			invalid_target_sprite.show()

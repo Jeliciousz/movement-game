@@ -75,7 +75,7 @@ func handle_grapple_hooking() -> bool:
 		player.clear_grapple_hook_point()
 		player.grapple_hook_point = target_grapple_hook_point
 	
-	if player.grapple_hook_point.position.distance_to(player.position) > player.grapple_hook_max_distance:
+	if player.grapple_hook_point.position.distance_to(player.head.global_position) > player.grapple_hook_max_distance:
 		player.grapple_hook_point.targeted = player.grapple_hook_point.InvalidTarget
 		return false
 	

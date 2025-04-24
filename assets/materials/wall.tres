@@ -1,9 +1,0 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://xq8b4h05kmml"]
-
-[ext_resource type="Texture2D" uid="uid://bh4wpxqcn65km" path="res://assets/textures/kenney_prototype_textures/orange/texture_01.png" id="1_blum3"]
-
-[resource]
-albedo_texture = ExtResource("1_blum3")
-uv1_triplanar = true
-uv1_triplanar_sharpness = 6.0
-uv1_world_triplanar = true

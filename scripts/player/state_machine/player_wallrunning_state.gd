@@ -59,7 +59,7 @@ func handle_wallrunning() -> void:
 	var wall_normal: Vector3
 	
 	if not player.is_on_wall():
-		var test = player.move_and_collide(-player.wallrun_wall_normal * 0.1, true)
+		var test: KinematicCollision3D = player.move_and_collide(-player.wallrun_wall_normal * 0.1, true)
 		
 		if not (test and test.get_collider().is_in_group("WallrunBodies")):
 			transition_func.call(&"Airborne")
@@ -83,7 +83,7 @@ func handle_wallrunning() -> void:
 		if player.wallrun_run_direction.dot(Vector3(player.velocity.x, 0, player.velocity.z).normalized()) < 0:
 			player.wallrun_run_direction *= -1
 		
-		var horizontal_colliding_speed = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
+		var horizontal_colliding_speed: float = Vector2(player.colliding_velocity.x, player.colliding_velocity.z).length()
 		
 		player.velocity.x = player.wallrun_run_direction.x * horizontal_colliding_speed
 		player.velocity.y = player.colliding_velocity.y

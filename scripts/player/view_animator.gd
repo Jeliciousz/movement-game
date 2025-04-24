@@ -67,7 +67,7 @@ func _physics_process(delta: float) -> void:
 	
 	last_player_velocity = player.velocity
 	
-	var player_speed = player.velocity.length()
+	var player_speed: float = player.velocity.length()
 	
 	if player.active_stance == player.Stances.Crouching:
 		head_target_position = Vector3(0, standing_head_y * player.crouch_height_multiplier, 0)
