@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dmlvcup0oypeu"]
 
-[ext_resource type="Script" uid="uid://bvsevbubnon83" path="res://scripts/explosion.gd" id="1_17npe"]
+[ext_resource type="Script" uid="uid://bvsevbubnon83" path="res://unused/explosion.gd" id="1_17npe"]
 [ext_resource type="AudioStream" uid="uid://dnur7jvmxvprr" path="res://assets/sounds/weapons/explode1.wav" id="2_3el85"]
 [ext_resource type="AudioStream" uid="uid://dtdvcvnmi65ga" path="res://assets/sounds/weapons/explode2.wav" id="3_hbmxj"]
 [ext_resource type="AudioStream" uid="uid://r1i1uh8w3y7m" path="res://assets/sounds/weapons/explode3.wav" id="4_xfoey"]

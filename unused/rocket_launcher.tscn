@@ -1,7 +1,7 @@
 [gd_scene load_steps=19 format=4 uid="uid://dotrhi4kwkha5"]
 
 [ext_resource type="AudioStream" uid="uid://bnmaolvqa7yg1" path="res://assets/sounds/weapons/rocket_launcher/fire.wav" id="1_mm0yg"]
-[ext_resource type="Script" uid="uid://bjuifgo2xqfgj" path="res://scripts/rocketlauncher.gd" id="1_vlcf2"]
+[ext_resource type="Script" uid="uid://bjuifgo2xqfgj" path="res://unused/rocketlauncher.gd" id="1_vlcf2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7m0kt"]
 resource_name = "Material"
