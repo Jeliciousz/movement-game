@@ -42,11 +42,11 @@ metadata/_custom_type_script = "uid://bmuaswe2r753e"
 script = ExtResource("9_dt7fs")
 metadata/_custom_type_script = "uid://df2r1myc6egbv"
 
-[sub_resource type="Resource" id="Resource_jc3p3"]
+[sub_resource type="Resource" id="Resource_ke2ow"]
 script = ExtResource("10_wqfne")
 metadata/_custom_type_script = "uid://c86h0mw7kqnm7"
 
-[sub_resource type="Resource" id="Resource_hax0n"]
+[sub_resource type="Resource" id="Resource_ujl30"]
 script = ExtResource("11_wnwbv")
 metadata/_custom_type_script = "uid://cxwhpms3hkok5"
 
@@ -112,11 +112,11 @@ player_footsteps_audio = NodePath("../FootstepsAudio")
 script = ExtResource("4_fulsm")
 states = Dictionary[StringName, ExtResource("5_ke2ow")]({
 &"Airborne": SubResource("Resource_487ah"),
-&"GrappleHooking": SubResource("Resource_hax0n"),
+&"Grapple Hooking": SubResource("Resource_ujl30"),
 &"Grounded": SubResource("Resource_gl8cc"),
 &"Jumping": SubResource("Resource_md1ol"),
 &"Sliding": SubResource("Resource_bj30b"),
-&"WallRunning": SubResource("Resource_jc3p3")
+&"Wall Running": SubResource("Resource_ke2ow")
 })
 player = NodePath("..")
 

@@ -25,7 +25,7 @@ func state_checks() -> void:
 	enter_state_checks()
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var friction: float = player.physics_friction * player.slide_friction_multiplier
 	
 	player.add_air_resistence(delta, player.physics_air_resistence)
@@ -40,7 +40,7 @@ func enter_state_checks() -> void:
 	
 	if player.slide_jump_enabled and Time.get_ticks_msec() - player.slide_timestamp >= player.slide_jump_delay and InputBuffer.is_action_buffered("jump"):
 		player.slide_jump()
-		transition_func.call(&"Grounded")
+		transition_func.call(&"Jumping")
 		return
 	
 	if player.slide_cancel_enabled and Time.get_ticks_msec() - player.slide_timestamp >= player.slide_cancel_delay and InputBuffer.is_action_buffered("slide"):

@@ -18,5 +18,9 @@ func state_checks() -> void:
 	pass
 
 
+func physics_update(delta: float) -> void:
+	pass
+
+
 func update(delta: float) -> void:
 	pass

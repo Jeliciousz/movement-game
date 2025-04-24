@@ -25,10 +25,13 @@ func state_checks() -> void:
 		transition_func.call(&"Grounded")
 		return
 	
+	if handle_grapple_hooking():
+		return
+	
 	enter_state_checks()
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var backwards_multiplier: float = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
 	var top_speed: float = player.air_speed * backwards_multiplier
@@ -56,3 +59,36 @@ func enter_state_checks() -> void:
 	if not player.jump_enabled or not Input.is_action_pressed("jump") or player.velocity.y < 0 or Time.get_ticks_msec() - player.jump_timestamp >= player.jump_duration:
 		transition_func.call(&"Airborne")
 		return
+
+
+func handle_grapple_hooking() -> bool:
+	if not player.grapple_hook_enabled:
+		player.clear_grapple_hook_point()
+		return false
+	
+	var target_grapple_hook_point: GrappleHookPoint = player.get_targeted_grapple_hook_point()
+	
+	if not target_grapple_hook_point:
+		player.clear_grapple_hook_point()
+		return false
+	elif player.grapple_hook_point != target_grapple_hook_point:
+		player.clear_grapple_hook_point()
+		player.grapple_hook_point = target_grapple_hook_point
+	
+	if player.grapple_hook_point.position.distance_to(player.position) > player.grapple_hook_max_distance:
+		player.grapple_hook_point.targeted = player.grapple_hook_point.InvalidTarget
+		return false
+	
+	if player.grapple_hook_point.targeted != player.grapple_hook_point.Targeted:
+		player.grapple_hook_point.targeted = player.grapple_hook_point.Targeted
+		
+		player.grapple_hook_indicator_audio.play()
+	
+	if Input.is_action_just_pressed("grapple_hook"):
+		player.grapple_hook_fire_audio.play()
+		
+		transition_func.call(&"Grapple Hooking")
+		
+		return true
+	
+	return false

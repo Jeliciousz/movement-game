@@ -355,7 +355,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	move_direction = basis * Vector3(move_input_vector.x, 0, move_input_vector.y).normalized()
 	
-	state_machine.update(delta)
+	state_machine.physics_update(delta)
 	
 	floor_block_on_wall = is_on_floor()
 	colliding_velocity = velocity
@@ -363,6 +363,10 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
 		velocity = get_real_velocity()
+
+
+func _process(delta: float) -> void:
+	state_machine.update(delta)
 
 
 ## Returns how much the player is moving backwards.[br]
@@ -466,6 +470,36 @@ func attempt_uncrouch() -> bool:
 		return true
 	
 	return false
+
+
+func get_targeted_grapple_hook_point() -> GrappleHookPoint:
+	var grapple_hook_points: Array[GrappleHookPoint] = []
+	
+	while grapple_hook_raycast.is_colliding():
+		var collider: CollisionObject3D = grapple_hook_raycast.get_collider()
+		if collider is GrappleHookPoint:
+			grapple_hook_points.push_back(collider)
+		
+		grapple_hook_raycast.add_exception(collider)
+		grapple_hook_raycast.force_raycast_update()
+	
+	if grapple_hook_points.is_empty():
+		return null
+	
+	grapple_hook_raycast.clear_exceptions()
+	
+	var highest_proximity_to_crosshair: float = -1
+	
+	var highest_proximity_point: GrappleHookPoint
+	
+	for i in grapple_hook_points.size():
+		var proximity_to_crosshair: float = position.direction_to(grapple_hook_points[i].position).dot(get_looking_direction())
+		
+		if proximity_to_crosshair > highest_proximity_to_crosshair:
+			highest_proximity_to_crosshair = proximity_to_crosshair
+			highest_proximity_point = grapple_hook_points[i]
+	
+	return highest_proximity_point
 
 
 func clear_grapple_hook_point() -> void:

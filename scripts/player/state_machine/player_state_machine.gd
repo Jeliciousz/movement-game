@@ -39,10 +39,17 @@ func _ready() -> void:
 		active_state.enter()
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	if not active_state:
 		return
 	
 	active_state.state_checks()
+	
+	active_state.physics_update(delta)
+
+
+func update(delta: float) -> void:
+	if not active_state:
+		return
 	
 	active_state.update(delta)

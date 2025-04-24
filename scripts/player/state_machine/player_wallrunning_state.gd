@@ -29,7 +29,7 @@ func state_checks() -> void:
 	enter_state_checks()
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var air_resistence: float = player.physics_air_resistence * player.wallrun_air_resistence_multiplier
 	var friction: float = player.physics_friction * player.wallrun_friction_multiplier
 	var gravity: float = player.physics_gravity * player.wallrun_gravity_multiplier

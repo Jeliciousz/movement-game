@@ -26,7 +26,7 @@ func state_checks() -> void:
 	enter_state_checks()
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var backwards_multiplier: float = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
 	var top_speed: float

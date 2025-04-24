@@ -3,6 +3,10 @@ class_name PlayerGrappleHookingState extends PlayerState
 
 func enter() -> void:
 	player.grapple_hook_point.targeted = player.grapple_hook_point.NotTargeted
+	
+	player.coyote_jump_active = false
+	player.coyote_slide_active = false
+	player.coyote_walljump_active = false
 
 
 func state_checks() -> void:
@@ -12,12 +16,12 @@ func state_checks() -> void:
 		transition_func.call(&"Grounded")
 		return
 	
-	if Input.is_action_just_released("secondary fire"):
+	if Input.is_action_just_pressed("grapple_hook"):
 		transition_func.call(&"Airborne")
 		return
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var backwards_multiplier = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
 	var top_speed: float = player.air_speed * backwards_multiplier
@@ -38,7 +42,9 @@ func update(delta: float) -> void:
 	var power: float = lerpf(0, player.grapple_hook_power, weight)
 	
 	player.velocity += -direction_from_grapple * maxf(0, (power - player.velocity.dot(-direction_from_grapple)))
-	
+
+
+func update(delta: float) -> void:
 	DebugDraw3D.draw_line(player.get_center_of_mass(), player.grapple_hook_point.position, Color.BLACK)
 
 

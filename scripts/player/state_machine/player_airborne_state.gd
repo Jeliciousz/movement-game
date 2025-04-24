@@ -14,10 +14,13 @@ func state_checks() -> void:
 		transition_func.call(&"Grounded")
 		return
 	
+	if handle_grapple_hooking():
+		return
+	
 	enter_state_checks()
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var backwards_multiplier: float = lerpf(1, player.move_backwards_multiplier, player.get_amount_moving_backwards())
 	
 	var top_speed: float = player.air_speed * backwards_multiplier
@@ -53,7 +56,7 @@ func enter_state_checks() -> void:
 		player.velocity.x = new_velocity.x
 		player.velocity.z = new_velocity.z
 		
-		transition_func.call(&"WallRunning")
+		transition_func.call(&"Wall Running")
 		return
 	
 	if player.coyote_enabled and Time.get_ticks_msec() - player.airborne_timestamp <= player.coyote_duration:
@@ -85,10 +88,6 @@ func enter_state_checks() -> void:
 		player.air_jump()
 		
 		transition_func.call(&"Jumping")
-		return
-	
-	if handle_grapple_hooking():
-		transition_func.call(&"GrappleHooking")
 		return
 
 
@@ -132,10 +131,14 @@ func handle_grapple_hooking() -> bool:
 		player.clear_grapple_hook_point()
 		return false
 	
-	get_targeted_grapple_hook_point()
+	var target_grapple_hook_point: GrappleHookPoint = player.get_targeted_grapple_hook_point()
 	
-	if not player.grapple_hook_point:
+	if not target_grapple_hook_point:
+		player.clear_grapple_hook_point()
 		return false
+	elif player.grapple_hook_point != target_grapple_hook_point:
+		player.clear_grapple_hook_point()
+		player.grapple_hook_point = target_grapple_hook_point
 	
 	if player.grapple_hook_point.position.distance_to(player.position) > player.grapple_hook_max_distance:
 		player.grapple_hook_point.targeted = player.grapple_hook_point.InvalidTarget
@@ -146,42 +149,11 @@ func handle_grapple_hooking() -> bool:
 		
 		player.grapple_hook_indicator_audio.play()
 	
-	if Input.is_action_just_pressed("secondary fire"):
+	if Input.is_action_just_pressed("grapple_hook"):
 		player.grapple_hook_fire_audio.play()
+		
+		transition_func.call(&"Grapple Hooking")
 		
 		return true
 	
 	return false
-
-
-func get_targeted_grapple_hook_point() -> void:
-	var grapple_hook_points: Array[GrappleHookPoint] = []
-	
-	while player.grapple_hook_raycast.is_colliding():
-		var collider: CollisionObject3D = player.grapple_hook_raycast.get_collider()
-		if collider is GrappleHookPoint and collider.position.distance_to(player.position) > player.grapple_hook_min_distance:
-			grapple_hook_points.push_back(collider)
-		
-		player.grapple_hook_raycast.add_exception(collider)
-		player.grapple_hook_raycast.force_raycast_update()
-	
-	if grapple_hook_points.is_empty():
-		player.clear_grapple_hook_point()
-		return
-	
-	player.grapple_hook_raycast.clear_exceptions()
-	
-	var highest_proximity_to_crosshair: float = -1
-	
-	var highest_proximity_point: GrappleHookPoint
-	
-	for i in grapple_hook_points.size():
-		var proximity_to_crosshair: float = player.position.direction_to(grapple_hook_points[i].position).dot(player.get_looking_direction())
-		
-		if proximity_to_crosshair > highest_proximity_to_crosshair:
-			highest_proximity_to_crosshair = proximity_to_crosshair
-			highest_proximity_point = grapple_hook_points[i]
-	
-	if not player.grapple_hook_point or player.grapple_hook_point != highest_proximity_point:
-		player.clear_grapple_hook_point()
-		player.grapple_hook_point = highest_proximity_point
