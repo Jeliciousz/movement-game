@@ -7,7 +7,7 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_friction: float = 40
 
 ## The acceleration applied opposite and proportional to the player's velocity.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.125
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.15
 
 ## The acceleration applied downwards.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_gravity: float = 30
@@ -15,11 +15,26 @@ class_name Player extends CharacterBody3D
 
 @export_group("Coyote Time", "coyote_")
 
-## Is there coyote time?
-@export var coyote_enabled: bool = true
+## Is there coyote time for jumps?
+@export var coyote_jump_enabled: bool = true
+
+## Is there coyote time for slides?
+@export var coyote_slide_enabled: bool = true
+
+## Is there coyote time for walljumps?
+@export var coyote_walljump_enabled: bool = true
 
 ## How long coyote time lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 125
+
+
+@export_group("Stair-Stepping", "stairstep_")
+
+## Is stair-stepping enabled?
+@export var stairstep_enabled: bool = true
+
+## How high can the player step up/down stairs?
+@export var stairstep_step_height: float = 0.5
 
 
 @export_group("Movement", "move_")
@@ -40,10 +55,10 @@ class_name Player extends CharacterBody3D
 @export_subgroup("Air Control", "air_")
 
 ## How fast the player can move in the air.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 1.5
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 2
 
 ## How quickly the player accelerates in the air.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 40
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 45
 
 
 @export_group("Jumping", "jump_")
@@ -127,6 +142,16 @@ class_name Player extends CharacterBody3D
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 40
 
 
+@export_subgroup("Crouch Jumping", "crouch_jump_")
+
+## Can the player jump while crouching?
+@export var crouch_jump_enabled: bool = true
+
+## How long after the crouching can the player jump?[br]
+## 0 = The player can always jump while crouching.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var crouch_jump_window: int = 200
+
+
 @export_subgroup("Air Crouching", "air_crouch_")
 
 ## Can the player crouch in the air?
@@ -202,10 +227,10 @@ class_name Player extends CharacterBody3D
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
 
 ## The acceleration applied against the direction of the velocity in the vertical axis while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 25
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 35
 
 ## How much air resistence is applied while wall-running.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.1
 
 ## How much gravity is applied while sliding on a wall.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_gravity_multiplier: float = 0.5
@@ -358,8 +383,19 @@ func _physics_process(delta: float) -> void:
 	state_machine.physics_update(delta)
 	
 	floor_block_on_wall = is_on_floor()
+	
 	colliding_velocity = velocity
-	move_and_slide()
+	
+	var last_position: Vector3 = position
+	var was_on_floor: bool = is_on_floor()
+	
+	var collided: bool = move_and_slide()
+	
+	if stairstep_enabled:
+		if collided:
+			stair_step_up(last_position)
+		elif not is_on_floor() and was_on_floor and velocity.dot(up_direction) <= 0:
+			stair_step_down()
 	
 	if not is_on_floor():
 		velocity = get_real_velocity()
@@ -398,6 +434,69 @@ func update_surface_checks() -> void:
 	velocity = Vector3.ZERO
 	move_and_slide()
 	velocity = player_velocity
+
+
+func stair_step_up(position_before_move: Vector3) -> void:
+	if colliding_velocity.is_zero_approx():
+		return
+	
+	var collision: KinematicCollision3D = get_last_slide_collision()
+	
+	if abs(collision.get_normal().y) > safe_margin:
+		return
+	
+	var normal: Vector3 = Vector3(collision.get_normal().x, 0, collision.get_normal().z).normalized()
+	
+	var position_before_test: Vector3 = position
+	
+	if move_and_collide(up_direction * stairstep_step_height, false, safe_margin):
+		position = position_before_test
+		return
+	
+	var test: KinematicCollision3D = move_and_collide(-normal * collision_shape.shape.radius, true, safe_margin)
+	
+	if test and test.get_travel().length() < 0.1:
+		position = position_before_test
+		return
+	
+	move_and_collide(-normal * collision_shape.shape.radius, false, safe_margin)
+	
+	test = move_and_collide(-up_direction * stairstep_step_height, true, safe_margin)
+	
+	if not test:
+		position = position_before_move + up_direction * stairstep_step_height
+		head.global_position -= up_direction * stairstep_step_height
+	else:
+		position = position_before_move + up_direction * stairstep_step_height - test.get_travel() 
+		head.global_position -= up_direction * stairstep_step_height - test.get_travel()
+	
+	velocity = colliding_velocity
+	
+	var last_position: Vector3 = position
+	
+	if move_and_slide():
+		stair_step_up(last_position)
+
+
+func stair_step_down() -> void:
+	var position_before_test: Vector3 = position
+	
+	var last_motion_direction: Vector3 = get_last_motion().normalized()
+	
+	if move_and_collide(last_motion_direction * 0.1, false, safe_margin):
+		position = position_before_test
+		return 
+	
+	var test: KinematicCollision3D = move_and_collide(-up_direction * (stairstep_step_height * 2), true, safe_margin)
+	
+	if not test:
+		position = position_before_test
+		return
+	
+	move_and_collide(-up_direction * (stairstep_step_height * 2), false, safe_margin)
+	head.global_position -= test.get_travel()
+	move_and_collide(-last_motion_direction * 0.1, false, safe_margin)
+	update_surface_checks()
 
 
 func spawn_random() -> void:
@@ -509,7 +608,7 @@ func clear_grapple_hook_point() -> void:
 
 
 func add_gravity(delta: float, gravity: float) -> void:
-	velocity += Vector3.DOWN * gravity * delta
+	velocity += -up_direction * gravity * delta
 
 
 func add_air_resistence(delta: float, air_resistence: float) -> void:
@@ -616,7 +715,7 @@ func jump() -> void:
 	var power: float = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
 	var horizontal_power: float = lerpf(jump_horizontal_power, speed_jump_max_horizontal_power, weight) * backwards_multiplier
 	
-	velocity.y += power
+	velocity += up_direction * power
 	
 	velocity += move_direction * horizontal_power
 
@@ -635,20 +734,20 @@ func air_jump() -> void:
 	var power: float = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
 	var horizontal_power: float = air_jump_horizontal_power * backwards_multiplier
 	
-	velocity.y = power
+	velocity += up_direction * power
 	
 	velocity += move_direction * horizontal_power
 
 
 func slide_jump() -> void:
-	velocity.y += slide_jump_power
+	velocity += up_direction * slide_jump_power
 	
 	velocity += velocity.normalized() * slide_jump_horizontal_power
 
 
 func wall_jump() -> void:
-	velocity.y = walljump_power
+	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * walljump_power
 	
-	velocity += Vector3(velocity.x, 0, velocity.z).normalized() * walljump_horizontal_power
+	velocity += wallrun_run_direction * walljump_horizontal_power
 	
 	velocity += wallrun_wall_normal * walljump_kick_power

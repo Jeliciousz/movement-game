@@ -18,7 +18,8 @@ func state_checks() -> void:
 		transition_func.call(&"Grounded")
 		return
 	
-	handle_wallrunning()
+	if not wallrun_checks():
+		return
 	
 	var horizontal_velocity: Vector3 = Vector3(player.velocity.x, 0, player.velocity.z)
 	
@@ -55,7 +56,7 @@ func update_stance() -> void:
 				player.switch_stance(player.Stances.SPRINTING)
 
 
-func handle_wallrunning() -> void:
+func wallrun_checks() -> bool:
 	var wall_normal: Vector3
 	
 	if not player.is_on_wall():
@@ -63,15 +64,17 @@ func handle_wallrunning() -> void:
 		
 		if not (test and test.get_collider().is_in_group("WallrunBodies")):
 			transition_func.call(&"Airborne")
-			return
+			return false
 		
 		player.move_and_collide(-player.wallrun_wall_normal * 0.1)
+		
+		player.update_surface_checks()
 		
 		wall_normal = Vector3(test.get_normal().x, 0, test.get_normal().z).normalized()
 	else:
 		if not player.get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
 			transition_func.call(&"Airborne")
-			return
+			return false
 		
 		wall_normal = player.get_wall_normal()
 	
@@ -88,6 +91,8 @@ func handle_wallrunning() -> void:
 		player.velocity.x = player.wallrun_run_direction.x * horizontal_colliding_speed
 		player.velocity.y = player.colliding_velocity.y
 		player.velocity.z = player.wallrun_run_direction.z * horizontal_colliding_speed
+	
+	return true
 
 
 func enter_state_checks() -> void:

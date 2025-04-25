@@ -59,26 +59,26 @@ func enter_state_checks() -> void:
 		transition_func.call(&"WallRunning")
 		return
 	
-	if player.coyote_enabled and Time.get_ticks_msec() - player.airborne_timestamp <= player.coyote_duration:
-		if player.slide_enabled and player.coyote_slide_active and slide_checks() and InputBuffer.is_action_buffered("slide"):
+	if Time.get_ticks_msec() - player.airborne_timestamp <= player.coyote_duration:
+		if player.slide_enabled and player.coyote_slide_enabled and player.coyote_slide_active and slide_checks() and InputBuffer.is_action_buffered("slide"):
 			player.crouch()
 			player.last_stance = player.Stances.SPRINTING
 			
-			player.velocity.y = 0
+			player.velocity -= player.up_direction * player.velocity.dot(player.up_direction)
 			player.velocity += player.move_direction * player.slide_power
 			
 			transition_func.call(&"Sliding")
 			return
 		
-		if player.walljump_enabled and player.coyote_walljump_active and InputBuffer.is_action_buffered("jump"):
+		if player.walljump_enabled and player.coyote_walljump_enabled and player.coyote_walljump_active and InputBuffer.is_action_buffered("jump"):
 			player.wall_jump()
 			
 			player.coyote_walljump_active = false
 			transition_func.call(&"Jumping")
 			return
 		
-		if player.jump_enabled and player.coyote_jump_active and InputBuffer.is_action_buffered("jump"):
-			player.velocity.y = 0
+		if player.jump_enabled and player.coyote_jump_enabled and player.coyote_jump_active and InputBuffer.is_action_buffered("jump"):
+			player.velocity -= player.up_direction * player.velocity.dot(player.up_direction)
 			player.jump()
 			
 			transition_func.call(&"Jumping")
@@ -114,7 +114,7 @@ func wallrun_checks() -> bool:
 	if not player.is_on_wall():
 		return false
 	
-	if player.get_wall_normal().y < 0:
+	if player.get_wall_normal().y < -player.safe_margin:
 		return false
 	
 	if not player.get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):

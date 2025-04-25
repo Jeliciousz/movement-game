@@ -89,7 +89,7 @@ func enter_state_checks() -> void:
 			
 			transition_func.call(&"Jumping")
 			return
-		elif player.coyote_enabled and Time.get_ticks_msec() - player.crouch_timestamp <= player.coyote_duration:
+		elif player.crouch_jump_enabled and (player.crouch_jump_window == 0 or Time.get_ticks_msec() - player.crouch_timestamp <= player.crouch_jump_window):
 			player.jump()
 			
 			transition_func.call(&"Jumping")
