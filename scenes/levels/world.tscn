@@ -3,8 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_dp8al"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_f1v6p"]
 [ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/other/main.tres" id="5_de0io"]
-[ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/textures/materials/wall.tres" id="6_xidr1"]
-[ext_resource type="Material" uid="uid://dst6hunp1eh6w" path="res://assets/textures/materials/wallrun_wall.tres" id="7_8c33x"]
+[ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/wall.tres" id="6_xidr1"]
+[ext_resource type="Material" uid="uid://dst6hunp1eh6w" path="res://assets/materials/wallrun_wall.tres" id="7_8c33x"]
 [ext_resource type="Texture2D" uid="uid://bwkbrd3qxcyx0" path="res://assets/textures/world/wall.png" id="8_y40x4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfnet"]
