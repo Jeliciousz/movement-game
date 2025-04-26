@@ -1,8 +1,7 @@
-[gd_scene load_steps=39 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=38 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
-[ext_resource type="Script" uid="uid://b64xddq5uht26" path="res://scripts/player/view_animator.gd" id="2_a8ls1"]
 [ext_resource type="Script" uid="uid://r1fkwgtbqld0" path="res://scripts/player/mouse_aim_controller.gd" id="2_ke2ow"]
 [ext_resource type="AudioStream" uid="uid://okhvtvkbf4eg" path="res://assets/sounds/player/footsteps/tile2.wav" id="3_i4ail"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
@@ -101,13 +100,6 @@ script = ExtResource("1_3vyb7")
 script = ExtResource("2_ke2ow")
 body = NodePath("..")
 head = NodePath("../Head")
-
-[node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_head", "player_camera", "player_footsteps_audio")]
-script = ExtResource("2_a8ls1")
-player = NodePath("..")
-player_head = NodePath("../Head")
-player_camera = NodePath("../Head/Camera")
-player_footsteps_audio = NodePath("../FootstepsAudio")
 
 [node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("player")]
 script = ExtResource("4_fulsm")
