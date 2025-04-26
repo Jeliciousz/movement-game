@@ -1,6 +1,7 @@
 extends Node
+## The Global Autoload.
 
 
 func _init() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	Input.use_accumulated_input = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
