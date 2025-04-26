@@ -6,3 +6,4 @@
 *.tmp
 addons/*/libs/
 exports/
+unused/
