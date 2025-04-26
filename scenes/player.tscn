@@ -97,9 +97,9 @@ floor_block_on_wall = false
 floor_snap_length = 0.25
 script = ExtResource("1_3vyb7")
 
-[node name="AimController" type="Node" parent="." node_paths=PackedStringArray("player", "head")]
+[node name="AimController" type="Node" parent="." node_paths=PackedStringArray("body", "head")]
 script = ExtResource("2_g2els")
-player = NodePath("..")
+body = NodePath("..")
 head = NodePath("../Head")
 
 [node name="ViewAnimator" type="Node" parent="." node_paths=PackedStringArray("player", "player_head", "player_camera", "player_footsteps_audio")]
