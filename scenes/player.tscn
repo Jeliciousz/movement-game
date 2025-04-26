@@ -48,9 +48,6 @@ metadata/_custom_type_script = "uid://df2r1myc6egbv"
 script = ExtResource("10_wqfne")
 metadata/_custom_type_script = "uid://c86h0mw7kqnm7"
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_l71n6"]
-viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
-
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ke2ow"]
 height = 1.8
 radius = 0.4
@@ -83,6 +80,9 @@ random_pitch = 1.1
 random_volume_offset_db = 1.5
 streams_count = 1
 stream_0/stream = ExtResource("21_31cv2")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_l71n6"]
+viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
 
 [node name="Player" type="CharacterBody3D"]
 top_level = true
@@ -134,31 +134,6 @@ collide_with_areas = true
 collide_with_bodies = false
 
 [node name="Hand" type="Node3D" parent="Head/Camera"]
-
-[node name="ViewmodelTexture" type="TextureRect" parent="."]
-z_index = -1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("ViewportTexture_l71n6")
-expand_mode = 1
-
-[node name="ViewmodelViewport" type="SubViewport" parent="ViewmodelTexture"]
-transparent_bg = true
-handle_input_locally = false
-use_debanding = true
-size = Vector2i(1280, 720)
-render_target_update_mode = 4
-script = ExtResource("15_l71n6")
-
-[node name="ViewmodelCamera" type="Camera3D" parent="ViewmodelTexture/ViewmodelViewport" node_paths=PackedStringArray("world_camera")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
-cull_mask = 2
-fov = 90.0
-script = ExtResource("17_31cv2")
-world_camera = NodePath("../../../Head/Camera")
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -214,6 +189,31 @@ attenuation_model = 3
 volume_db = -12.0
 max_distance = 30.0
 attenuation_filter_cutoff_hz = 20500.0
+
+[node name="ViewmodelTexture" type="TextureRect" parent="."]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_l71n6")
+expand_mode = 1
+
+[node name="ViewmodelViewport" type="SubViewport" parent="ViewmodelTexture"]
+transparent_bg = true
+handle_input_locally = false
+use_debanding = true
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+script = ExtResource("15_l71n6")
+
+[node name="ViewmodelCamera" type="Camera3D" parent="ViewmodelTexture/ViewmodelViewport" node_paths=PackedStringArray("world_camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+cull_mask = 2
+fov = 90.0
+script = ExtResource("17_31cv2")
+world_camera = NodePath("../../../Head/Camera")
 
 [node name="PlayerHUD" type="Control" parent="."]
 layout_mode = 3
