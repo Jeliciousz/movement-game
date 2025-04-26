@@ -197,21 +197,32 @@ gi_mode = 0
 mesh = SubResource("CapsuleMesh_y4r1p")
 skeleton = NodePath("../..")
 
-[node name="FootstepsAudio" type="AudioStreamPlayer" parent="."]
+[node name="FootstepsAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamRandomizer_l71n6")
+attenuation_model = 3
 volume_db = -12.0
+max_distance = 10.0
+max_polyphony = 2
+attenuation_filter_cutoff_hz = 20500.0
 
-[node name="SlideAudio" type="AudioStreamPlayer" parent="."]
+[node name="SlideAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamRandomizer_pf23h")
+attenuation_model = 3
 volume_db = -12.0
+max_distance = 10.0
+attenuation_filter_cutoff_hz = 20500.0
 
 [node name="GrappleHookIndicatorAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_a8ls1")
 volume_db = -12.0
 
-[node name="GrappleHookFireAudio" type="AudioStreamPlayer" parent="."]
+[node name="GrappleHookFireAudio" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 stream = ExtResource("12_qfm1y")
+attenuation_model = 3
 volume_db = -12.0
+max_distance = 30.0
+attenuation_filter_cutoff_hz = 20500.0
 
 [node name="Hud" type="Control" parent="."]
 layout_mode = 3
