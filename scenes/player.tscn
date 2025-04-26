@@ -95,7 +95,6 @@ floor_stop_on_slope = false
 floor_constant_speed = true
 floor_block_on_wall = false
 floor_snap_length = 0.25
-safe_margin = 0.008
 script = ExtResource("1_3vyb7")
 
 [node name="AimController" type="Node" parent="." node_paths=PackedStringArray("player", "head")]
