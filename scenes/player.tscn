@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=37 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -10,7 +10,6 @@
 [ext_resource type="Script" uid="uid://b3vho23i1k8ru" path="res://scripts/player/state_machine/player_state.gd" id="5_ke2ow"]
 [ext_resource type="Script" uid="uid://cgxt0qp2f6woe" path="res://scripts/player/state_machine/player_grounded_state.gd" id="6_ujl30"]
 [ext_resource type="Script" uid="uid://qs1s86l755ag" path="res://scripts/player/state_machine/player_airborne_state.gd" id="7_31cv2"]
-[ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/hud/fps_counter.gd" id="7_smehm"]
 [ext_resource type="Script" uid="uid://bmuaswe2r753e" path="res://scripts/player/state_machine/player_jumping_state.gd" id="8_pf23h"]
 [ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/hud/spedometer.gd" id="8_smehm"]
 [ext_resource type="Script" uid="uid://df2r1myc6egbv" path="res://scripts/player/state_machine/player_sliding_state.gd" id="9_dt7fs"]
@@ -216,7 +215,7 @@ volume_db = -12.0
 max_distance = 30.0
 attenuation_filter_cutoff_hz = 20500.0
 
-[node name="Hud" type="Control" parent="."]
+[node name="PlayerHUD" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -231,51 +230,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="DebugInfo" type="Label" parent="Hud" node_paths=PackedStringArray("player")]
-layout_mode = 0
-offset_left = 6.0
-offset_top = 5.0
-offset_right = 46.0
-offset_bottom = 28.0
-script = ExtResource("19_4ni07")
-player = NodePath("../..")
-
-[node name="PanelContainer" type="PanelContainer" parent="Hud"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -43.0
-offset_top = 160.0
-offset_right = 43.0
-offset_bottom = 200.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = ExtResource("22_ke2ow")
-
-[node name="Spedometer" type="Label" parent="Hud/PanelContainer" node_paths=PackedStringArray("player")]
-layout_mode = 2
-horizontal_alignment = 1
-script = ExtResource("8_smehm")
-player = NodePath("../../..")
-
-[node name="FPS Counter" type="Label" parent="Hud"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -46.0
-offset_top = 5.0
-offset_right = -6.0
-offset_bottom = 28.0
-grow_horizontal = 0
-theme_override_font_sizes/font_size = 10
-horizontal_alignment = 2
-script = ExtResource("7_smehm")
-
-[node name="TextureRect" type="TextureRect" parent="Hud"]
+[node name="Crosshair" type="TextureRect" parent="PlayerHUD"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -290,3 +245,33 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("25_ke2ow")
 expand_mode = 1
+
+[node name="SpedometerPanel" type="PanelContainer" parent="PlayerHUD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.0
+offset_top = 106.0
+offset_right = 43.0
+offset_bottom = 146.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("22_ke2ow")
+
+[node name="Spedometer" type="Label" parent="PlayerHUD/SpedometerPanel" node_paths=PackedStringArray("player")]
+layout_mode = 2
+horizontal_alignment = 1
+script = ExtResource("8_smehm")
+player = NodePath("../../..")
+
+[node name="DebugInfo" type="Label" parent="PlayerHUD" node_paths=PackedStringArray("player")]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 5.0
+offset_right = 46.0
+offset_bottom = 28.0
+script = ExtResource("19_4ni07")
+player = NodePath("../..")
