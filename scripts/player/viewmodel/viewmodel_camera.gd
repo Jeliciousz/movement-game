@@ -1,6 +1,7 @@
 extends Camera3D
 
 
+## The world camera to transform the viewmodel camera to.
 @export var world_camera: Camera3D
 
 
