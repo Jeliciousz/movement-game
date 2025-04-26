@@ -24,6 +24,18 @@
 [ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/other/hud.tres" id="22_ke2ow"]
 [ext_resource type="Texture2D" uid="uid://crlxrcr3qgg73" path="res://assets/textures/ui/crosshair.png" id="25_ke2ow"]
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ke2ow"]
+height = 1.8
+radius = 0.4
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ujl30"]
+height = 1.8
+radius = 0.4
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_31cv2"]
+height = 1.8
+radius = 0.4
+
 [sub_resource type="Resource" id="Resource_487ah"]
 script = ExtResource("7_31cv2")
 metadata/_custom_type_script = "uid://qs1s86l755ag"
@@ -48,24 +60,6 @@ metadata/_custom_type_script = "uid://df2r1myc6egbv"
 script = ExtResource("10_wqfne")
 metadata/_custom_type_script = "uid://c86h0mw7kqnm7"
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_ke2ow"]
-height = 1.8
-radius = 0.4
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_ujl30"]
-height = 1.8
-radius = 0.4
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_31cv2"]
-height = 1.8
-radius = 0.4
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_y4r1p"]
-radius = 0.4
-height = 1.8
-radial_segments = 16
-rings = 2
-
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_l71n6"]
 random_pitch = 1.1
 random_volume_offset_db = 1.5
@@ -81,6 +75,12 @@ random_volume_offset_db = 1.5
 streams_count = 1
 stream_0/stream = ExtResource("21_31cv2")
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y4r1p"]
+radius = 0.4
+height = 1.8
+radial_segments = 16
+rings = 2
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_l71n6"]
 viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
 
@@ -94,23 +94,6 @@ floor_constant_speed = true
 floor_block_on_wall = false
 floor_snap_length = 0.25
 script = ExtResource("1_3vyb7")
-
-[node name="MouseAimController" type="Node" parent="." node_paths=PackedStringArray("body", "head")]
-script = ExtResource("2_ke2ow")
-body = NodePath("..")
-head = NodePath("../Head")
-
-[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("player")]
-script = ExtResource("4_fulsm")
-states = Dictionary[StringName, ExtResource("5_ke2ow")]({
-&"Airborne": SubResource("Resource_487ah"),
-&"GrappleHooking": SubResource("Resource_ujl30"),
-&"Grounded": SubResource("Resource_gl8cc"),
-&"Jumping": SubResource("Resource_md1ol"),
-&"Sliding": SubResource("Resource_bj30b"),
-&"WallRunning": SubResource("Resource_ke2ow")
-})
-player = NodePath("..")
 
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
@@ -135,6 +118,11 @@ collide_with_bodies = false
 
 [node name="Hand" type="Node3D" parent="Head/Camera"]
 
+[node name="MouseAimController" type="Node" parent="." node_paths=PackedStringArray("body", "head")]
+script = ExtResource("2_ke2ow")
+body = NodePath("..")
+head = NodePath("../Head")
+
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_ke2ow")
@@ -155,13 +143,17 @@ collision_mask = 9
 [node name="CollisionShape" type="CollisionShape3D" parent="AirborneUncrouchArea"]
 shape = SubResource("CylinderShape3D_31cv2")
 
-[node name="MeshInstance" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-layers = 4
-cast_shadow = 3
-gi_mode = 0
-mesh = SubResource("CapsuleMesh_y4r1p")
-skeleton = NodePath("../..")
+[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("4_fulsm")
+states = Dictionary[StringName, ExtResource("5_ke2ow")]({
+&"Airborne": SubResource("Resource_487ah"),
+&"GrappleHooking": SubResource("Resource_ujl30"),
+&"Grounded": SubResource("Resource_gl8cc"),
+&"Jumping": SubResource("Resource_md1ol"),
+&"Sliding": SubResource("Resource_bj30b"),
+&"WallRunning": SubResource("Resource_ke2ow")
+})
+player = NodePath("..")
 
 [node name="FootstepsAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamRandomizer_l71n6")
@@ -190,8 +182,15 @@ volume_db = -12.0
 max_distance = 30.0
 attenuation_filter_cutoff_hz = 20500.0
 
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+layers = 4
+cast_shadow = 3
+gi_mode = 0
+mesh = SubResource("CapsuleMesh_y4r1p")
+skeleton = NodePath("../..")
+
 [node name="ViewmodelTexture" type="TextureRect" parent="."]
-z_index = -1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -216,6 +215,7 @@ script = ExtResource("17_31cv2")
 world_camera = NodePath("../../../Head/Camera")
 
 [node name="PlayerHUD" type="Control" parent="."]
+z_index = 1
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
