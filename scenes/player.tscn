@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
 [ext_resource type="Script" uid="uid://b64xddq5uht26" path="res://scripts/player/view_animator.gd" id="2_a8ls1"]
-[ext_resource type="Script" uid="uid://cb61nsmt71w5o" path="res://scripts/player/aim_controller.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://r1fkwgtbqld0" path="res://scripts/player/mouse_aim_controller.gd" id="2_ke2ow"]
 [ext_resource type="AudioStream" uid="uid://okhvtvkbf4eg" path="res://assets/sounds/player/footsteps/tile2.wav" id="3_i4ail"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
 [ext_resource type="Script" uid="uid://cpaw76w4abifk" path="res://scripts/player/state_machine/player_state_machine.gd" id="4_fulsm"]
@@ -97,8 +97,8 @@ floor_block_on_wall = false
 floor_snap_length = 0.25
 script = ExtResource("1_3vyb7")
 
-[node name="AimController" type="Node" parent="." node_paths=PackedStringArray("body", "head")]
-script = ExtResource("2_g2els")
+[node name="MouseAimController" type="Node" parent="." node_paths=PackedStringArray("body", "head")]
+script = ExtResource("2_ke2ow")
 body = NodePath("..")
 head = NodePath("../Head")
 
