@@ -12,4 +12,4 @@ func _process(delta: float) -> void:
 
 	label_speed = lerpf(label_speed, horizontal_speed, 15 * delta)
 
-	text = "%.fkph" % (label_speed * 3.6)
+	text = "%.f kph" % (label_speed * 3.6)
