@@ -287,13 +287,13 @@ class_name Player extends CharacterBody3D
 
 @onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
 
-@onready var footsteps_audio: AudioStreamPlayer = $FootstepsAudio
+@onready var footsteps_audio: AudioStreamPlayer3D = $FootstepsAudio
 
-@onready var slide_audio: AudioStreamPlayer = $SlideAudio
+@onready var slide_audio: AudioStreamPlayer3D = $SlideAudio
 
 @onready var grapple_hook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
 
-@onready var grapple_hook_fire_audio: AudioStreamPlayer = $GrappleHookFireAudio
+@onready var grapple_hook_fire_audio: AudioStreamPlayer3D = $GrappleHookFireAudio
 
 
 @onready var standing_height: float = collision_shape.shape.height
