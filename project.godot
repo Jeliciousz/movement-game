@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 [autoload]
 
 InputBuffer="*res://scripts/autoloads/input_buffer.gd"
+Global="*res://scripts/autoloads/global.gd"
 
 [debug]
 
