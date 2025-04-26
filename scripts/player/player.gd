@@ -603,7 +603,7 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 
 func clear_grapple_hook_point() -> void:
 	if grapple_hook_point:
-		grapple_hook_point.targeted = grapple_hook_point.NotTargeted
+		grapple_hook_point.targeted = grapple_hook_point.NOT_TARGETED
 		grapple_hook_point = null
 
 

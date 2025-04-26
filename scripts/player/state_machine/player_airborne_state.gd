@@ -141,11 +141,11 @@ func handle_grapple_hooking() -> bool:
 		player.grapple_hook_point = target_grapple_hook_point
 	
 	if player.grapple_hook_point.position.distance_to(player.head.global_position) > player.grapple_hook_max_distance:
-		player.grapple_hook_point.targeted = player.grapple_hook_point.InvalidTarget
+		player.grapple_hook_point.targeted = player.grapple_hook_point.INVALID_TARGET
 		return false
-	
-	if player.grapple_hook_point.targeted != player.grapple_hook_point.Targeted:
-		player.grapple_hook_point.targeted = player.grapple_hook_point.Targeted
+
+	if player.grapple_hook_point.targeted != player.grapple_hook_point.TARGETED:
+		player.grapple_hook_point.targeted = player.grapple_hook_point.TARGETED
 		
 		player.grapple_hook_indicator_audio.play()
 	

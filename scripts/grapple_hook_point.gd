@@ -8,20 +8,20 @@ class_name GrappleHookPoint extends Area3D
 @onready var invalid_target_sprite: Sprite3D = $InvalidTargetSprite
 
 
-enum {NotTargeted, Targeted, InvalidTarget}
+enum {NOT_TARGETED, TARGETED, INVALID_TARGET}
 
 
-var targeted: int = NotTargeted
+var targeted: int = NOT_TARGETED
 
 
 func _process(_delta: float) -> void:
 	match targeted:
-		NotTargeted:
+		NOT_TARGETED:
 			targeted_sprite.hide()
 			invalid_target_sprite.hide()
-		Targeted:
+		TARGETED:
 			targeted_sprite.show()
 			invalid_target_sprite.hide()
-		InvalidTarget:
+		INVALID_TARGET:
 			targeted_sprite.hide()
 			invalid_target_sprite.show()

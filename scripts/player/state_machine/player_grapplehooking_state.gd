@@ -2,7 +2,7 @@ class_name PlayerGrappleHookingState extends PlayerState
 
 
 func enter() -> void:
-	player.grapple_hook_point.targeted = player.grapple_hook_point.NotTargeted
+    player.grapple_hook_point.targeted = player.grapple_hook_point.NOT_TARGETED
 	
 	player.coyote_jump_active = false
 	player.coyote_slide_active = false
