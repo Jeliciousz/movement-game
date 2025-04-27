@@ -28,12 +28,16 @@ func _process(delta: float) -> void:
 	if _state == null:
 		return
 
+	_state._state_preprocess(delta)
+
 	_state._state_process(delta)
 
 
 func _physics_process(delta: float) -> void:
 	if _state == null:
 		return
+
+	_state._state_physics_preprocess(delta)
 
 	_state._state_physics_process(delta)
 
