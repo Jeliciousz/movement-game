@@ -28,7 +28,6 @@ func spawn_random() -> void:
 		shared_vars[&"air_crouches"] = Global.MAX_INT
 		shared_vars[&"airborne_timestamp"] = 0
 		shared_vars[&"jump_timestamp"] = 0
-		shared_vars[&"crouch_timestamp"] = 0
 		shared_vars[&"slide_timestamp"] = 0
 		shared_vars[&"wallrun_timestamp"] = 0
 		shared_vars[&"wallrun_wall_normal"] = Vector3.ZERO
