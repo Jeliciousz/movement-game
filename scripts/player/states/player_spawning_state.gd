@@ -26,8 +26,9 @@ func spawn_random() -> void:
 		shared_vars[&"coyote_walljump_active"] = false
 		shared_vars[&"air_jumps"] = Global.MAX_INT
 		shared_vars[&"air_crouches"] = Global.MAX_INT
-		shared_vars[&"slide_timestamp"] = Global.MIN_INT
+		shared_vars[&"airborne_timestamp"] = Global.MIN_INT
 		shared_vars[&"crouch_timestamp"] = Global.MIN_INT
+		shared_vars[&"slide_timestamp"] = Global.MIN_INT
 		shared_vars[&"grapple_hook_point"] = null
 
 		InputBuffer.clear_buffered_action("jump")
