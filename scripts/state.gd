@@ -5,7 +5,7 @@ extends Node
 ## Can be entered, exited, and updated per physics and idle frame.
 
 ## The function a state can call to transition to a new state.
-var change_state_to: Callable
+var change_state: Callable
 
 ## The dictionary of values shared between the states in a state machine.
 var shared_vars: Dictionary[StringName, Variant]

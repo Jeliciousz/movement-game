@@ -19,7 +19,7 @@ func _ready() -> void:
 	if _state == null:
 		return
 
-	_state.change_state_to = change_state_to
+	_state.change_state = change_state_to
 	_state.shared_vars = shared_vars
 	_state._state_enter()
 
@@ -70,7 +70,7 @@ func change_state_to(state: StringName) -> void:
 		_state._state_exit()
 
 	_state = get_node(NodePath(state))
-	_state.change_state_to = change_state_to
+	_state.change_state = change_state_to
 	_state.shared_vars = shared_vars
 	_state._state_enter()
 
