@@ -1,15 +1,17 @@
 extends Label
 
+## The [Player].
+@export var _player: Player
 
-@export var player: Player
+## How quickly the speed shown on the spedometeter updates to match the player's speed.
+@export var _speed_track_rate: float = 25.0
 
-
-var label_speed: float = 0
+var _label_speed_kph: float = 0.0
 
 
 func _process(delta: float) -> void:
-	var horizontal_speed: float = Vector2(player.velocity.x, player.velocity.z).length()
+	var horizontal_speed_kph: float = Vector2(_player.velocity.x, _player.velocity.z).length() * 3.6
 
-	label_speed = lerpf(label_speed, horizontal_speed, 15 * delta)
+	_label_speed_kph = move_toward(_label_speed_kph, horizontal_speed_kph, _speed_track_rate * delta)
 
-	text = "%.f kph" % (label_speed * 3.6)
+	text = "%.f kph" % _label_speed_kph
