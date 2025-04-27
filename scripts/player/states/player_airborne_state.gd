@@ -21,34 +21,31 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	update_stance()
 
-	if Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
-		if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and shared_vars[&"coyote_slide_active"] and slide_checks():
-			InputBuffer.clear_buffered_action(&"slide")
-			_player.slide()
-			state_machine.change_state_to(&"Sliding")
+	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and shared_vars[&"coyote_slide_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration and slide_checks():
+		InputBuffer.clear_buffered_action(&"slide")
+		_player.slide()
+
+	if InputBuffer.is_action_buffered(&"jump"):
+		if _player.walljump_enabled and _player.coyote_walljump_enabled and shared_vars[&"coyote_walljump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
+			InputBuffer.clear_buffered_action(&"jump")
+			_player.wall_jump(shared_vars[&"wallrun_wall_normal"], shared_vars[&"wallrun_run_direction"])
+			shared_vars[&"coyote_walljump_active"] = false
+			state_machine.change_state_to(&"Jumping")
 			return
 
-		if InputBuffer.is_action_buffered(&"jump"):
-			if _player.walljump_enabled and _player.coyote_walljump_enabled and shared_vars[&"coyote_walljump_active"]:
-				InputBuffer.clear_buffered_action(&"jump")
-				_player.wall_jump(shared_vars[&"wallrun_wall_normal"], shared_vars[&"wallrun_run_direction"])
-				shared_vars[&"coyote_walljump_active"] = false
-				state_machine.change_state_to(&"Jumping")
-				return
+		if _player.jump_enabled and _player.coyote_jump_enabled and shared_vars[&"coyote_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
+			InputBuffer.clear_buffered_action(&"jump")
+			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
+			_player.jump()
+			state_machine.change_state_to(&"Jumping")
+			return
 
-			if _player.jump_enabled and _player.coyote_jump_enabled and shared_vars[&"coyote_jump_active"]:
-				InputBuffer.clear_buffered_action(&"jump")
-				_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
-				_player.jump()
-				state_machine.change_state_to(&"Jumping")
-				return
-
-	if InputBuffer.is_action_buffered(&"jump") and _player.air_jump_enabled and shared_vars[&"air_jumps"] < _player.air_jump_limit:
-		InputBuffer.clear_buffered_action(&"jump")
-		_player.air_jump()
-		shared_vars[&"air_jumps"] += 1
-		state_machine.change_state_to(&"Jumping")
-		return
+		if _player.air_jump_enabled and shared_vars[&"air_jumps"] < _player.air_jump_limit:
+			InputBuffer.clear_buffered_action(&"jump")
+			_player.air_jump()
+			shared_vars[&"air_jumps"] += 1
+			state_machine.change_state_to(&"Jumping")
+			return
 
 	if InputBuffer.is_action_buffered(&"grapple_hook") and shared_vars[&"grapple_hook_point_in_range"]:
 		InputBuffer.clear_buffered_action(&"grapple_hook")
