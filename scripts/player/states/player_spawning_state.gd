@@ -29,6 +29,8 @@ func spawn_random() -> void:
 		shared_vars[&"airborne_timestamp"] = Global.MIN_INT
 		shared_vars[&"crouch_timestamp"] = Global.MIN_INT
 		shared_vars[&"slide_timestamp"] = Global.MIN_INT
+		shared_vars[&"wallrun_wall_normal"] = Vector3.ZERO
+		shared_vars[&"wallrun_run_direction"] = Vector3.ZERO
 		shared_vars[&"grapple_hook_point"] = null
 
 		InputBuffer.clear_buffered_action("jump")
