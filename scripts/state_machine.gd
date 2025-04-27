@@ -61,6 +61,11 @@ func get_state_name() -> StringName:
 	return _state.name
 
 
+## Returns the value of the shared var with name [param variable_name]. Returns null if shared var doesn't exist.
+func get_shared_var(variable_name: StringName) -> Variant:
+	return _shared_vars[variable_name]
+
+
 ## Transition to a new state.
 func change_state_to(state: StringName) -> void:
 	if not has_node(NodePath(state)):
