@@ -4,7 +4,7 @@ extends Label
 @export var _player: Player
 
 ## How quickly the speed shown on the spedometeter updates to match the player's speed.
-@export var _speed_track_rate: float = 25.0
+@export var _speed_track_rate: float = 100.0
 
 var _label_speed_kph: float = 0.0
 
