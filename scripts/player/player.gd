@@ -299,7 +299,8 @@ func update() -> void:
 			#_stairstep_step_up(position_before_move, velocity_before_move)
 	else:
 		if stairstep_enabled and not is_on_floor() and was_on_floor_before_move and velocity.dot(up_direction) <= 0.0:
-			_stairstep_step_down(position_before_move)
+			pass
+			#_stairstep_step_down(position_before_move)
 
 	if not is_on_floor():
 		velocity = get_real_velocity()
