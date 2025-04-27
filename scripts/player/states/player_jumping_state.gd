@@ -18,8 +18,12 @@ func _state_exit() -> void:
 
 
 func _state_physics_preprocess(_delta: float) -> void:
-	update_stance()
 	handle_grapple_hooking()
+
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
+	update_stance()
 
 	if InputBuffer.is_action_buffered(&"grapple_hook") and shared_vars[&"grapple_hook_point_in_range"]:
 		InputBuffer.clear_buffered_action(&"grapple_hook")
@@ -27,7 +31,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		state_machine.change_state_to(&"GrappleHooking")
 		return
 
-	if not _player.jump_enabled or not Input.is_action_pressed(&"jump") or _player.velocity.dot(_player.up_direction) < 0.0 or Time.get_ticks_msec() - shared_vars[&"jump_timestamp"] >= _player.jump_duration:
+	if not Input.is_action_pressed(&"jump"):
 		state_machine.change_state_to(&"Airborne")
 		return
 
@@ -38,6 +42,10 @@ func _state_physics_process(_delta: float) -> void:
 
 	if _player.is_on_floor():
 		state_machine.change_state_to(&"Grounded")
+		return
+
+	if not _player.jump_enabled or _player.velocity.dot(_player.up_direction) < 0.0 or Time.get_ticks_msec() - shared_vars[&"jump_timestamp"] >= _player.jump_duration:
+		state_machine.change_state_to(&"Airborne")
 		return
 
 

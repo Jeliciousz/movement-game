@@ -17,6 +17,9 @@ func _state_enter() -> void:
 
 
 func _state_physics_preprocess(_delta: float) -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
 	update_stance()
 
 	if _player.slide_enabled and slide_checks() and InputBuffer.is_action_buffered(&"slide"):

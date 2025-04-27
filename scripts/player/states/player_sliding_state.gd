@@ -17,6 +17,9 @@ func _state_exit() -> void:
 
 
 func _state_physics_preprocess(_delta: float) -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
 	if _player.slide_jump_enabled and InputBuffer.is_action_buffered(&"jump") and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_jump_delay:
 		_player.slide_jump()
 		state_machine.change_state_to(&"Jumping")
