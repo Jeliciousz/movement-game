@@ -236,6 +236,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	#
 	#	-Jeliciousz
 
+	if event.echo or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
 	if event.is_action(&"move_forward"):
 		if event.pressed:
 			_input_vector.y = -1.0
