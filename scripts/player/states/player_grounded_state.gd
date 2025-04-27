@@ -22,13 +22,13 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	update_stance()
 
-	if _player.slide_enabled and slide_checks() and InputBuffer.is_action_buffered(&"slide"):
+	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and slide_checks():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
 		state_machine.change_state_to(&"Sliding")
 		return
 
-	if _player.jump_enabled and InputBuffer.is_action_buffered(&"jump"):
+	if InputBuffer.is_action_buffered(&"jump") and _player.jump_enabled:
 		if _player.stance != Player.Stances.CROUCHING:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.jump()
@@ -60,25 +60,25 @@ func clear_grapple_hook_point() -> void:
 func update_stance() -> void:
 	match _player.stance:
 		Player.Stances.STANDING:
-			if _player.sprint_enabled and InputBuffer.is_action_buffered(&"sprint"):
+			if InputBuffer.is_action_buffered(&"sprint") and _player.sprint_enabled:
 				InputBuffer.clear_buffered_action(&"sprint")
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if _player.crouch_enabled and Input.is_action_pressed(&"crouch"):
+			if Input.is_action_pressed(&"crouch") and _player.crouch_enabled:
 				_player.crouch()
 
 		Player.Stances.CROUCHING:
-			if not _player.crouch_enabled or not Input.is_action_pressed(&"crouch"):
+			if not Input.is_action_pressed(&"crouch") or not _player.crouch_enabled:
 				_player.attempt_uncrouch()
 
 		Player.Stances.SPRINTING:
-			if not _player.sprint_enabled or InputBuffer.is_action_buffered(&"sprint"):
+			if InputBuffer.is_action_buffered(&"sprint") or not _player.sprint_enabled:
 				InputBuffer.clear_buffered_action(&"sprint")
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if _player.crouch_enabled and Input.is_action_pressed(&"crouch"):
+			if Input.is_action_pressed(&"crouch") and _player.crouch_enabled:
 				_player.crouch()
 
 

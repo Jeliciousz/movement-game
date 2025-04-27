@@ -20,12 +20,14 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if _player.slide_jump_enabled and InputBuffer.is_action_buffered(&"jump") and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_jump_delay:
+	if InputBuffer.is_action_buffered(&"jump") and _player.slide_jump_enabled and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_jump_delay:
+		InputBuffer.clear_buffered_action(&"jump")
 		_player.slide_jump()
 		state_machine.change_state_to(&"Jumping")
 		return
 
-	if _player.slide_cancel_enabled and InputBuffer.is_action_buffered(&"slide") and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_cancel_delay:
+	if InputBuffer.is_action_buffered(&"slide") and _player.slide_cancel_enabled and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_cancel_delay:
+		InputBuffer.clear_buffered_action(&"slide")
 		state_machine.change_state_to(&"Grounded")
 		return
 
