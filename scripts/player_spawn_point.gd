@@ -1,5 +1,7 @@
-class_name PlayerSpawnPoint extends Node3D
+class_name PlayerSpawnPoint
+extends Node3D
+## A point the [Player] can spawn at.
 
 
-func _ready() -> void:
+func _init() -> void:
 	hide()
