@@ -39,8 +39,8 @@ func _state_physics_preprocess(_delta: float) -> void:
 			return
 
 
-func _state_physics_process(delta: float) -> void:
-	update_physics(delta)
+func _state_physics_process(_delta: float) -> void:
+	update_physics()
 	_player.update()
 
 	if not _player.is_on_floor():
@@ -93,7 +93,7 @@ func slide_checks() -> bool:
 	return true
 
 
-func update_physics(_delta: float) -> void:
+func update_physics() -> void:
 	var top_speed: float
 	var acceleration: float
 

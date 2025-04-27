@@ -53,8 +53,8 @@ func _state_physics_preprocess(_delta: float) -> void:
 		return
 
 
-func _state_physics_process(delta: float) -> void:
-	update_physics(delta)
+func _state_physics_process(_delta: float) -> void:
+	update_physics()
 	player_velocity_before_move = _player.velocity
 	_player.update()
 
@@ -133,7 +133,7 @@ func slide_checks() -> bool:
 	return true
 
 
-func update_physics(_delta: float) -> void:
+func update_physics() -> void:
 	_player.add_air_resistence(_player.physics_air_resistence)
 	_player.add_gravity(_player.physics_gravity)
 	_player.add_movement(_player.air_speed, _player.air_acceleration)
