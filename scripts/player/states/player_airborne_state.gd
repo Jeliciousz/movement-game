@@ -111,6 +111,12 @@ func handle_grapple_hooking() -> void:
 		_player.grapple_hook_indicator_audio.play()
 
 
+func clear_grapple_hook_point() -> void:
+	if shared_vars[&"grapple_hook_point"] != null:
+		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
+		shared_vars[&"grapple_hook_point"] = null
+
+
 func slide_checks() -> bool:
 	if _player.get_wish_direction().is_zero_approx():
 		return false
@@ -125,12 +131,6 @@ func slide_checks() -> bool:
 		return false
 
 	return true
-
-
-func clear_grapple_hook_point() -> void:
-	if shared_vars[&"grapple_hook_point"] != null:
-		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
-		shared_vars[&"grapple_hook_point"] = null
 
 
 func update_physics(_delta: float) -> void:
