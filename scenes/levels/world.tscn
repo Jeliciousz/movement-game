@@ -41,7 +41,6 @@ texture_filter = 5
 [node name="World" type="Node3D"]
 
 [node name="Player" parent="." instance=ExtResource("1_dp8al")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0164013, -0.0297184, 0.00356579)
 
 [node name="PlayerSpawnPoint" parent="." instance=ExtResource("2_f1v6p")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 6.5, -6)
