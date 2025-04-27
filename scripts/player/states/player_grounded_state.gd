@@ -12,31 +12,29 @@ func _state_enter() -> void:
 	shared_vars[&"coyote_walljump_active"] = false
 	shared_vars[&"air_jumps"] = 0
 	shared_vars[&"air_crouches"] = 0
-
 	clear_grapple_hook_point()
-
 	_player.footstep_audio.play()
 
 
 func _state_physics_preprocess(_delta: float) -> void:
 	update_stance()
 
-	if _player.slide_enabled and slide_checks() and InputBuffer.is_action_buffered("slide"):
+	if _player.slide_enabled and slide_checks() and InputBuffer.is_action_buffered(&"slide"):
+		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
-
 		state_machine.change_state_to(&"Sliding")
 		return
 
-	if _player.jump_enabled and InputBuffer.is_action_buffered("jump"):
+	if _player.jump_enabled and InputBuffer.is_action_buffered(&"jump"):
 		if _player.stance != Player.Stances.CROUCHING:
+			InputBuffer.clear_buffered_action(&"jump")
 			_player.jump()
-
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.crouch_jump_enabled and (_player.crouch_jump_window == 0.0 or Time.get_ticks_msec() - shared_vars[&"crouch_timestamp"] <= _player.crouch_jump_window):
+		elif _player.crouch_jump_enabled and (_player.crouch_jump_window == 0.0 or Time.get_ticks_msec() - shared_vars[&"crouch_timestamp"] <= _player.crouch_jump_window):
+			InputBuffer.clear_buffered_action(&"jump")
 			_player.jump()
-
 			state_machine.change_state_to(&"Jumping")
 			return
 
@@ -59,23 +57,23 @@ func clear_grapple_hook_point() -> void:
 func update_stance() -> void:
 	match _player.stance:
 		Player.Stances.STANDING:
-			if _player.sprint_enabled and InputBuffer.is_action_buffered("sprint"):
+			if _player.sprint_enabled and InputBuffer.is_action_buffered(&"sprint"):
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if _player.crouch_enabled and Input.is_action_pressed("crouch"):
+			if _player.crouch_enabled and Input.is_action_pressed(&"crouch"):
 				_player.crouch()
 
 		Player.Stances.CROUCHING:
-			if not _player.crouch_enabled or not Input.is_action_pressed("crouch"):
+			if not _player.crouch_enabled or not Input.is_action_pressed(&"crouch"):
 				_player.attempt_uncrouch()
 
 		Player.Stances.SPRINTING:
-			if not _player.sprint_enabled or InputBuffer.is_action_buffered("sprint"):
+			if not _player.sprint_enabled or InputBuffer.is_action_buffered(&"sprint"):
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if _player.crouch_enabled and Input.is_action_pressed("crouch"):
+			if _player.crouch_enabled and Input.is_action_pressed(&"crouch"):
 				_player.crouch()
 
 
