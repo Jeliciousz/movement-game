@@ -11,15 +11,21 @@ var _mouse_button_timestamps: Dictionary[MouseButton, int] = {}
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey:
-		_key_timestamps[event.physical_keycode] = Time.get_ticks_msec()
+		if event.pressed and not event.echo:
+			_key_timestamps[event.physical_keycode] = Time.get_ticks_msec()
+
 		return
 
 	if event is InputEventJoypadButton:
-		_joy_button_timestamps[event.button_index] = Time.get_ticks_msec()
+		if event.pressed:
+			_joy_button_timestamps[event.button_index] = Time.get_ticks_msec()
+
 		return
 
 	if event is InputEventMouseButton:
-		_mouse_button_timestamps[event.button_index] = Time.get_ticks_msec()
+		if event.pressed:
+			_mouse_button_timestamps[event.button_index] = Time.get_ticks_msec()
+
 		return
 
 
