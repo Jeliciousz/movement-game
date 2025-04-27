@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=29 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://bvgfehgumdbw3" path="res://scripts/player/states/player_grounded_state.gd" id="5_fulsm"]
 [ext_resource type="Script" uid="uid://dgraslf5y2wop" path="res://scripts/player/states/player_airborne_state.gd" id="6_4r5pv"]
 [ext_resource type="Script" uid="uid://y8w4hmshqr8c" path="res://scripts/player/states/player_jumping_state.gd" id="7_60mlk"]
+[ext_resource type="Script" uid="uid://bcehomb8e032t" path="res://scripts/player/states/player_sliding_state.gd" id="8_i4ail"]
 [ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/hud/spedometer.gd" id="8_smehm"]
 [ext_resource type="AudioStream" uid="uid://b7xmurbvikg55" path="res://assets/sounds/player/grapple/grapple_hook_indicator.ogg" id="11_a8ls1"]
 [ext_resource type="AudioStream" uid="uid://b67ihi2sr2j5a" path="res://assets/sounds/player/grapple/grapple_hook_fire.wav" id="12_qfm1y"]
@@ -114,6 +115,10 @@ _player = NodePath("../..")
 
 [node name="Jumping" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
 script = ExtResource("7_60mlk")
+_player = NodePath("../..")
+
+[node name="Sliding" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+script = ExtResource("8_i4ail")
 _player = NodePath("../..")
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
