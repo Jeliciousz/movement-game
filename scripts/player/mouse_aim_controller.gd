@@ -1,19 +1,10 @@
-class_name MouseAimController extends Node
+class_name MouseAimController
+extends Node
 ## Rotates a body and a head for FPS camera control with the mouse.
 ##
 ## Code courtesy of [url=https://yosoyfreeman.github.io/article/godot/tutorial/achieving-better-mouse-input-in-godot-4-the-perfect-camera-controller/]Yo Soy Freeman[/url]. Edited by Jeliciousz
 
 const RADIANS_PER_UNIT: float = deg_to_rad(0.2)
-
-## Node references.
-@export_group("Nodes")
-
-## The body.
-@export var body: Node3D
-
-## The head.
-@export var head: Node3D
-
 
 ## Settings.
 @export_group("Settings")
@@ -32,6 +23,15 @@ const RADIANS_PER_UNIT: float = deg_to_rad(0.2)
 
 ## Minimum camera pitch in radians.
 @export_range(-90, 0, 0.5, "radians_as_degrees") var min_pitch: float = deg_to_rad(-89.5)
+
+## Node references.
+@export_group("Nodes")
+
+## The body.
+@export var _body: Node3D
+
+## The head.
+@export var _head: Node3D
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -55,13 +55,13 @@ func aim(event: InputEventMouseMotion) -> void:
 	clamp_pitch()
 
 
-## Rotates the character around the local Y axis by a given amount (in radians) to achieve yaw.
+## Rotates the body around the local Y axis by a given amount (in radians) to achieve yaw.
 func add_yaw(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 
-	body.rotate_object_local(Vector3.DOWN, amount)
-	body.orthonormalize()
+	_body.rotate_object_local(Vector3.DOWN, amount)
+	_body.orthonormalize()
 
 
 ## Rotates the head around the local x axis by a given amount (in radians) to achieve pitch.
@@ -69,14 +69,14 @@ func add_pitch(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 
-	head.rotate_object_local(Vector3.LEFT, amount)
-	head.orthonormalize()
+	_head.rotate_object_local(Vector3.LEFT, amount)
+	_head.orthonormalize()
 
 
 ## Clamps the pitch between min_pitch and max_pitch.
 func clamp_pitch() -> void:
-	if head.rotation.x > min_pitch and head.rotation.x < max_pitch:
+	if _head.rotation.x > min_pitch and _head.rotation.x < max_pitch:
 		return
 
-	head.rotation.x = clamp(head.rotation.x, min_pitch, max_pitch)
-	head.orthonormalize()
+	_head.rotation.x = clamp(_head.rotation.x, min_pitch, max_pitch)
+	_head.orthonormalize()
