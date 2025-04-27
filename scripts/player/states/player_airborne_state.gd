@@ -88,22 +88,6 @@ func update_stance() -> void:
 				_player.attempt_uncrouch()
 
 
-func slide_checks() -> bool:
-	if _player.get_wish_direction().is_zero_approx():
-		return false
-
-	if not is_zero_approx(_player.get_amount_moving_backwards()):
-		return false
-
-	if _player.velocity.length() < _player.slide_start_speed:
-		return false
-
-	if Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] < _player.slide_cooldown:
-		return false
-
-	return true
-
-
 func handle_grapple_hooking() -> void:
 	if not _player.grapple_hook_enabled:
 		clear_grapple_hook_point()
@@ -125,6 +109,22 @@ func handle_grapple_hooking() -> void:
 	elif shared_vars[&"grapple_hook_point"].targeted != GrappleHookPoint.Target.TARGETED:
 		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.TARGETED
 		_player.grapple_hook_indicator_audio.play()
+
+
+func slide_checks() -> bool:
+	if _player.get_wish_direction().is_zero_approx():
+		return false
+
+	if not is_zero_approx(_player.get_amount_moving_backwards()):
+		return false
+
+	if _player.velocity.length() < _player.slide_start_speed:
+		return false
+
+	if Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] < _player.slide_cooldown:
+		return false
+
+	return true
 
 
 func clear_grapple_hook_point() -> void:
