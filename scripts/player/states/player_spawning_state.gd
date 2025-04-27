@@ -27,6 +27,7 @@ func spawn_random() -> void:
 		shared_vars[&"air_jumps"] = Global.MAX_INT
 		shared_vars[&"air_crouches"] = Global.MAX_INT
 		shared_vars[&"airborne_timestamp"] = Global.MIN_INT
+		shared_vars[&"jump_timestamp"] = Global.MIN_INT
 		shared_vars[&"crouch_timestamp"] = Global.MIN_INT
 		shared_vars[&"slide_timestamp"] = Global.MIN_INT
 		shared_vars[&"wallrun_timestamp"] = Global.MIN_INT
