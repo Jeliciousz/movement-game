@@ -9,7 +9,7 @@ signal state_changed(last: StringName, current: StringName)
 @export var initial_state: State
 
 ## The dictionary of values shared between the states in a state machine.
-var shared_vars: Dictionary[StringName, Variant] = {}
+var _shared_vars: Dictionary[StringName, Variant] = {}
 
 ## The currently active state.
 @onready var _state: State = initial_state
@@ -19,8 +19,8 @@ func _ready() -> void:
 	if _state == null:
 		return
 
-	_state.change_state = change_state_to
-	_state.shared_vars = shared_vars
+	_state.state_machine = self
+	_state.shared_vars = _shared_vars
 	_state._state_enter()
 
 
@@ -70,8 +70,8 @@ func change_state_to(state: StringName) -> void:
 		_state._state_exit()
 
 	_state = get_node(NodePath(state))
-	_state.change_state = change_state_to
-	_state.shared_vars = shared_vars
+	_state.state_machine = self
+	_state.shared_vars = _shared_vars
 	_state._state_enter()
 
 	state_changed.emit(last_state_name, _state.name)
