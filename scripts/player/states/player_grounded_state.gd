@@ -58,6 +58,7 @@ func update_stance() -> void:
 	match _player.stance:
 		Player.Stances.STANDING:
 			if _player.sprint_enabled and InputBuffer.is_action_buffered(&"sprint"):
+				InputBuffer.clear_buffered_action(&"sprint")
 				_player.stance = Player.Stances.SPRINTING
 				return
 
@@ -70,6 +71,7 @@ func update_stance() -> void:
 
 		Player.Stances.SPRINTING:
 			if not _player.sprint_enabled or InputBuffer.is_action_buffered(&"sprint"):
+				InputBuffer.clear_buffered_action(&"sprint")
 				_player.stance = Player.Stances.STANDING
 				return
 
