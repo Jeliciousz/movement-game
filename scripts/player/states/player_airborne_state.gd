@@ -15,6 +15,7 @@ func _state_enter() -> void:
 
 func _state_physics_preprocess(_delta: float) -> void:
 	update_stance()
+	handle_grapple_hooking()
 
 	if Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
 		if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and shared_vars[&"coyote_slide_active"] and slide_checks():
