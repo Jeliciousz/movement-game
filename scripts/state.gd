@@ -16,6 +16,11 @@ func _state_enter() -> void:
 	pass
 
 
+## Called when the [StateMachine] changes from this state.
+func _state_exit() -> void:
+	pass
+
+
 ## Called during [method StateMachine._process] before [method _state_process]. Use this to change the state based on user input. [method _state_process] will then be called on the new state.
 func _state_preprocess(_delta: float) -> void:
 	pass
@@ -43,9 +48,4 @@ func _state_input(_event: InputEvent) -> void:
 
 ## Called during [method StateMachine._unhandled_input].
 func _state_unhandled_input(_event: InputEvent) -> void:
-	pass
-
-
-## Called when the [StateMachine] changes from this state.
-func _state_exit() -> void:
 	pass
