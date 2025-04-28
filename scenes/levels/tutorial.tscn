@@ -1416,14 +1416,14 @@ size = Vector3(1.5, 3, 0.25)
 material = ExtResource("4_g7bfq")
 
 [node name="LeftWallMount6" type="CSGBox3D" parent="CSG/CSGArea6_Challenge"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 64.375, 10.5, -41.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.875, 10.5, -41.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 1.5)
 material = ExtResource("4_g7bfq")
 
 [node name="RightWallMount6" type="CSGBox3D" parent="CSG/CSGArea6_Challenge"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 72.625, 10.5, -41.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.125, 10.5, -41.25)
 use_collision = true
 collision_mask = 0
 size = Vector3(0.25, 3, 1.5)
@@ -1712,8 +1712,8 @@ size = Vector3(6.5, 3, 0.5)
 material = ExtResource("6_uu0hj")
 
 [node name="WallrunWall10" type="CSGBox3D" parent="CSG/CSGArea6Wallrun_Challenge" groups=["WallrunBodies"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -42.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.5, -42.5)
 use_collision = true
 collision_mask = 0
-size = Vector3(8, 3, 0.5)
+size = Vector3(5, 3, 0.5)
 material = ExtResource("6_uu0hj")
