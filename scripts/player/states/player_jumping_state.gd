@@ -66,7 +66,7 @@ func update_stance() -> void:
 				shared_vars[&"air_crouches"] += 1
 
 		Player.Stances.CROUCHING:
-			if Input.is_action_just_released(&"crouch") or not _player.crouch_enabled:
+			if not Input.is_action_pressed(&"crouch") or not _player.crouch_enabled:
 				_player.attempt_uncrouch()
 
 		Player.Stances.SPRINTING:
