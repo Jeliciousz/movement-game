@@ -30,7 +30,7 @@ enum Stances {
 ## How fast the player can move.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var move_speed: float = 4.0
 ## How quickly the player accelerates.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var move_acceleration: float = 40.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var move_acceleration: float = 75.0
 ## How quickly the player can move backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var move_backwards_multiplier: float = 0.5
 ## How much friction is applied against the direction the player is moving.
@@ -40,7 +40,7 @@ enum Stances {
 ## How fast the player can move in the air.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 3.0
 ## How quickly the player accelerates in the air.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 35.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 45.0
 
 @export_group("Jumping", "jump_")
 ## Can the player jump?
@@ -84,7 +84,7 @@ enum Stances {
 ## How fast the player can move while sprinting.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var sprint_speed: float = 7.0
 ## How quickly the player accelerates while sprinting.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var sprint_acceleration: float = 60.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var sprint_acceleration: float = 100.0
 
 @export_group("Crouching", "crouch_")
 ## Can the player crouch?
@@ -94,7 +94,7 @@ enum Stances {
 ## How fast the player can move while crouching.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var crouch_speed: float = 2.0
 ## How quickly the player accelerates while crouching.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 40.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 60.0
 
 @export_subgroup("Crouch Jumping", "crouch_jump_")
 ## Can the player jump while crouching?
@@ -173,9 +173,9 @@ enum Stances {
 ## How high the player jumps while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_power: float = 9.0
 ## How far the player jumps forwards while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_power: float = -6.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_power: float = -4.0
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_power: float = 12.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_power: float = 10.0
 
 @export_group("Grapple Hooking", "grapple_hook_")
 ## Can the player grapple hook?
