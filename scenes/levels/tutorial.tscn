@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_7ac3l"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_iig34"]
-[ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/other/main.tres" id="3_3e81p"]
+[ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/other/main_environment.tres" id="3_3e81p"]
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/wall.tres" id="4_g7bfq"]
 [ext_resource type="Texture2D" uid="uid://bwkbrd3qxcyx0" path="res://assets/textures/world/wall.png" id="5_4a02d"]
 [ext_resource type="Material" uid="uid://dst6hunp1eh6w" path="res://assets/materials/wallrun_wall.tres" id="6_uu0hj"]
@@ -60,6 +60,7 @@ environment = ExtResource("3_3e81p")
 transform = Transform3D(0.866025, 0.492404, -0.086824, 0, 0.173648, 0.984808, 0.5, -0.852868, 0.150384, 0, 0, 0)
 layers = 3
 light_energy = 2.0
+shadow_enabled = true
 
 [node name="Area1OmniLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 15.5, -18.5)

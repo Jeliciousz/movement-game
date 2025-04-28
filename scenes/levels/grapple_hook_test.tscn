@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://r687ikb388ck"]
 
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_j45pq"]
-[ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/other/main.tres" id="2_hfflh"]
+[ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/other/main_environment.tres" id="2_hfflh"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="3_hfflh"]
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/wall.tres" id="3_sn1xj"]
 [ext_resource type="PackedScene" uid="uid://cqkeqglbsx1tw" path="res://scenes/grapple_hook_point.tscn" id="4_4h3fk"]
@@ -16,6 +16,7 @@ environment = ExtResource("2_hfflh")
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.847465, 0.401876, -0.346841, 1.06083e-08, 0.653368, 0.757041, 0.530851, -0.641566, 0.553706, 0, 0, 0)
 layers = 3
+shadow_enabled = true
 
 [node name="PlayerSpawnPoint" parent="." instance=ExtResource("3_hfflh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 21)
