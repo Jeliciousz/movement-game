@@ -88,8 +88,7 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if InputBuffer.is_action_buffered(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
-				InputBuffer.clear_buffered_action(&"crouch")
+			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
 				_player.crouch()
 				shared_vars[&"air_crouches"] += 1
 
@@ -103,8 +102,7 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if InputBuffer.is_action_buffered(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
-				InputBuffer.clear_buffered_action(&"crouch")
+			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
 				_player.crouch()
 				shared_vars[&"air_crouches"] += 1
 

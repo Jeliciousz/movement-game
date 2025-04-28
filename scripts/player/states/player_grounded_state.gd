@@ -66,8 +66,7 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if InputBuffer.is_action_buffered(&"crouch") and _player.crouch_enabled:
-				InputBuffer.clear_buffered_action(&"crouch")
+			if Input.is_action_just_pressed(&"crouch") and _player.crouch_enabled:
 				_player.crouch()
 
 		Player.Stances.CROUCHING:
@@ -80,8 +79,7 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if InputBuffer.is_action_buffered(&"crouch") and _player.crouch_enabled:
-				InputBuffer.clear_buffered_action(&"crouch")
+			if Input.is_action_just_pressed(&"crouch") and _player.crouch_enabled:
 				_player.crouch()
 
 

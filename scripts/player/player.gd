@@ -214,7 +214,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		InputBuffer.clear_buffered_action("jump")
-		InputBuffer.clear_buffered_action("crouch")
 		InputBuffer.clear_buffered_action("sprint")
 		InputBuffer.clear_buffered_action("slide")
 		InputBuffer.clear_buffered_action("grapple_hook")
