@@ -26,12 +26,6 @@ enum Stances {
 ## How long coyote time lasts.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 125
 
-@export_group("Stair-Stepping", "stairstep_")
-## Is stair-stepping enabled?
-@export var stairstep_enabled: bool = true
-## How high can the player step up/down stairs?
-@export var stairstep_step_height: float = 0.5
-
 @export_group("Movement", "move_")
 ## How fast the player can move.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var move_speed: float = 4.0
@@ -285,22 +279,9 @@ func get_stance_as_text() -> String:
 
 
 func update() -> void:
-	var position_before_move: Vector3 = position
-	#var velocity_before_move: Vector3 = velocity
-	var was_on_floor_before_move: bool = is_on_floor()
-
 	floor_block_on_wall = is_on_floor()
 
-	var move_collided: bool = move_and_slide()
-
-	if move_collided:
-		if stairstep_enabled:
-			pass
-			#_stairstep_step_up(position_before_move, velocity_before_move)
-	else:
-		if stairstep_enabled and not is_on_floor() and was_on_floor_before_move and velocity.dot(up_direction) <= 0.0:
-			pass
-			#_stairstep_step_down(position_before_move)
+	move_and_slide()
 
 	if not is_on_floor():
 		velocity = get_real_velocity()
@@ -577,78 +558,3 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 			highest_proximity_point = grapple_hook_points[i]
 
 	return highest_proximity_point
-
-
-func _stairstep_step_up(position_before_move: Vector3, velocity_before_move: Vector3) -> void:
-	if velocity_before_move.is_zero_approx():
-		return
-
-	var collision: KinematicCollision3D = get_last_slide_collision()
-
-	if abs(collision.get_normal().y) > 0.1:
-		return
-
-	var position_before_test: Vector3 = position
-	var normal: Vector3 = Vector3(collision.get_normal().x, 0.0, collision.get_normal().z).normalized()
-
-	if move_and_collide(up_direction * stairstep_step_height, false, safe_margin):
-		position = position_before_test
-		print_debug("hit ceiling trying to step up")
-		return
-
-	move_and_collide(-normal * collision_shape.shape.radius, false, safe_margin)
-	var test: KinematicCollision3D = move_and_collide(-up_direction * stairstep_step_height, true, safe_margin)
-
-	if not test:
-		position = position_before_test
-		print_debug("no step found")
-		return
-
-	elif position.distance_to(position_before_test) <= 0.01:
-		position = position_before_test
-		print_debug("hit wall")
-		return
-
-	position = position_before_move + up_direction * stairstep_step_height - test.get_travel()
-	velocity = velocity_before_move
-
-	var new_position_before_move: Vector3 = position
-	var new_velocity_before_move: Vector3 = velocity
-
-	if move_and_slide():
-		_stairstep_step_up(new_position_before_move, new_velocity_before_move)
-
-
-func _stairstep_step_down(position_before_move: Vector3) -> void:
-	position = position_before_move
-
-	var remaining_motion: Vector3 = get_last_motion()
-	var delta: float = 0.125
-
-	while remaining_motion != Vector3.ZERO:
-		var over_ledge: bool = false
-
-		while not over_ledge:
-			position += get_last_motion().normalized() * delta
-			remaining_motion -= get_last_motion().normalized() * delta
-			delta = minf(0.125, remaining_motion.length())
-
-			if move_and_collide(-up_direction * safe_margin, true, safe_margin) == null:
-				over_ledge = true
-
-			if delta <= 0.0:
-				break
-
-		if not over_ledge:
-			print_debug("Couldn't find ledge to step down")
-			return
-
-		print_debug("Found ledge with remaining motion percentage: %f" % (remaining_motion.length() / get_last_motion().length()))
-
-		if not move_and_collide(-up_direction * (stairstep_step_height + safe_margin), true, safe_margin):
-			print_debug("Ledge too deep to step down")
-			position += remaining_motion
-			return
-
-		var collision: KinematicCollision3D = move_and_collide(-up_direction * stairstep_step_height, false, safe_margin)
-		print_debug("Stepped down ledge: %f" % collision.get_travel().length())
