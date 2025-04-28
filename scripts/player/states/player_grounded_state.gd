@@ -13,7 +13,6 @@ func _state_enter() -> void:
 	shared_vars[&"air_jumps"] = 0
 	shared_vars[&"air_crouches"] = 0
 	clear_grapple_hook_point()
-	_player.footstep_audio.play()
 
 
 func _state_physics_preprocess(_delta: float) -> void:

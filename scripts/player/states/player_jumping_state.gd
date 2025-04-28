@@ -40,6 +40,7 @@ func _state_physics_process(_delta: float) -> void:
 	_player.update()
 
 	if _player.is_on_floor():
+		_player.footstep_audio.play()
 		state_machine.change_state_to(&"Grounded")
 		return
 
