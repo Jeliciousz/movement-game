@@ -22,10 +22,11 @@
 [ext_resource type="Script" uid="uid://dy0ilnerqu2pn" path="res://scripts/player/viewmodel/viewmodel_camera.gd" id="17_31cv2"]
 [ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/hud/debug_info.gd" id="19_4ni07"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
-[ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/other/hud.tres" id="22_ke2ow"]
+[ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/other/hud_theme.tres" id="22_ke2ow"]
 [ext_resource type="Texture2D" uid="uid://crlxrcr3qgg73" path="res://assets/textures/ui/crosshair.png" id="25_ke2ow"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_l71n6"]
+margin = 0.001
 height = 1.8
 radius = 0.4
 
@@ -267,6 +268,8 @@ script = ExtResource("8_smehm")
 _player = NodePath("../../..")
 
 [node name="DebugInfo" type="Label" parent="PlayerHUD" node_paths=PackedStringArray("_player")]
+process_mode = 4
+visible = false
 layout_mode = 0
 offset_left = 6.0
 offset_top = 5.0
