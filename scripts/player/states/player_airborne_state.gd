@@ -19,8 +19,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	update_stance()
-
 	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and shared_vars[&"coyote_slide_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration and slide_checks():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
@@ -55,6 +53,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 
 func _state_physics_process(_delta: float) -> void:
+	update_stance()
 	update_physics()
 	player_velocity_before_move = _player.velocity
 	_player.update()
@@ -78,6 +77,9 @@ func _state_physics_process(_delta: float) -> void:
 
 
 func update_stance() -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
 	match _player.stance:
 		Player.Stances.STANDING:
 			if InputBuffer.is_action_buffered(&"sprint") and _player.sprint_enabled:

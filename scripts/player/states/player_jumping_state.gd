@@ -23,8 +23,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	update_stance()
-
 	if InputBuffer.is_action_buffered(&"grapple_hook") and shared_vars[&"grapple_hook_point_in_range"]:
 		InputBuffer.clear_buffered_action(&"grapple_hook")
 		_player.grapple_hook_fire_audio.play()
@@ -37,6 +35,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 
 func _state_physics_process(_delta: float) -> void:
+	update_stance()
 	update_physics()
 	_player.update()
 
@@ -50,6 +49,9 @@ func _state_physics_process(_delta: float) -> void:
 
 
 func update_stance() -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
 	match _player.stance:
 		Player.Stances.STANDING:
 			if InputBuffer.is_action_buffered(&"sprint") and _player.sprint_enabled:

@@ -23,8 +23,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	update_stance()
-
 	if InputBuffer.is_action_buffered(&"jump") and _player.walljump_enabled:
 		InputBuffer.clear_buffered_action(&"jump")
 		_player.wall_jump(shared_vars[&"wallrun_wall_normal"], shared_vars[&"wallrun_run_direction"])
@@ -34,6 +32,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 
 func _state_physics_process(delta: float) -> void:
+	update_stance()
 	update_physics(delta)
 	player_velocity_before_move = _player.velocity
 	_player.update()
