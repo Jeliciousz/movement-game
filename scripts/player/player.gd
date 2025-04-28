@@ -345,13 +345,13 @@ func crouch() -> void:
 	stance = Stances.CROUCHING
 	_crouch_timestamp = Time.get_ticks_msec()
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
-	collision_shape.position.y = standing_height * crouch_height_multiplier / 2.0
-	head.position.y -= standing_height / 2.0
+	collision_shape.position.y = (standing_height * crouch_height_multiplier) / 2.0
+	head.position.y -= standing_height * (1 - crouch_height_multiplier)
 
 	if is_on_floor():
 		_air_crouching = false
 	else:
-		position.y += standing_height / 2.0
+		position.y += standing_height * (1 - crouch_height_multiplier)
 		_air_crouching = true
 
 
@@ -371,10 +371,10 @@ func attempt_uncrouch() -> bool:
 		_crouch_timestamp = Time.get_ticks_msec()
 		collision_shape.shape.height = standing_height
 		collision_shape.position.y = standing_height / 2.0
-		head.position.y += standing_height / 2.0
+		head.position.y += standing_height * (1 - crouch_height_multiplier)
 
 		if _air_crouching:
-			position.y -= standing_height / 2.0
+			position.y -= standing_height * (1 - crouch_height_multiplier)
 			_air_crouching = false
 
 		return true
