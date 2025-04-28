@@ -57,9 +57,14 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if Input.is_action_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+			if InputBuffer.is_action_buffered(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+				InputBuffer.clear_buffered_action(&"crouch")
 				_player.crouch()
 				shared_vars[&"air_crouches"] += 1
+
+		Player.Stances.CROUCHING:
+			if Input.is_action_just_released(&"crouch") or not _player.crouch_enabled:
+				_player.attempt_uncrouch()
 
 		Player.Stances.SPRINTING:
 			if InputBuffer.is_action_buffered(&"sprint") and _player.sprint_enabled:
@@ -67,13 +72,10 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if Input.is_action_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+			if InputBuffer.is_action_buffered(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+				InputBuffer.clear_buffered_action(&"crouch")
 				_player.crouch()
 				shared_vars[&"air_crouches"] += 1
-
-		Player.Stances.CROUCHING:
-			if not Input.is_action_pressed(&"crouch") or not _player.crouch_enabled:
-				_player.attempt_uncrouch()
 
 
 func handle_grapple_hooking() -> void:
