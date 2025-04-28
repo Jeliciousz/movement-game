@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dpgsmifow0gcw"]
+[gd_scene load_steps=13 format=3 uid="uid://dpgsmifow0gcw"]
 
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_dp8al"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_f1v6p"]
@@ -6,6 +6,14 @@
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/wall.tres" id="6_xidr1"]
 [ext_resource type="Material" uid="uid://dst6hunp1eh6w" path="res://assets/materials/wallrun_wall.tres" id="7_8c33x"]
 [ext_resource type="Texture2D" uid="uid://bwkbrd3qxcyx0" path="res://assets/textures/world/wall.png" id="8_y40x4"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_gy5pc"]
+margin = 0.001
+points = PackedVector3Array(0, 0, 0, 0, 0, -5, 20, 0, -5, 20, 0, 0, 6, 6, 0, 6, 6, -5, 14, 6, -5, 14, 6, 0)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_0lift"]
+margin = 0.001
+points = PackedVector3Array(0, 0, 0, 0, 0, -1.5, 12, 0, -1.5, 12, 0, 0, 0, 1, -0.5, 12, 1, -0.5, 12, 1, 0, 0, 1, 0)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfnet"]
 albedo_texture = ExtResource("8_y40x4")
@@ -174,6 +182,19 @@ omni_attenuation = 2.0
 visible = false
 bake_mask = 4293918721
 bake_simplification_distance = 0.01
+
+[node name="A4NorthPlatform" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3, -124)
+
+[node name="CollisionShape" type="CollisionShape3D" parent="A4NorthPlatform"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+shape = SubResource("ConvexPolygonShape3D_gy5pc")
+
+[node name="A7SouthStairs" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55, 9, -128)
+
+[node name="CollisionShape" type="CollisionShape3D" parent="A7SouthStairs"]
+shape = SubResource("ConvexPolygonShape3D_0lift")
 
 [node name="CSG" type="Node3D" parent="."]
 
@@ -582,7 +603,7 @@ size = Vector3(11, 1, 22)
 material = ExtResource("6_xidr1")
 
 [node name="SouthLeftWall" type="CSGBox3D" parent="CSG/CSGArea4_Pillar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.52224, 10.5075, -0.499039)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 10.5, -0.5)
 use_collision = true
 collision_mask = 0
 size = Vector3(11, 21, 1)
@@ -710,181 +731,6 @@ collision_mask = 0
 size = Vector3(7.25, 20, 5)
 material = SubResource("StandardMaterial3D_i7141")
 
-[node name="NorthPlatform" type="CSGBox3D" parent="CSG/CSGArea4_Pillar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4, -28.5)
-use_collision = true
-collision_mask = 0
-size = Vector3(8, 6, 5)
-material = ExtResource("6_xidr1")
-
-[node name="NorthLeftStairs" type="CSGBox3D" parent="CSG/CSGArea4_Pillar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 1.25, -28.5)
-use_collision = true
-collision_mask = 0
-size = Vector3(6, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step1" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(5.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step2" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step3" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(4.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step4" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(4, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step5" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 2.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(3.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step6" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(3, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step7" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 3.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(2.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step8" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(2, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step9" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.25, 4.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(1.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step10" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(1, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step11" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthLeftStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.75, 5.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(0.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="NorthRightStairs" type="CSGBox3D" parent="CSG/CSGArea4_Pillar"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 23, 1.25, -28.5)
-use_collision = true
-collision_mask = 0
-size = Vector3(6, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step1" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(5.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step2" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step3" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(4.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step4" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 2, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(4, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step5" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.25, 2.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(3.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step6" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(3, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step7" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 3.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(2.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step8" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 4, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(2, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step9" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.25, 4.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(1.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step10" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(1, 0.5, 5)
-material = ExtResource("6_xidr1")
-
-[node name="Step11" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/NorthRightStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.75, 5.5, 0)
-use_collision = true
-collision_mask = 0
-size = Vector3(0.5, 0.5, 5)
-material = ExtResource("6_xidr1")
-
 [node name="Pillar" type="CSGCylinder3D" parent="CSG/CSGArea4_Pillar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4, -16)
 use_collision = true
@@ -899,6 +745,197 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
 use_collision = true
 collision_mask = 0
 size = Vector3(10, 6, 10)
+material = ExtResource("6_xidr1")
+
+[node name="Side" type="CSGBox3D" parent="CSG/CSGArea4_Pillar/Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+use_collision = true
+collision_mask = 0
+size = Vector3(20, 6, 10)
+material = ExtResource("6_xidr1")
+
+[node name="CSGArea4Detail_Pillar" type="CSGCombiner3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2, -99)
+collision_mask = 0
+
+[node name="NorthLeftStairs" type="CSGCombiner3D" parent="CSG/CSGArea4Detail_Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1, -26)
+
+[node name="Step1" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.25, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(6, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step2" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.25, 0.75, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(5.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step3" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.25, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step4" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75, 1.75, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step5" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.25, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step6" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.25, 2.75, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(3.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step7" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 3.25, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(3, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step8" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.75, 3.75, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step9" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4.25, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(2, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step10" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.25, 4.75, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step11" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 5.25, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step12" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthLeftStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.75, 5.75, -2.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="NorthRightStairs" type="CSGCombiner3D" parent="CSG/CSGArea4Detail_Pillar"]
+
+[node name="Step1" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 23, 1.25, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(6, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step2" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 22.75, 1.75, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(5.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step3" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 22.5, 2.25, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step4" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 22.25, 2.75, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(4.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step5" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 22, 3.25, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step6" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 21.75, 3.75, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(3.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step7" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 21.5, 4.25, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(3, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step8" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 21.25, 4.75, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(2.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step9" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 21, 5.25, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(2, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step10" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 20.75, 5.75, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(1.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step11" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 20.5, 6.25, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(1, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="Step12" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar/NorthRightStairs"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 20.25, 6.75, -28.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(0.5, 0.5, 5)
+material = ExtResource("6_xidr1")
+
+[node name="NorthPlatform" type="CSGBox3D" parent="CSG/CSGArea4Detail_Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 4, -28)
+use_collision = true
+collision_mask = 0
+size = Vector3(8, 6, 6)
 material = ExtResource("6_xidr1")
 
 [node name="CSGArea4Bounds_Pillar" type="CSGCombiner3D" parent="CSG"]
@@ -1494,18 +1531,23 @@ collision_mask = 0
 size = Vector3(14, 15, 1)
 material = ExtResource("6_xidr1")
 
-[node name="SouthStairs" type="CSGBox3D" parent="CSG/CSGArea7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.25, -0.5)
+[node name="CSGArea7Detail" type="CSGCombiner3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56, 8, -128)
+
+[node name="SouthStairs" type="CSGCombiner3D" parent="CSG/CSGArea7Detail"]
+
+[node name="Step2" type="CSGBox3D" parent="CSG/CSGArea7Detail/SouthStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.75, -0.5)
 use_collision = true
 collision_mask = 0
 size = Vector3(12, 0.5, 1)
 material = ExtResource("6_xidr1")
 
-[node name="Step1" type="CSGBox3D" parent="CSG/CSGArea7/SouthStairs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.25)
+[node name="Step1" type="CSGBox3D" parent="CSG/CSGArea7Detail/SouthStairs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.25, -0.75)
 use_collision = true
 collision_mask = 0
-size = Vector3(12, 0.5, 0.5)
+size = Vector3(12, 0.5, 1.5)
 material = ExtResource("6_xidr1")
 
 [node name="CSGArea7Bounds" type="CSGCombiner3D" parent="CSG"]
