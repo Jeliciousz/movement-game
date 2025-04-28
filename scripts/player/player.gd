@@ -467,8 +467,8 @@ func jump() -> void:
 
 
 func slide() -> void:
+	stance = Stances.SPRINTING
 	crouch()
-	_last_stance = Stances.SPRINTING
 
 	velocity -= up_direction * velocity.dot(up_direction)
 	velocity += _wish_direction * slide_power
