@@ -253,7 +253,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 	elif event.is_action(&"move_right"):
 		if event.pressed:
-			_input_vector.x = 1
+			_input_vector.x = 1.0
 		else:
 			_input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
 
