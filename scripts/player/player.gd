@@ -199,6 +199,7 @@ var _air_crouching: bool = false
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape3D = $CollisionShape
 @onready var standing_height: float = collision_shape.shape.height
+@onready var standing_head_y: float = head.position.y
 @onready var grounded_uncrouch_area: Area3D = $GroundedUncrouchArea
 @onready var airborne_uncrouch_area: Area3D = $AirborneUncrouchArea
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
@@ -216,6 +217,11 @@ func _physics_process(delta: float) -> void:
 		_input_vector = Vector2.ZERO
 
 	_wish_direction = basis * Vector3(_input_vector.x, 0.0, _input_vector.y).normalized()
+
+	if stance == Stances.CROUCHING:
+		head.position.y = move_toward(head.position.y, standing_head_y - standing_height * (1.0 - crouch_height_multiplier), delta * 15.0)
+	else:
+		head.position.y = move_toward(head.position.y, standing_head_y, delta * 15.0)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -342,7 +348,6 @@ func crouch() -> void:
 	_crouch_timestamp = Time.get_ticks_msec()
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
 	collision_shape.position.y = (standing_height * crouch_height_multiplier) / 2.0
-	head.position.y -= standing_height * (1.0 - crouch_height_multiplier)
 
 	if is_on_floor():
 		_air_crouching = false
@@ -366,7 +371,6 @@ func attempt_uncrouch() -> bool:
 		_crouch_timestamp = Time.get_ticks_msec()
 		collision_shape.shape.height = standing_height
 		collision_shape.position.y = standing_height / 2.0
-		head.position.y += standing_height * (1.0 - crouch_height_multiplier)
 
 		if _air_crouching:
 			position.y -= standing_height * (1.0 - crouch_height_multiplier)
