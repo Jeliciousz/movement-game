@@ -21,6 +21,8 @@ func spawn_random() -> void:
 		_player.rotation.y = spawn_node.rotation.y
 		_player.head.rotation.x = spawn_node.rotation.x
 
+		_player.reset_physics_interpolation()
+
 		shared_vars[&"coyote_jump_active"] = false
 		shared_vars[&"coyote_slide_active"] = false
 		shared_vars[&"coyote_walljump_active"] = false
