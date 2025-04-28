@@ -12,6 +12,7 @@ func _state_enter() -> void:
 	shared_vars[&"coyote_slide_active"] = false
 	shared_vars[&"coyote_walljump_active"] = false
 
+
 func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
