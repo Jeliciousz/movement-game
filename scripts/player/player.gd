@@ -464,7 +464,6 @@ func jump() -> void:
 	var horizontal_power: float = lerpf(jump_horizontal_power, speed_jump_max_horizontal_power, weight) * backwards_multiplier
 
 	velocity += up_direction * power
-
 	velocity += _wish_direction * horizontal_power
 
 
@@ -490,13 +489,11 @@ func air_jump() -> void:
 	var horizontal_power: float = air_jump_horizontal_power * backwards_multiplier
 
 	velocity += up_direction * power
-
 	velocity += _wish_direction * horizontal_power
 
 
 func slide_jump() -> void:
 	velocity += up_direction * slide_jump_power
-
 	velocity += velocity.normalized() * slide_jump_horizontal_power
 
 
@@ -526,9 +523,7 @@ func add_wallrun_movement(run_direction: Vector3) -> void:
 
 func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
 	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * walljump_power
-
 	velocity += run_direction * walljump_horizontal_power
-
 	velocity += wall_normal * walljump_kick_power
 
 
