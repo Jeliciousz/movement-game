@@ -1,8 +1,9 @@
-[gd_scene load_steps=31 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=32 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
 [ext_resource type="Script" uid="uid://r1fkwgtbqld0" path="res://scripts/player/mouse_aim_controller.gd" id="2_ke2ow"]
+[ext_resource type="Script" uid="uid://c8jtxyh06bprf" path="res://scripts/player/camera.gd" id="2_l71n6"]
 [ext_resource type="AudioStream" uid="uid://okhvtvkbf4eg" path="res://assets/sounds/player/footsteps/tile2.wav" id="3_i4ail"]
 [ext_resource type="Script" uid="uid://d656537yxmwb" path="res://scripts/state_machine.gd" id="3_qfm1y"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
@@ -74,11 +75,16 @@ script = ExtResource("1_3vyb7")
 [node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
-[node name="Camera" type="Camera3D" parent="Head"]
+[node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("_player")]
+physics_interpolation_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+top_level = true
 cull_mask = 1048573
 current = true
 fov = 120.0
 near = 0.005
+script = ExtResource("2_l71n6")
+_player = NodePath("../..")
 
 [node name="WeaponRaycast" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -200)
@@ -205,7 +211,9 @@ render_target_update_mode = 4
 script = ExtResource("15_l71n6")
 
 [node name="ViewmodelCamera" type="Camera3D" parent="ViewmodelTexture/ViewmodelViewport" node_paths=PackedStringArray("_world_camera")]
+physics_interpolation_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+top_level = true
 cull_mask = 2
 fov = 90.0
 script = ExtResource("17_31cv2")
