@@ -12,7 +12,7 @@ enum Stances {
 ## The acceleration applied against the direction of the player's velocity.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_friction: float = 30.0
 ## The acceleration applied opposite and proportional to the player's velocity.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.1
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_air_resistence: float = 0.05
 ## The acceleration applied downwards.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var physics_gravity: float = 30.0
 
@@ -68,7 +68,7 @@ enum Stances {
 ## How high the player jumps at max speed.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_power: float = 10.0
 ## How far the player jumps in the direction they're moving at max speed.
-@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_power: float = 1.0
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_power: float = 0.5
 
 @export_subgroup("Air Jumping", "air_jump_")
 ## Can the player air jump?
