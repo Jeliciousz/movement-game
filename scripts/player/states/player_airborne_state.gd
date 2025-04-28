@@ -47,7 +47,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-	if InputBuffer.is_action_buffered(&"grapple_hook") and shared_vars[&"grapple_hook_point_in_range"]:
+	if InputBuffer.is_action_buffered(&"grapple_hook") and shared_vars[&"grapple_hook_point"] != null and shared_vars[&"grapple_hook_point_in_range"]:
 		InputBuffer.clear_buffered_action(&"grapple_hook")
 		_player.grapple_hook_fire_audio.play()
 		state_machine.change_state_to(&"GrappleHooking")
@@ -118,7 +118,7 @@ func handle_grapple_hooking() -> void:
 		clear_grapple_hook_point()
 		shared_vars[&"grapple_hook_point"] = target_grapple_hook_point
 
-	shared_vars[&"grapple_hook_point_in_range"] = shared_vars[&"grapple_hook_point"].position.distance_to(_player.head.global_position) > _player.grapple_hook_max_distance
+	shared_vars[&"grapple_hook_point_in_range"] = shared_vars[&"grapple_hook_point"].position.distance_to(_player.head.global_position) <= _player.grapple_hook_max_distance
 
 	if not shared_vars[&"grapple_hook_point_in_range"]:
 		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.INVALID_TARGET
