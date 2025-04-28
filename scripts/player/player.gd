@@ -207,10 +207,6 @@ var _air_crouching: bool = false
 @onready var grapple_hook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
 
 
-func _ready() -> void:
-	airborne_uncrouch_area.position.y -= (1.0 - crouch_height_multiplier) * standing_height
-
-
 func _physics_process(delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		InputBuffer.clear_buffered_action("jump")
@@ -362,6 +358,7 @@ func attempt_uncrouch() -> bool:
 	var uncrouch_area: Area3D
 
 	if _air_crouching:
+		airborne_uncrouch_area.position.y = -standing_height * (1.0 - crouch_height_multiplier)
 		uncrouch_area = airborne_uncrouch_area
 	else:
 		uncrouch_area = grounded_uncrouch_area
