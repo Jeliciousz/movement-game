@@ -125,7 +125,7 @@ enum Stances {
 ## How fast the player must be until they stop sliding.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_stop_speed: float = 4.0
 ## How long the player must wait after a slide until they can slide again.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cooldown: int = 350
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cooldown: int = 0
 
 @export_subgroup("Slide Canceling", "slide_cancel_")
 ## Can the player slide cancel?
