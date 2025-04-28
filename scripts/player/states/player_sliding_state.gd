@@ -41,6 +41,7 @@ func _state_physics_process(_delta: float) -> void:
 		return
 
 	if not _player.slide_enabled or Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] > _player.slide_duration or _player.velocity.length() < _player.slide_stop_speed:
+		_player.attempt_uncrouch()
 		state_machine.change_state_to(&"Grounded")
 		return
 
