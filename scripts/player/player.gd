@@ -355,13 +355,11 @@ func attempt_uncrouch() -> bool:
 	if stance != Stances.CROUCHING:
 		return true
 
-	var uncrouch_area: Area3D
+	var uncrouch_area: Area3D = grounded_uncrouch_area
 
 	if _air_crouching:
 		airborne_uncrouch_area.position.y = -standing_height * (1.0 - crouch_height_multiplier)
 		uncrouch_area = airborne_uncrouch_area
-	else:
-		uncrouch_area = grounded_uncrouch_area
 
 	if not uncrouch_area.has_overlapping_bodies():
 		stance =_last_stance
