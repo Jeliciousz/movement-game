@@ -38,6 +38,7 @@ func spawn_random() -> void:
 		shared_vars[&"grapple_hook_point_in_range"] = false
 
 		InputBuffer.clear_buffered_action("jump")
+		InputBuffer.clear_buffered_action("crouch")
 		InputBuffer.clear_buffered_action("sprint")
 		InputBuffer.clear_buffered_action("slide")
 		InputBuffer.clear_buffered_action("grapple_hook")

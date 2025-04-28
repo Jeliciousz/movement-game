@@ -211,7 +211,15 @@ func _ready() -> void:
 	airborne_uncrouch_area.position.y -= (1.0 - crouch_height_multiplier) * standing_height
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		InputBuffer.clear_buffered_action("jump")
+		InputBuffer.clear_buffered_action("crouch")
+		InputBuffer.clear_buffered_action("sprint")
+		InputBuffer.clear_buffered_action("slide")
+		InputBuffer.clear_buffered_action("grapple_hook")
+		_input_vector = Vector2.ZERO
+
 	_wish_direction = basis * Vector3(_input_vector.x, 0.0, _input_vector.y).normalized()
 
 
