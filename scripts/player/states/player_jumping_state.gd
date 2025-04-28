@@ -51,7 +51,22 @@ func _state_physics_process(_delta: float) -> void:
 
 func update_stance() -> void:
 	match _player.stance:
-		Player.Stances.STANDING, Player.Stances.SPRINTING:
+		Player.Stances.STANDING:
+			if InputBuffer.is_action_buffered(&"sprint") and _player.sprint_enabled:
+				InputBuffer.clear_buffered_action(&"sprint")
+				_player.stance = Player.Stances.SPRINTING
+				return
+
+			if Input.is_action_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+				_player.crouch()
+				shared_vars[&"air_crouches"] += 1
+
+		Player.Stances.SPRINTING:
+			if InputBuffer.is_action_buffered(&"sprint") and _player.sprint_enabled:
+				InputBuffer.clear_buffered_action(&"sprint")
+				_player.stance = Player.Stances.STANDING
+				return
+
 			if Input.is_action_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
 				_player.crouch()
 				shared_vars[&"air_crouches"] += 1
