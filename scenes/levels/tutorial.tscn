@@ -1472,10 +1472,10 @@ size = Vector3(4, 7, 4)
 material = ExtResource("4_g7bfq")
 
 [node name="Jump7" type="CSGBox3D" parent="CSG/CSGArea6_Challenge"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 5, -35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 4.75, -35)
 use_collision = true
 collision_mask = 0
-size = Vector3(4, 8, 4)
+size = Vector3(4, 7.5, 4)
 material = ExtResource("4_g7bfq")
 
 [node name="CSGArea7" type="CSGCombiner3D" parent="CSG"]
