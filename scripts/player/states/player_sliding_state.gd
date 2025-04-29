@@ -14,6 +14,7 @@ func _state_enter() -> void:
 
 func _state_exit() -> void:
 	shared_vars[&"slide_timestamp"] = Time.get_ticks_msec()
+	_player.velocity -= _player.velocity.normalized() * _player.slide_stop_force
 
 
 func _state_physics_preprocess(_delta: float) -> void:

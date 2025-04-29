@@ -46,11 +46,11 @@ enum Stances {
 ## Can the player jump?
 @export var jump_enabled: bool = true
 ## How high the player jumps.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_power: float = 8.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_force: float = 8.0
 ## How high the player can jump while standing still.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_standing_multiplier: float = 1.1
 ## How far the player jumps in the direction they're moving.
-@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_horizontal_power: float = 1.5
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_horizontal_force: float = 1.5
 ## How far the player can jump backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_backwards_multiplier: float = 0.1
 ## How long the player can jump for.
@@ -66,15 +66,15 @@ enum Stances {
 ## The speed at or above which the player has max jump power.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_speed: float = 8.0
 ## How high the player jumps at max speed.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_power: float = 10.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_force: float = 10.0
 ## How far the player jumps in the direction they're moving at max speed.
-@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_power: float = 0.5
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_force: float = 0.5
 
 @export_subgroup("Air Jumping", "air_jump_")
 ## Can the player air jump?
 @export var air_jump_enabled: bool = false
 ## How far the player jumps in the direction they're moving while airborne.
-@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var air_jump_horizontal_power: float = 8.0
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var air_jump_horizontal_force: float = 8.0
 ## How many times the player can air jump before touching the ground.
 @export_range(0, 100, 1, "or_greater") var air_jump_limit: int = 1
 
@@ -113,7 +113,9 @@ enum Stances {
 ## Can the player slide?
 @export var slide_enabled: bool = true
 ## How fast the player slides.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_power: float = 5.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_start_force: float = 5.0
+## How much the player is slowed when they stop sliding.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_stop_force: float = 1.0
 ## How long the player can slide for.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_duration: int = 1000
 ## How quickly the player accelerates while sliding.
@@ -137,9 +139,9 @@ enum Stances {
 ## Can the player slide jump?
 @export var slide_jump_enabled: bool = true
 ## How high the player jumps while sliding.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_power: float = 14.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_force: float = 16.0
 ## How far the player jumps in the direction they're moving while sliding.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_horizontal_power: float = -3.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_horizontal_force: float = -3.0
 ## How long the player must wait after starting a slide until they can slide jump.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_jump_delay: int = 250
 
@@ -171,17 +173,17 @@ enum Stances {
 ## Can the player wall-jump?
 @export var walljump_enabled: bool = true
 ## How high the player jumps while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_power: float = 9.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_force: float = 9.0
 ## How far the player jumps forwards while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_power: float = -4.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_force: float = -4.0
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_power: float = 10.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_force: float = 10.0
 
 @export_group("Grapple Hooking", "grapple_hook_")
 ## Can the player grapple hook?
 @export var grapple_hook_enabled: bool = true
 ## How fast the player is pulled towards the grapple point when grapple hooking.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_power: float = 8.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_speed: float = 8.0
 ## How close to the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 15.0
 
@@ -464,8 +466,8 @@ func jump() -> void:
 	var current_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	var weight: float = clampf((current_horizontal_speed - speed_jump_base_speed) / (speed_jump_max_speed - speed_jump_base_speed), 0.0, 1.0)
 
-	var power: float = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
-	var horizontal_power: float = lerpf(jump_horizontal_power, speed_jump_max_horizontal_power, weight) * backwards_multiplier
+	var power: float = lerpf(jump_force, speed_jump_max_force, weight) * standing_multiplier
+	var horizontal_power: float = lerpf(jump_horizontal_force, speed_jump_max_horizontal_force, weight) * backwards_multiplier
 
 	velocity += up_direction * power
 	velocity += _wish_direction * horizontal_power
@@ -476,7 +478,7 @@ func slide() -> void:
 	crouch()
 
 	velocity -= up_direction * velocity.dot(up_direction)
-	velocity += _wish_direction * slide_power
+	velocity += _wish_direction * slide_start_force
 
 
 func air_jump() -> void:
@@ -489,16 +491,16 @@ func air_jump() -> void:
 	var current_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	var weight: float = clampf((current_horizontal_speed - speed_jump_base_speed) / (speed_jump_max_speed - speed_jump_base_speed), 0.0, 1.0)
 
-	var power: float = lerpf(jump_power, speed_jump_max_power, weight) * standing_multiplier
-	var horizontal_power: float = air_jump_horizontal_power * backwards_multiplier
+	var power: float = lerpf(jump_force, speed_jump_max_force, weight) * standing_multiplier
+	var horizontal_power: float = air_jump_horizontal_force * backwards_multiplier
 
 	velocity += up_direction * power
 	velocity += _wish_direction * horizontal_power
 
 
 func slide_jump() -> void:
-	velocity += up_direction * slide_jump_power
-	velocity += velocity.normalized() * slide_jump_horizontal_power
+	velocity += up_direction * slide_jump_force
+	velocity += velocity.normalized() * slide_jump_horizontal_force
 
 
 func add_wallrun_movement(run_direction: Vector3) -> void:
@@ -526,9 +528,9 @@ func add_wallrun_movement(run_direction: Vector3) -> void:
 
 
 func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
-	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * walljump_power
-	velocity += run_direction * walljump_horizontal_power
-	velocity += wall_normal * walljump_kick_power
+	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * walljump_force
+	velocity += run_direction * walljump_horizontal_force
+	velocity += wall_normal * walljump_kick_force
 
 
 func get_targeted_grapple_hook_point() -> GrappleHookPoint:
