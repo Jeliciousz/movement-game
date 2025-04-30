@@ -4,7 +4,7 @@ extends Node
 ##
 ## Code courtesy of [url=https://yosoyfreeman.github.io/article/godot/tutorial/achieving-better-mouse-input-in-godot-4-the-perfect-camera-controller/]Yo Soy Freeman[/url]. Edited by Jeliciousz
 
-const RADIANS_PER_UNIT: float = deg_to_rad(0.2)
+const RADIANS_PER_UNIT: float = deg_to_rad(0.075)
 
 ## Settings.
 @export_group("Settings")
@@ -13,7 +13,7 @@ const RADIANS_PER_UNIT: float = deg_to_rad(0.2)
 @export_subgroup("Mouse")
 
 ## How sensitive aiming is.
-@export var sensitivity: Vector2 = Vector2(0.5, 0.5)
+@export var sensitivity: Vector2 = Vector2(1.0, 1.0)
 
 ## Camera pitch clamping.
 @export_subgroup("Clamping")
