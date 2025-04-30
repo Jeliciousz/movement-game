@@ -16,16 +16,15 @@ environment = ExtResource("2_hfflh")
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.847465, 0.401876, -0.346841, 1.06083e-08, 0.653368, 0.757041, 0.530851, -0.641566, 0.553706, 0, 0, 0)
 layers = 3
-shadow_enabled = true
 
 [node name="PlayerSpawnPoint" parent="." instance=ExtResource("3_hfflh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 21)
 
 [node name="GrappleHookPoint1" parent="." instance=ExtResource("4_4h3fk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, 8)
 
 [node name="GrappleHookPoint2" parent="." instance=ExtResource("4_4h3fk")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13, -8)
 
 [node name="Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
