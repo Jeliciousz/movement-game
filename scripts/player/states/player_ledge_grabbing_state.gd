@@ -20,12 +20,15 @@ func _state_physics_process(delta: float) -> void:
 	_player.position = _player.position.move_toward(ledge_grab_position, delta * 15.0)
 
 	if _player.position.is_equal_approx(ledge_grab_position):
+		_player.position += _player.up_direction * 0.25
 		_player.velocity = _player.get_forward_direction() * Vector3(shared_vars[&"ledge_grab_velocity"].x, shared_vars[&"ledge_grab_velocity"].y * 0.5, shared_vars[&"ledge_grab_velocity"].z).length()
-		_player.velocity.y = 8.0
+		_player.velocity.y = 6.0
 
-		if InputBuffer.is_action_buffered(&"jump"):
+		if Input.is_action_pressed(&"jump"):
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.velocity += _player.get_forward_direction() * 3.0
+			shared_vars[&"coyote_jump_active"] = false
+			shared_vars[&"coyote_slide_active"] = false
+			_player.velocity += _player.get_forward_direction() * 2.0
 
 		state_machine.change_state_to(&"Grounded")
 		return
