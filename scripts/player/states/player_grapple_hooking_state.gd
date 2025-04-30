@@ -5,6 +5,8 @@ extends State
 ## The [Player].
 @export var _player: Player
 
+var player_velocity_before_move: Vector3 = Vector3.ZERO
+
 
 func _state_enter() -> void:
 	shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
@@ -26,11 +28,25 @@ func _state_physics_preprocess(_delta: float) -> void:
 func _state_physics_process(_delta: float) -> void:
 	update_stance()
 	update_physics()
+	player_velocity_before_move = _player.velocity
 	_player.update()
 
 	if _player.is_on_floor():
 		_player.footstep_audio.play()
 		state_machine.change_state_to(&"Grounded")
+		return
+
+	if _player.wallrun_enabled and wallrun_checks():
+		shared_vars[&"wallrun_wall_normal"] = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
+		shared_vars[&"wallrun_run_direction"] = shared_vars[&"wallrun_wall_normal"].rotated(Vector3.UP, deg_to_rad(90.0))
+
+		if shared_vars[&"wallrun_run_direction"].dot(_player.get_forward_direction()) < 0.0:
+			shared_vars[&"wallrun_run_direction"] *= -1.0
+
+		var new_velocity: Vector3 = shared_vars[&"wallrun_run_direction"] * Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
+		_player.velocity.x = new_velocity.x
+		_player.velocity.z = new_velocity.z
+		state_machine.change_state_to(&"WallRunning")
 		return
 
 	DebugDraw3D.draw_line(_player.get_center_of_mass(), shared_vars[&"grapple_hook_point"].position, Color.BLACK)
@@ -73,8 +89,52 @@ func update_physics() -> void:
 
 	var direction_from_grapple: Vector3 = shared_vars[&"grapple_hook_point"].position.direction_to(_player.get_center_of_mass())
 	var distance_from_grapple: float = shared_vars[&"grapple_hook_point"].position.distance_to(_player.get_center_of_mass())
-	var weight: float = clampf((distance_from_grapple - _player.standing_height) / (_player.grapple_hook_max_distance - _player.standing_height), 0, 1)
-	var power: float = lerpf(0, _player.grapple_hook_power, weight)
+	var weight: float = clampf((distance_from_grapple - 5.0) / (_player.grapple_hook_max_distance - _player.standing_height), 0, 1)
+	var power: float = lerpf(0, _player.grapple_hook_speed, weight)
 
 	_player.velocity += -direction_from_grapple * maxf(0, _player.velocity.dot(direction_from_grapple))
 	_player.velocity += -direction_from_grapple * maxf(0, (power - _player.velocity.dot(-direction_from_grapple)))
+
+
+func wallrun_checks() -> bool:
+	if Time.get_ticks_msec() - shared_vars[&"wallrun_timestamp"] < _player.wallrun_cooldown:
+		return false
+
+	if not _player.is_on_wall():
+		return false
+
+	if _player.get_wall_normal().y < -_player.safe_margin:
+		return false
+
+	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
+
+	#if _player.get_forward_direction().dot(-normal) > 0.8:
+		#return false
+
+	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
+
+	var horizontal_velocity: Vector3 = Vector3(player_velocity_before_move.x, 0.0, player_velocity_before_move.z)
+
+	if run_direction.dot(_player.get_forward_direction()) < 0.0:
+		run_direction *= -1.0
+
+	#if run_direction.dot(_player.get_forward_direction()) <= 0.0:
+	#	return false
+
+	if horizontal_velocity.length() < _player.wallrun_start_speed:
+		return false
+
+	_player.wallrun_floor_raycast.force_raycast_update()
+
+	if _player.wallrun_floor_raycast.is_colliding():
+		return false
+
+	_player.wallrun_foot_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
+	_player.wallrun_hand_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
+	_player.wallrun_foot_raycast.force_raycast_update()
+	_player.wallrun_hand_raycast.force_raycast_update()
+
+	if not (_player.wallrun_foot_raycast.is_colliding() and _player.wallrun_hand_raycast.is_colliding()):
+		return false
+
+	return true

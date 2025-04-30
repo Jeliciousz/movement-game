@@ -22,6 +22,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and shared_vars[&"coyote_slide_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration and slide_checks():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
+		_player.attempt_uncrouch()
 
 	if InputBuffer.is_action_buffered(&"jump"):
 		if _player.walljump_enabled and _player.coyote_walljump_enabled and shared_vars[&"coyote_walljump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
@@ -33,6 +34,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 		if _player.jump_enabled and _player.coyote_jump_enabled and shared_vars[&"coyote_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
+			_player.attempt_uncrouch()
 			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
@@ -168,10 +170,35 @@ func wallrun_checks() -> bool:
 	if _player.get_wall_normal().y < -_player.safe_margin:
 		return false
 
-	if not _player.get_last_slide_collision().get_collider().is_in_group(&"WallrunBodies"):
+	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
+
+	#if _player.get_forward_direction().dot(-normal) > 0.8:
+		#return false
+
+	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
+
+	var horizontal_velocity: Vector3 = Vector3(player_velocity_before_move.x, 0.0, player_velocity_before_move.z)
+
+	if run_direction.dot(_player.get_forward_direction()) < 0.0:
+		run_direction *= -1.0
+
+	#if run_direction.dot(_player.get_forward_direction()) <= 0.0:
+	#	return false
+
+	if horizontal_velocity.length() < _player.wallrun_start_speed:
 		return false
 
-	if Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length() < _player.wallrun_start_speed:
+	_player.wallrun_floor_raycast.force_raycast_update()
+
+	if _player.wallrun_floor_raycast.is_colliding():
+		return false
+
+	_player.wallrun_foot_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
+	_player.wallrun_hand_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
+	_player.wallrun_foot_raycast.force_raycast_update()
+	_player.wallrun_hand_raycast.force_raycast_update()
+
+	if not (_player.wallrun_foot_raycast.is_colliding() and _player.wallrun_hand_raycast.is_colliding()):
 		return false
 
 	return true

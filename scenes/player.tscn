@@ -134,6 +134,24 @@ script = ExtResource("10_4ni07")
 _player = NodePath("../..")
 metadata/_custom_type_script = "uid://c11sddh62rt7v"
 
+[node name="LedgeGrabFootRaycast" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, -0.65)
+
+[node name="LedgeGrabHandRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+target_position = Vector3(0, 0, -0.65)
+
+[node name="WallrunFloorRaycast" type="RayCast3D" parent="."]
+target_position = Vector3(0, -0.1, 0)
+
+[node name="WallrunFootRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+target_position = Vector3(0.65, 0, 0)
+
+[node name="WallrunHandRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+target_position = Vector3(0.65, 0, 0)
+
 [node name="CollisionShape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_l71n6")
@@ -264,8 +282,6 @@ script = ExtResource("8_smehm")
 _player = NodePath("../../..")
 
 [node name="DebugInfo" type="Label" parent="PlayerHUD" node_paths=PackedStringArray("_player")]
-process_mode = 4
-visible = false
 layout_mode = 0
 offset_left = 6.0
 offset_top = 5.0

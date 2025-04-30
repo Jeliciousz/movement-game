@@ -23,6 +23,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"jump") and _player.slide_jump_enabled and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_jump_delay:
 		InputBuffer.clear_buffered_action(&"jump")
+		_player.attempt_uncrouch()
 		_player.slide_jump()
 		state_machine.change_state_to(&"Jumping")
 		return

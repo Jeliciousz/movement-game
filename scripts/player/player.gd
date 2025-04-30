@@ -38,7 +38,7 @@ enum Stances {
 
 @export_subgroup("Air Control", "air_")
 ## How fast the player can move in the air.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 3.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var air_speed: float = 1.0
 ## How quickly the player accelerates in the air.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var air_acceleration: float = 45.0
 
@@ -167,7 +167,11 @@ enum Stances {
 ## How fast the player must be until they stop wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_stop_speed: float = 2.0
 ## How long the player must wait after a wallrun until they can wallrun again.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_cooldown: int = 200
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_cooldown: int = 250
+## The largest external angle a wall can have for the player to stay running on it.
+@export_range(0, 89, 1, "radians_as_degrees") var wallrun_max_external_angle: float = 15
+## The largest internal angle a wall can have for the player to stay running on it.
+@export_range(0, 89, 1, "radians_as_degrees") var wallrun_max_internal_angle: float = 45
 
 @export_subgroup("Wall-Jumping", "walljump_")
 ## Can the player wall-jump?
@@ -175,17 +179,17 @@ enum Stances {
 ## How high the player jumps while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_force: float = 9.0
 ## How far the player jumps forwards while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_force: float = -4.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_horizontal_force: float = -6.0
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_force: float = 10.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_force: float = 12.0
 
 @export_group("Grapple Hooking", "grapple_hook_")
 ## Can the player grapple hook?
 @export var grapple_hook_enabled: bool = true
 ## How fast the player is pulled towards the grapple point when grapple hooking.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_speed: float = 8.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_speed: float = 6.0
 ## How close to the grapple point the player must be to grapple to it.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 15.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 10.0
 
 var stance: Stances = Stances.SPRINTING:
 	set = set_stance
@@ -198,6 +202,9 @@ var _air_crouching: bool = false
 
 @onready var head: Node3D = $Head
 @onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
+@onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
+@onready var wallrun_hand_raycast: RayCast3D = $WallrunHandRaycast
+@onready var wallrun_floor_raycast: RayCast3D = $WallrunFloorRaycast
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape3D = $CollisionShape
 @onready var standing_height: float = collision_shape.shape.height

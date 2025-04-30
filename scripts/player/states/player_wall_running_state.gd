@@ -19,6 +19,10 @@ func _state_enter() -> void:
 	_player.footstep_audio.play()
 
 
+func _state_exit() -> void:
+	shared_vars[&"wallrun_timestamp"] = Time.get_ticks_msec()
+
+
 func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
@@ -71,30 +75,43 @@ func update_physics(delta: float) -> void:
 		_player.add_friction(_player.physics_friction * _player.wallrun_friction_multiplier, _player.wallrun_top_speed)
 		_player.add_gravity(_player.physics_gravity * _player.wallrun_gravity_multiplier)
 	else:
-		_player.velocity.y = move_toward(_player.velocity.y, 0, _player.wallrun_vertical_friction * delta)
+		_player.velocity.y = move_toward(_player.velocity.y, 0.0, _player.wallrun_vertical_friction * delta)
 
 		_player.add_wallrun_movement(shared_vars[&"wallrun_run_direction"])
 
 
 func wallrun_checks() -> bool:
+	_player.wallrun_floor_raycast.force_raycast_update()
+
+	if _player.wallrun_floor_raycast.is_colliding():
+		return false
+
 	var wall_normal: Vector3
 
 	if not _player.is_on_wall():
-		var test: KinematicCollision3D = _player.move_and_collide(-shared_vars[&"wallrun_wall_normal"] * _player.floor_snap_length, true, _player.safe_margin)
+		_player.wallrun_foot_raycast.target_position = _player.basis.inverse() * -shared_vars[&"wallrun_wall_normal"] * _player.collision_shape.shape.radius * 3
+		_player.wallrun_hand_raycast.target_position = _player.basis.inverse() * -shared_vars[&"wallrun_wall_normal"] * _player.collision_shape.shape.radius * 3
+		_player.wallrun_foot_raycast.force_raycast_update()
+		_player.wallrun_hand_raycast.force_raycast_update()
 
-		if not (test and test.get_collider().is_in_group("WallrunBodies")):
+		if not (_player.wallrun_foot_raycast.is_colliding() and _player.wallrun_hand_raycast.is_colliding()):
+			return false
+
+		var normal: Vector3 = Vector3(_player.wallrun_foot_raycast.get_collision_normal().x, 0.0, _player.wallrun_foot_raycast.get_collision_normal().z).normalized()
+
+		if normal.angle_to(shared_vars[&"wallrun_wall_normal"]) > deg_to_rad(_player.wallrun_max_external_angle + 1):
 			return false
 
 		_player.move_and_collide(-shared_vars[&"wallrun_wall_normal"] * _player.floor_snap_length, false, _player.safe_margin)
 
 		_player.check_surface(-shared_vars[&"wallrun_wall_normal"])
 
-		wall_normal = Vector3(test.get_normal().x, 0.0, test.get_normal().z).normalized()
+		wall_normal = normal
 	else:
-		if not _player.get_last_slide_collision().get_collider().is_in_group("WallrunBodies"):
+		if Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized().angle_to(shared_vars[&"wallrun_wall_normal"]) > deg_to_rad(_player.wallrun_max_internal_angle + 1):
 			return false
 
-		wall_normal = _player.get_wall_normal()
+		wall_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 
 	if wall_normal != shared_vars[&"wallrun_wall_normal"]:
 		shared_vars[&"wallrun_wall_normal"] = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
