@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=32 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" uid="uid://4o5xvw2q2e42" path="res://scripts/player/states/player_wall_running_state.gd" id="9_a38lo"]
 [ext_resource type="Script" uid="uid://c4qp2brm6b7a" path="res://scripts/player/states/player_grapple_hooking_state.gd" id="10_4ni07"]
 [ext_resource type="AudioStream" uid="uid://b7xmurbvikg55" path="res://assets/sounds/player/grapple/grapple_hook_indicator.ogg" id="11_a8ls1"]
+[ext_resource type="Script" uid="uid://mvnof2ryv8nf" path="res://scripts/player/states/player_ledge_grabbing_state.gd" id="12_ke2ow"]
 [ext_resource type="AudioStream" uid="uid://b67ihi2sr2j5a" path="res://assets/sounds/player/grapple/grapple_hook_fire.wav" id="12_qfm1y"]
 [ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/player/viewmodel/viewmodel_viewport.gd" id="15_l71n6"]
 [ext_resource type="Script" uid="uid://dy0ilnerqu2pn" path="res://scripts/player/viewmodel/viewmodel_camera.gd" id="17_31cv2"]
@@ -134,6 +135,11 @@ script = ExtResource("10_4ni07")
 _player = NodePath("../..")
 metadata/_custom_type_script = "uid://c11sddh62rt7v"
 
+[node name="LedgeGrabbing" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+script = ExtResource("12_ke2ow")
+_player = NodePath("../..")
+metadata/_custom_type_script = "uid://c11sddh62rt7v"
+
 [node name="LedgeGrabFootRaycast" type="RayCast3D" parent="."]
 target_position = Vector3(0, 0, -0.65)
 
@@ -141,15 +147,23 @@ target_position = Vector3(0, 0, -0.65)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 target_position = Vector3(0, 0, -0.65)
 
+[node name="LedgeGrabLedgeRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -0.65)
+target_position = Vector3(0, -2, 0)
+
+[node name="LedgeGrabHeadRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+target_position = Vector3(0, 2, 0)
+
 [node name="WallrunFloorRaycast" type="RayCast3D" parent="."]
 target_position = Vector3(0, -0.1, 0)
 
 [node name="WallrunFootRaycast" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 target_position = Vector3(0.65, 0, 0)
 
 [node name="WallrunHandRaycast" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 target_position = Vector3(0.65, 0, 0)
 
 [node name="CollisionShape" type="CollisionShape3D" parent="."]

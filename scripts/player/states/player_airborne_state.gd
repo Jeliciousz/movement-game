@@ -65,6 +65,11 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
+	if _player.ledge_grab_enabled and ledgegrab_checks() and _player._input_vector.y < -0.2:
+		shared_vars[&"ledge_grab_velocity"] = player_velocity_before_move
+		state_machine.change_state_to(&"LedgeGrabbing")
+		return
+
 	if _player.wallrun_enabled and wallrun_checks():
 		shared_vars[&"wallrun_wall_normal"] = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 		shared_vars[&"wallrun_run_direction"] = shared_vars[&"wallrun_wall_normal"].rotated(Vector3.UP, deg_to_rad(90.0))
@@ -199,6 +204,26 @@ func wallrun_checks() -> bool:
 	_player.wallrun_hand_raycast.force_raycast_update()
 
 	if not (_player.wallrun_foot_raycast.is_colliding() and _player.wallrun_hand_raycast.is_colliding()):
+		return false
+
+	return true
+
+
+func ledgegrab_checks() -> bool:
+	if not _player.is_on_wall():
+		return false
+
+	_player.ledge_grab_foot_raycast.force_raycast_update()
+	_player.ledge_grab_hand_raycast.force_raycast_update()
+	_player.ledge_grab_head_raycast.force_raycast_update()
+
+	if not _player.ledge_grab_foot_raycast.is_colliding():
+		return false
+
+	if _player.ledge_grab_hand_raycast.is_colliding():
+		return false
+
+	if _player.ledge_grab_head_raycast.is_colliding():
 		return false
 
 	return true

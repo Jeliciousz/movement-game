@@ -145,7 +145,7 @@ enum Stances {
 ## How long the player must wait after starting a slide until they can slide jump.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_jump_delay: int = 250
 
-@export_group("Wall-Running")
+@export_group("Wall-Running", "wallrun")
 ## Can the player wall-run?
 @export var wallrun_enabled: bool = true
 ## The fast the player can move while wall-running.
@@ -155,7 +155,7 @@ enum Stances {
 ## How long the player can wall-run for until they start sliding.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
 ## The acceleration applied against the direction of the velocity in the vertical axis while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 35.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 45.0
 ## How much air resistence is applied while wall-running.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
 ## How much gravity is applied while sliding on a wall.
@@ -183,6 +183,10 @@ enum Stances {
 ## How far the player jumps away from the wall while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_force: float = 12.0
 
+@export_group("Ledge Grabbing", "ledge_grab_")
+## Can the player ledge-grab?
+@export var ledge_grab_enabled: bool = true
+
 @export_group("Grapple Hooking", "grapple_hook_")
 ## Can the player grapple hook?
 @export var grapple_hook_enabled: bool = true
@@ -205,6 +209,10 @@ var _air_crouching: bool = false
 @onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
 @onready var wallrun_hand_raycast: RayCast3D = $WallrunHandRaycast
 @onready var wallrun_floor_raycast: RayCast3D = $WallrunFloorRaycast
+@onready var ledge_grab_foot_raycast: RayCast3D = $LedgeGrabFootRaycast
+@onready var ledge_grab_hand_raycast: RayCast3D = $LedgeGrabHandRaycast
+@onready var ledge_grab_head_raycast: RayCast3D = $LedgeGrabHeadRaycast
+@onready var ledge_grab_ledge_raycast: RayCast3D = $LedgeGrabLedgeRaycast
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape3D = $CollisionShape
 @onready var standing_height: float = collision_shape.shape.height
@@ -357,6 +365,12 @@ func crouch() -> void:
 	_crouch_timestamp = Time.get_ticks_msec()
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
 	collision_shape.position.y = (standing_height * crouch_height_multiplier) / 2.0
+	wallrun_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
+	ledge_grab_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
+	ledge_grab_head_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
+	ledge_grab_head_raycast.target_position.y = ledge_grab_hand_raycast.position.y
+	ledge_grab_ledge_raycast.position.y = ledge_grab_hand_raycast.position.y
+	ledge_grab_ledge_raycast.target_position.y = -ledge_grab_hand_raycast.position.y
 
 	if is_on_floor():
 		_air_crouching = false
@@ -369,20 +383,21 @@ func attempt_uncrouch() -> bool:
 	if stance != Stances.CROUCHING:
 		return true
 
-	var uncrouch_area: Area3D = grounded_uncrouch_area
-
 	if _air_crouching:
 		airborne_uncrouch_area.position.y = -standing_height * (1.0 - crouch_height_multiplier)
-		uncrouch_area = airborne_uncrouch_area
 
-	if not uncrouch_area.has_overlapping_bodies():
-		stance =_last_stance
-		_crouch_timestamp = Time.get_ticks_msec()
-		collision_shape.shape.height = standing_height
-		collision_shape.position.y = standing_height / 2.0
+		if not airborne_uncrouch_area.has_overlapping_bodies():
+			_uncrouch()
+
+			position.y -= standing_height * (1.0 - crouch_height_multiplier)
+			_air_crouching = false
+
+		return true
+
+	if not grounded_uncrouch_area.has_overlapping_bodies():
+		_uncrouch()
 
 		if _air_crouching:
-			position.y -= standing_height * (1.0 - crouch_height_multiplier)
 			_air_crouching = false
 
 		return true
@@ -568,3 +583,16 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 			highest_proximity_point = grapple_hook_points[i]
 
 	return highest_proximity_point
+
+
+func _uncrouch() -> void:
+	stance =_last_stance
+	_crouch_timestamp = Time.get_ticks_msec()
+	collision_shape.shape.height = standing_height
+	collision_shape.position.y = standing_height / 2.0
+	wallrun_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	ledge_grab_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	ledge_grab_head_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	ledge_grab_head_raycast.target_position.y = ledge_grab_hand_raycast.position.y
+	ledge_grab_ledge_raycast.position.y = ledge_grab_hand_raycast.position.y
+	ledge_grab_ledge_raycast.target_position.y = -ledge_grab_hand_raycast.position.y
