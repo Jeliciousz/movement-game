@@ -25,7 +25,7 @@ func _state_physics_process(delta: float) -> void:
 
 		if InputBuffer.is_action_buffered(&"jump"):
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.velocity += _player.get_forward_direction() * 4.0
+			_player.velocity += _player.get_forward_direction() * 3.0
 
 		state_machine.change_state_to(&"Grounded")
 		return
