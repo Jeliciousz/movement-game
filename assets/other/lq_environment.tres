@@ -1,4 +1,4 @@
-[gd_resource type="Environment" load_steps=3 format=3 uid="uid://bqwugpp0ec7ws"]
+[gd_resource type="Environment" load_steps=3 format=3 uid="uid://bep57j4x8yodg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_lg8b7"]
 sky_top_color = Color(0.522986, 0.834134, 0.99177, 1)
@@ -16,9 +16,3 @@ background_color = Color(0.752941, 0.776471, 0.827451, 1)
 background_intensity = 0.0
 sky = SubResource("Sky_7bk1c")
 tonemap_mode = 4
-tonemap_exposure = 1.5
-ssr_enabled = true
-ssao_enabled = true
-ssil_enabled = true
-sdfgi_enabled = true
-glow_enabled = true

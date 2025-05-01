@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_7ac3l"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_iig34"]
-[ext_resource type="Environment" uid="uid://bqwugpp0ec7ws" path="res://assets/other/main_environment.tres" id="3_3e81p"]
+[ext_resource type="Environment" uid="uid://bep57j4x8yodg" path="res://assets/other/lq_environment.tres" id="3_u4f7j"]
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/wall.tres" id="4_g7bfq"]
 
 [node name="World" type="Node3D"]
@@ -13,7 +13,7 @@
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = ExtResource("3_3e81p")
+environment = ExtResource("3_u4f7j")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707106, 0.707107, 0.5, -0.612372, 0.612373, 0, 0, 0)
