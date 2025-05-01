@@ -27,11 +27,14 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if InputBuffer.is_action_buffered(&"jump"):
 		if _player.walljump_enabled and _player.coyote_walljump_enabled and shared_vars[&"coyote_walljump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
+			shared_vars[&"wall_jumps"] += 1
 
 			var force: float
 
-			if shared_vars[&"wall_jumps"] >= _player.walljump_min_limit:
-				force = lerpf(_player.walljump_force, 0.0, minf(float(1 + shared_vars[&"wall_jumps"] - _player.walljump_min_limit) / float(_player.walljump_max_limit), 1.0))
+			if shared_vars[&"wall_jumps"] == _player.walljump_max_limit:
+				force = 0.0
+			elif shared_vars[&"wall_jumps"] > _player.walljump_min_limit:
+				force = lerpf(_player.walljump_force, 0.0, float(shared_vars[&"wall_jumps"] - _player.walljump_min_limit) / float(_player.walljump_max_limit - _player.walljump_min_limit))
 			else:
 				force = _player.walljump_force
 
