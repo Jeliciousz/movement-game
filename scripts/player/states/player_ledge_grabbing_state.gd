@@ -17,20 +17,20 @@ func _state_enter() -> void:
 func _state_physics_process(delta: float) -> void:
 	update_stance()
 
-	_player.position = _player.position.move_toward(ledge_grab_position, delta * 15.0)
+	_player.position = _player.position.move_toward(ledge_grab_position, delta * _player.ledge_grab_speed)
 
 	if _player.position.is_equal_approx(ledge_grab_position):
-		_player.position += _player.up_direction * 0.25
-		_player.velocity = _player.get_forward_direction() * Vector3(shared_vars[&"ledge_grab_velocity"].x, shared_vars[&"ledge_grab_velocity"].y * 0.5, shared_vars[&"ledge_grab_velocity"].z).length()
-		_player.velocity.y = 6.0
+		_player.position += _player.up_direction * _player.safe_margin
+		_player.velocity = _player.get_forward_direction() * Vector3(shared_vars[&"ledge_grab_velocity"].x, shared_vars[&"ledge_grab_velocity"].y * _player.ledge_grab_vertical_speed_followthrough, shared_vars[&"ledge_grab_velocity"].z).length()
+		_player.velocity.y = _player.ledge_grab_power
 
 		if Input.is_action_pressed(&"jump"):
 			InputBuffer.clear_buffered_action(&"jump")
 			shared_vars[&"coyote_jump_active"] = false
 			shared_vars[&"coyote_slide_active"] = false
-			_player.velocity += _player.get_forward_direction() * 2.0
+			_player.velocity += _player.get_forward_direction() * _player.ledge_grab_vault_power
 
-		state_machine.change_state_to(&"Grounded")
+		state_machine.change_state_to(&"Airborne")
 		return
 
 

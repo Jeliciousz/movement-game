@@ -154,8 +154,10 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80.0
 ## How long the player can wall-run for until they start sliding.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
-## The acceleration applied against the direction of the velocity in the vertical axis while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_vertical_friction: float = 45.0
+## The acceleration opposing upwards movement while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_upwards_friction: float = 15.0
+## The acceleration opposing downwards movement while wall-running.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_downwards_friction: float = 45.0
 ## How much air resistence is applied while wall-running.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
 ## How much gravity is applied while sliding on a wall.
@@ -183,9 +185,6 @@ enum Stances {
 ## How far the player jumps away from the wall while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_kick_force: float = 12.0
 
-@export_group("Ledge Grabbing", "ledge_grab_")
-## Can the player ledge-grab?
-@export var ledge_grab_enabled: bool = true
 
 @export_group("Grapple Hooking", "grapple_hook_")
 ## Can the player grapple hook?
@@ -194,6 +193,18 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_speed: float = 6.0
 ## How close to the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 10.0
+
+@export_group("Ledge Grabbing", "ledge_grab_")
+## Can the player ledge-grab?
+@export var ledge_grab_enabled: bool = true
+## How quickly the player climbs a ledge.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_speed: float = 15.0
+## How high the player is sent upwards when ledge-grabbing.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_power: float = 6.0
+## How far the player is sent forwards when vaulting over a ledge.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_power: float = 2.0
+## How much of the player's vertical speed is sent forwards when they climb a ledge.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var ledge_grab_vertical_speed_followthrough: float = 0.5
 
 var stance: Stances = Stances.SPRINTING:
 	set = set_stance
