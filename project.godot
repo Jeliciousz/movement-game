@@ -39,7 +39,6 @@ enabled=PackedStringArray()
 
 [global_group]
 
-WallrunBodies="Walls that can be run on."
 PlayerSpawnPoints="Points the player can spawn at."
 
 [input]
@@ -130,7 +129,13 @@ common/physics_interpolation=true
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
+textures/default_filters/anisotropic_filtering_level=3
+anti_aliasing/quality/msaa_3d=2
+anti_aliasing/screen_space_roughness_limiter/enabled=false
 textures/default_filters/texture_mipmap_bias=-1.0
+textures/decals/filter=5
+textures/light_projectors/filter=5
 occlusion_culling/occlusion_rays_per_thread=2048
 lightmapping/denoising/denoiser=1
 anti_aliasing/quality/use_debanding=true
