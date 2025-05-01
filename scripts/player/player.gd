@@ -204,9 +204,9 @@ enum Stances {
 ## How quickly the player climbs a ledge.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_speed: float = 15.0
 ## How high the player is sent upwards when ledge-grabbing.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_power: float = 6.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_power: float = 4.0
 ## How far the player is sent upwards when vaulting over a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_power: float = 4.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_power: float = 8.0
 ## How far the player is sent forwards when vaulting over a ledge.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_horizontal_power: float = 2.0
 ## How much of the player's vertical speed is sent forwards when they climb a ledge.
