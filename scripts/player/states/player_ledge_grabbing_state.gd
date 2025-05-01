@@ -22,13 +22,14 @@ func _state_physics_process(delta: float) -> void:
 	if _player.position.is_equal_approx(ledge_grab_position):
 		_player.position += _player.up_direction * _player.safe_margin
 		_player.velocity = _player.get_forward_direction() * Vector3(shared_vars[&"ledge_grab_velocity"].x, shared_vars[&"ledge_grab_velocity"].y * _player.ledge_grab_vertical_speed_followthrough, shared_vars[&"ledge_grab_velocity"].z).length()
-		_player.velocity.y = _player.ledge_grab_power
+		_player.velocity += _player.up_direction * _player.ledge_grab_power
 
 		if Input.is_action_pressed(&"jump"):
 			InputBuffer.clear_buffered_action(&"jump")
 			shared_vars[&"coyote_jump_active"] = false
 			shared_vars[&"coyote_slide_active"] = false
-			_player.velocity += _player.get_forward_direction() * _player.ledge_grab_vault_power
+			_player.velocity += _player.up_direction * _player.ledge_grab_vault_power
+			_player.velocity += _player.get_forward_direction() * _player.ledge_grab_vault_horizontal_power
 
 		state_machine.change_state_to(&"Airborne")
 		return
