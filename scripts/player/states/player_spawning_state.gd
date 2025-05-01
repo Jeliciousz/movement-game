@@ -37,6 +37,7 @@ func spawn_random() -> void:
 		shared_vars[&"grapple_hook_point"] = null
 		shared_vars[&"grapple_hook_point_in_range"] = false
 		shared_vars[&"ledge_grab_velocity"] = Vector3.ZERO
+		shared_vars[&"wall_jumps"] = 0
 
 		InputBuffer.clear_buffered_action("jump")
 		InputBuffer.clear_buffered_action("sprint")

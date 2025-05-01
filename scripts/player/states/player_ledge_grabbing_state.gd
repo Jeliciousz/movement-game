@@ -28,6 +28,8 @@ func _state_physics_process(delta: float) -> void:
 			InputBuffer.clear_buffered_action(&"jump")
 			shared_vars[&"coyote_jump_active"] = false
 			shared_vars[&"coyote_slide_active"] = false
+			shared_vars[&"air_jumps"] = 0
+			shared_vars[&"wall_jumps"] = 0
 			_player.velocity += _player.up_direction * _player.ledge_grab_vault_power
 			_player.velocity += _player.get_forward_direction() * _player.ledge_grab_vault_horizontal_power
 

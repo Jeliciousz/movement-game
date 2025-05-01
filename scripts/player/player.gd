@@ -178,6 +178,10 @@ enum Stances {
 @export_subgroup("Wall-Jumping", "walljump_")
 ## Can the player wall-jump?
 @export var walljump_enabled: bool = true
+## How many times the player can wall-jump with full force.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_min_limit: int = 3
+## How many wall-jumps until the player get no vertical force when wall jumping.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_max_limit: int = 6
 ## How high the player jumps while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_force: float = 9.0
 ## How far the player jumps forwards while wall-running.
@@ -562,8 +566,8 @@ func add_wallrun_movement(run_direction: Vector3) -> void:
 	velocity.z = limited_velocity.y
 
 
-func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
-	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * walljump_force
+func wall_jump(wall_normal: Vector3, run_direction: Vector3, force: float) -> void:
+	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * force
 	velocity += run_direction * walljump_horizontal_force
 	velocity += wall_normal * walljump_kick_force
 

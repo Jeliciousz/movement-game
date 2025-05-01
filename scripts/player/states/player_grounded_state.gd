@@ -12,6 +12,7 @@ func _state_enter() -> void:
 	shared_vars[&"coyote_walljump_active"] = false
 	shared_vars[&"air_jumps"] = 0
 	shared_vars[&"air_crouches"] = 0
+	shared_vars[&"wall_jumps"] = 0
 	clear_grapple_hook_point()
 
 
