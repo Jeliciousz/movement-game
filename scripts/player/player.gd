@@ -575,6 +575,8 @@ func wall_jump(wall_normal: Vector3, run_direction: Vector3, force: float) -> vo
 func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	var grapple_hook_points: Array[GrappleHookPoint] = []
 
+	grapple_hook_raycast.force_raycast_update()
+
 	while grapple_hook_raycast.is_colliding():
 		var collider: CollisionObject3D = grapple_hook_raycast.get_collider()
 		if collider is GrappleHookPoint:
