@@ -113,7 +113,7 @@ func wallrun_checks() -> bool:
 
 	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 
-	if _player.get_forward_direction().dot(-normal) > 0.9:
+	if _player.get_forward_direction().dot(-normal) >= 0.9:
 		return false
 
 	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
@@ -144,6 +144,11 @@ func wallrun_checks() -> bool:
 
 func ledgegrab_checks() -> bool:
 	if not _player.is_on_wall():
+		return false
+
+	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
+
+	if _player.get_forward_direction().dot(-normal) < 0.9:
 		return false
 
 	_player.ledge_grab_foot_raycast.force_raycast_update()
