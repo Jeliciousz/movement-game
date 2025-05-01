@@ -179,7 +179,7 @@ enum Stances {
 ## Can the player wall-jump?
 @export var walljump_enabled: bool = true
 ## How many times the player can wall-jump with full force.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_min_limit: int = 3
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_min_limit: int = 4
 ## How many wall-jumps until the player get no vertical force when wall jumping.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var walljump_max_limit: int = 8
 ## How high the player jumps while wall-running.
