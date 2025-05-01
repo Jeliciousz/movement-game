@@ -157,7 +157,7 @@ enum Stances {
 ## The acceleration opposing upwards movement while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_upwards_friction: float = 20.0
 ## The acceleration opposing downwards movement while wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_downwards_friction: float = 35.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_downwards_friction: float = 45.0
 ## How much air resistence is applied while wall-running.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
 ## How much gravity is applied while sliding on a wall.
