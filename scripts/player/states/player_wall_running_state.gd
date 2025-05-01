@@ -75,7 +75,10 @@ func update_physics(delta: float) -> void:
 		_player.add_friction(_player.physics_friction * _player.wallrun_friction_multiplier, _player.wallrun_top_speed)
 		_player.add_gravity(_player.physics_gravity * _player.wallrun_gravity_multiplier)
 	else:
-		_player.velocity.y = move_toward(_player.velocity.y, 0.0, _player.wallrun_vertical_friction * delta)
+		if _player.velocity.y < 0:
+			_player.velocity.y = move_toward(_player.velocity.y, 0.0, _player.wallrun_downwards_friction * delta)
+		else:
+			_player.velocity.y = move_toward(_player.velocity.y, 0.0, _player.wallrun_upwards_friction * delta)
 
 		_player.add_wallrun_movement(shared_vars[&"wallrun_run_direction"])
 
