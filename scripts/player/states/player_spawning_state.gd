@@ -11,7 +11,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 
 func spawn_random() -> void:
-	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint)
+	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint and node.enabled)
 
 	if not spawn_nodes.is_empty():
 		var spawn_node: PlayerSpawnPoint = spawn_nodes.pick_random()
