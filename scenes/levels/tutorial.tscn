@@ -49,6 +49,20 @@ collision_mask = 0
 size = Vector3(10, 50, 11)
 material = ExtResource("4_g7bfq")
 
+[node name="Box7" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -24, -53)
+use_collision = true
+collision_mask = 0
+size = Vector3(10, 50, 8)
+material = ExtResource("4_g7bfq")
+
+[node name="Box10" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, -24, -53)
+use_collision = true
+collision_mask = 0
+size = Vector3(10, 50, 8)
+material = ExtResource("4_g7bfq")
+
 [node name="Box3" type="CSGBox3D" parent="CSG"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -12.5)
 use_collision = true
@@ -61,4 +75,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, -36)
 use_collision = true
 collision_mask = 0
 size = Vector3(10, 10, 1)
+material = ExtResource("4_g7bfq")
+
+[node name="Box8" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 6, -56.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(30, 10, 1)
+material = ExtResource("4_g7bfq")
+
+[node name="Box9" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 6, -49.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(20, 10, 1)
 material = ExtResource("4_g7bfq")
