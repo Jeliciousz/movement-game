@@ -28,10 +28,23 @@ collision_mask = 0
 size = Vector3(50, 1, 50)
 material = ExtResource("4_g7bfq")
 
+[node name="Box" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -22)
+use_collision = true
+collision_mask = 0
+size = Vector3(10, 4, 4)
+material = ExtResource("4_g7bfq")
+
 [node name="NorthWall" type="CSGBox3D" parent="CSG"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 7.5, -24.5)
 use_collision = true
 size = Vector3(49, 15, 1)
+material = ExtResource("4_g7bfq")
+
+[node name="WestWall" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.5, 7.5, 0.5)
+use_collision = true
+size = Vector3(1, 15, 49)
 material = ExtResource("4_g7bfq")
 
 [node name="EastWall" type="CSGBox3D" parent="CSG"]
@@ -44,10 +57,4 @@ material = ExtResource("4_g7bfq")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 7.5, 24.5)
 use_collision = true
 size = Vector3(49, 15, 1)
-material = ExtResource("4_g7bfq")
-
-[node name="SouthWall2" type="CSGBox3D" parent="CSG"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.5, 7.5, 0.5)
-use_collision = true
-size = Vector3(1, 15, 49)
 material = ExtResource("4_g7bfq")
