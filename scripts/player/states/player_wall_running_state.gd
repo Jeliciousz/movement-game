@@ -45,6 +45,12 @@ func _state_physics_preprocess(_delta: float) -> void:
 		state_machine.change_state_to(&"Jumping")
 		return
 
+	if InputBuffer.is_action_buffered(&"crouch"):
+		InputBuffer.clear_buffered_action(&"crouch")
+		_player.velocity += shared_vars[&"wallrun_wall_normal"] * _player.wallrun_cancel_force
+		shared_vars[&"coyote_walljump_active"] = false
+		state_machine.change_state_to(&"Airborne")
+
 
 func _state_physics_process(delta: float) -> void:
 	update_stance()
