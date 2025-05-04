@@ -378,6 +378,10 @@ func get_amount_moving_backwards() -> float:
 	return maxf(0.0, _wish_direction.dot(basis.z))
 
 
+func kill() -> void:
+	state_machine.change_state_to(&"Spawning")
+
+
 func crouch() -> void:
 	if stance == Stances.CROUCHING:
 		return
