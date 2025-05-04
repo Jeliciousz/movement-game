@@ -52,3 +52,13 @@ func _on_state_machine_state_changed(_last_state: StringName, current_state: Str
 		&"Jumping":
 			_rotation_offset_velocity += Vector3(deg_to_rad(-0.5), 0.0, 0.0) * 250.0
 			return
+		&"Spawning":
+			_target_position = _player.head.get_global_transform_interpolated().origin
+			_target_rotation = _player.head.global_rotation
+			_rotation_offset = Vector3.ZERO
+			_rotation_offset_velocity = Vector3.ZERO
+			_head_velocity = Vector3.ZERO
+			_last_head_position = _player.head.global_position
+			position = _target_position
+			rotation = _target_rotation
+			return
