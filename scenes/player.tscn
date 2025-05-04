@@ -306,3 +306,5 @@ offset_right = 46.0
 offset_bottom = 28.0
 script = ExtResource("19_4ni07")
 _player = NodePath("../..")
+
+[connection signal="state_changed" from="StateMachine" to="Head/Camera" method="_on_state_machine_state_changed"]
