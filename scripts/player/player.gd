@@ -200,7 +200,7 @@ enum Stances {
 ## How fast the player is pulled towards the grapple point when grapple hooking.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_speed: float = 6.0
 ## How close to the grapple point the player must be to grapple to it.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 10.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 14.0
 
 @export_group("Ledge Grabbing", "ledge_grab_")
 ## Can the player ledge-grab?
