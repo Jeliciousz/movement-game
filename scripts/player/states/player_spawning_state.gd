@@ -20,6 +20,7 @@ func spawn_random() -> void:
 		_player.velocity = Vector3.ZERO
 		_player.rotation.y = spawn_node.rotation.y
 		_player.head.rotation.x = spawn_node.rotation.x
+		_player.stance = spawn_node.spawn_stance
 
 		_player.reset_physics_interpolation()
 
