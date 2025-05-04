@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dpgsmifow0gcw"]
+[gd_scene load_steps=13 format=3 uid="uid://dpgsmifow0gcw"]
 
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_7ac3l"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_iig34"]
@@ -15,6 +15,15 @@ size = Vector3(39, 35, 7)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3e81p"]
 size = Vector3(22, 35, 36)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g7bfq"]
+size = Vector3(6, 35, 48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4a02d"]
+size = Vector3(56, 35, 38)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uu0hj"]
+size = Vector3(8, 35, 28)
 
 [node name="World" type="Node3D"]
 
@@ -130,6 +139,102 @@ light_bake_mode = 1
 omni_range = 20.0
 omni_attenuation = 0.5
 
+[node name="OmniLight3D13" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.9938, 6.9794, -103.999)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D14" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.9938, 6.9794, -117.999)
+light_color = Color(0.9667, 0.537458, 0.759086, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D15" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.9938, 6.9794, -133.999)
+light_color = Color(0.9667, 0.537458, 0.759086, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D16" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.9938, 6.9794, -145.999)
+light_color = Color(0.9667, 0.537458, 0.759086, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D17" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.9938, 6.9794, -157.999)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D18" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 7, -167)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D20" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.9938, 6.9794, -166.999)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D24" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.9938, 6.9794, -186.999)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D19" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 7, -167)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D21" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 7, -183)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D22" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41, 7, -188)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D23" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 7, -188)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
 [node name="DeathArea" parent="." instance=ExtResource("4_1wklo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
@@ -144,6 +249,18 @@ shape = SubResource("BoxShape3D_iig34")
 [node name="CollisionShape3" type="CollisionShape3D" parent="DeathArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -32.5, -73)
 shape = SubResource("BoxShape3D_3e81p")
+
+[node name="CollisionShape4" type="CollisionShape3D" parent="DeathArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -32.5, -124)
+shape = SubResource("BoxShape3D_g7bfq")
+
+[node name="CollisionShape5" type="CollisionShape3D" parent="DeathArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -32.5, -167)
+shape = SubResource("BoxShape3D_4a02d")
+
+[node name="CollisionShape6" type="CollisionShape3D" parent="DeathArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -61, -32.5, -200)
+shape = SubResource("BoxShape3D_uu0hj")
 
 [node name="CSG" type="Node3D" parent="."]
 
@@ -173,6 +290,42 @@ material = ExtResource("4_g7bfq")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -19, -79)
 flip_faces = true
 size = Vector3(22, 62, 36)
+material = ExtResource("4_g7bfq")
+
+[node name="5" type="CSGBox3D" parent="CSG/Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 4.5, -97.5)
+flip_faces = true
+size = Vector3(8, 7, 1)
+material = ExtResource("4_g7bfq")
+
+[node name="6" type="CSGBox3D" parent="CSG/Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -21, -130)
+flip_faces = true
+size = Vector3(6, 58, 64)
+material = ExtResource("4_g7bfq")
+
+[node name="7" type="CSGBox3D" parent="CSG/Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, -20, -177)
+flip_faces = true
+size = Vector3(34, 60, 30)
+material = ExtResource("4_g7bfq")
+
+[node name="8" type="CSGBox3D" parent="CSG/Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, -20, -158)
+flip_faces = true
+size = Vector3(26, 60, 8)
+material = ExtResource("4_g7bfq")
+
+[node name="9" type="CSGBox3D" parent="CSG/Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55, -20, -178)
+flip_faces = true
+size = Vector3(22, 60, 28)
+material = ExtResource("4_g7bfq")
+
+[node name="10" type="CSGBox3D" parent="CSG/Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -61, -20, -206)
+flip_faces = true
+size = Vector3(8, 60, 28)
 material = ExtResource("4_g7bfq")
 
 [node name="Box" type="CSGBox3D" parent="CSG"]
@@ -236,6 +389,90 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -24.5, -93)
 use_collision = true
 collision_mask = 0
 size = Vector3(14, 51, 8)
+material = ExtResource("4_g7bfq")
+
+[node name="Box15" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -24.5, -102)
+use_collision = true
+collision_mask = 0
+size = Vector3(8, 51, 8)
+material = ExtResource("4_g7bfq")
+
+[node name="Box16" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -24.5, -160)
+use_collision = true
+collision_mask = 0
+size = Vector3(6, 51, 12)
+material = ExtResource("4_g7bfq")
+
+[node name="Box25" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -61, -24.5, -196)
+use_collision = true
+collision_mask = 0
+size = Vector3(8, 51, 8)
+material = ExtResource("4_g7bfq")
+
+[node name="Box18" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, -24.5, -168)
+use_collision = true
+collision_mask = 0
+size = Vector3(6, 51, 12)
+material = ExtResource("4_g7bfq")
+
+[node name="Box20" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, -24.5, -180)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 51, 4)
+material = ExtResource("4_g7bfq")
+
+[node name="Box21" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, -24.5, -188)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 51, 4)
+material = ExtResource("4_g7bfq")
+
+[node name="Box22" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, -24.5, -188)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 51, 4)
+material = ExtResource("4_g7bfq")
+
+[node name="Box23" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41, -24.5, -188)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 51, 4)
+material = ExtResource("4_g7bfq")
+
+[node name="Box24" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, -24.5, -188)
+use_collision = true
+collision_mask = 0
+size = Vector3(4, 51, 4)
+material = ExtResource("4_g7bfq")
+
+[node name="Box19" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.75, 0, -12.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(6, 51, 12)
+material = ExtResource("4_g7bfq")
+
+[node name="Box17" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, -20, -177)
+use_collision = true
+collision_mask = 0
+size = Vector3(30, 60, 14)
+material = ExtResource("4_g7bfq")
+
+[node name="Box14" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 5, -98.5)
+use_collision = true
+collision_mask = 0
+size = Vector3(6, 6, 1)
 material = ExtResource("4_g7bfq")
 
 [node name="Box3" type="CSGBox3D" parent="CSG"]
