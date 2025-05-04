@@ -5,5 +5,6 @@
 .vscode/
 *.tmp
 addons/*/libs/
+addons/debug_draw_3d/
 exports/
 archived/
