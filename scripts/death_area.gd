@@ -11,4 +11,4 @@ func _physics_process(_delta: float) -> void:
 		if not player is Player:
 			continue
 
-		player.state_machine.change_state_to(&"Spawning")
+		player.kill()
