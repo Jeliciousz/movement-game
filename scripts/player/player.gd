@@ -204,7 +204,7 @@ enum Stances {
 ## Can the player ledge-grab?
 @export var ledge_grab_enabled: bool = true
 ## How quickly the player climbs a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_speed: float = 15.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_speed: float = 12.0
 ## How high the player is sent upwards when ledge-grabbing.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_power: float = 4.0
 ## How far the player is sent upwards when vaulting over a ledge.
