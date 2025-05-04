@@ -29,6 +29,8 @@ func spawn_random() -> void:
 	_player.velocity = Vector3.ZERO
 	_player.reset_physics_interpolation()
 
+	clear_grapple_hook_point()
+
 	shared_vars[&"coyote_jump_active"] = false
 	shared_vars[&"coyote_slide_active"] = false
 	shared_vars[&"coyote_walljump_active"] = false
@@ -56,3 +58,9 @@ func spawn_random() -> void:
 		state_machine.change_state_to(&"Grounded")
 	else:
 		state_machine.change_state_to(&"Airborne")
+
+
+func clear_grapple_hook_point() -> void:
+	if shared_vars[&"grapple_hook_point"] != null:
+		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
+		shared_vars[&"grapple_hook_point"] = null
