@@ -87,12 +87,13 @@ func update_stance() -> void:
 
 
 func update_physics(delta: float) -> void:
-	_player.add_air_resistence(_player.physics_air_resistence * _player.wallrun_air_resistence_multiplier)
-
 	if Time.get_ticks_msec() - shared_vars[&"wallrun_timestamp"] > _player.wallrun_duration:
+		_player.add_air_resistence(_player.physics_air_resistence)
 		_player.add_friction(_player.physics_friction * _player.wallrun_friction_multiplier, _player.wallrun_top_speed)
 		_player.add_gravity(_player.physics_gravity * _player.wallrun_gravity_multiplier)
 	else:
+		_player.add_air_resistence(_player.physics_air_resistence * _player.wallrun_air_resistence_multiplier)
+
 		if _player.velocity.dot(_player.up_direction) < 0:
 			_player.velocity = _player.velocity.move_toward(_player.velocity - _player.up_direction * _player.velocity.dot(_player.up_direction), _player.wallrun_downwards_friction * delta)
 		else:
