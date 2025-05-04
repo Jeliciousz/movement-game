@@ -95,6 +95,8 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var crouch_speed: float = 2.0
 ## How quickly the player accelerates while crouching.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var crouch_acceleration: float = 60.0
+## How fast the player's head moves up or down when crouching/uncrouching.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var crouch_animate_speed: float = 10.0
 
 @export_subgroup("Crouch Jumping", "crouch_jump_")
 ## Can the player jump while crouching?
@@ -255,9 +257,9 @@ func _physics_process(delta: float) -> void:
 	_wish_direction = basis * Vector3(_input_vector.x, 0.0, _input_vector.y).normalized()
 
 	if stance == Stances.CROUCHING:
-		head.position.y = move_toward(head.position.y, standing_head_y - standing_height * (1.0 - crouch_height_multiplier), delta * 15.0)
+		head.position.y = move_toward(head.position.y, standing_head_y - standing_height * (1.0 - crouch_height_multiplier), crouch_animate_speed * delta)
 	else:
-		head.position.y = move_toward(head.position.y, standing_head_y, delta * 15.0)
+		head.position.y = move_toward(head.position.y, standing_head_y, crouch_animate_speed * delta)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
