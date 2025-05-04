@@ -587,9 +587,11 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	grapple_hook_raycast.force_raycast_update()
 
 	while grapple_hook_raycast.is_colliding():
-		var collider: CollisionObject3D = grapple_hook_raycast.get_collider()
+		var collider: Node3D = grapple_hook_raycast.get_collider()
 		if collider is GrappleHookPoint:
 			grapple_hook_points.push_back(collider)
+		else:
+			break
 
 		grapple_hook_raycast.add_exception(collider)
 		grapple_hook_raycast.force_raycast_update()
