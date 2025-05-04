@@ -47,8 +47,8 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"crouch"):
 		InputBuffer.clear_buffered_action(&"crouch")
-		_player.velocity += shared_vars[&"wallrun_wall_normal"] * _player.wallrun_cancel_force
 		shared_vars[&"coyote_walljump_active"] = false
+		_player.velocity += shared_vars[&"wallrun_wall_normal"] * _player.wallrun_cancel_force
 		state_machine.change_state_to(&"Airborne")
 
 
@@ -65,6 +65,7 @@ func _state_physics_process(delta: float) -> void:
 	var horizontal_velocity: Vector3 = Vector3(_player.velocity.x, 0.0, _player.velocity.z)
 
 	if horizontal_velocity.length() < _player.wallrun_stop_speed or horizontal_velocity.dot(shared_vars[&"wallrun_run_direction"]) <= 0.0 or not wallrun_checks():
+		_player.velocity += shared_vars[&"wallrun_wall_normal"] * _player.wallrun_cancel_force
 		state_machine.change_state_to(&"Airborne")
 		return
 
