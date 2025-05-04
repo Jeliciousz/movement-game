@@ -84,7 +84,7 @@ enum Stances {
 ## How fast the player can move while sprinting.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var sprint_speed: float = 7.0
 ## How quickly the player accelerates while sprinting.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var sprint_acceleration: float = 100.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var sprint_acceleration: float = 150.0
 
 @export_group("Crouching", "crouch_")
 ## Can the player crouch?
