@@ -155,7 +155,7 @@ enum Stances {
 ## How quickly the player accelerates while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_acceleration: float = 80.0
 ## How long the player can wall-run for until they start sliding.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 2000
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_duration: int = 100
 ## The acceleration opposing upwards movement while wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var wallrun_upwards_friction: float = 20.0
 ## The acceleration opposing downwards movement while wall-running.
