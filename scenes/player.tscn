@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=35 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://c8jtxyh06bprf" path="res://scripts/player/camera.gd" id="2_l71n6"]
 [ext_resource type="AudioStream" uid="uid://okhvtvkbf4eg" path="res://assets/sounds/player/footsteps/tile2.wav" id="3_i4ail"]
 [ext_resource type="Script" uid="uid://d656537yxmwb" path="res://scripts/state_machine.gd" id="3_qfm1y"]
+[ext_resource type="Script" uid="uid://dn58b3xgqy5be" path="res://addons/godot-polyliner/Line3D/Line3D.gd" id="3_ujl30"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
 [ext_resource type="Script" uid="uid://c1t06x3s1bb2f" path="res://scripts/player/states/player_spawning_state.gd" id="4_fulsm"]
 [ext_resource type="AudioStream" uid="uid://nixfol2hcs07" path="res://assets/sounds/player/footsteps/tile4.wav" id="5_4ni07"]
@@ -25,6 +26,124 @@
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
 [ext_resource type="Theme" uid="uid://beiec5xu2enuv" path="res://assets/other/hud_theme.tres" id="22_ke2ow"]
 [ext_resource type="Texture2D" uid="uid://crlxrcr3qgg73" path="res://assets/textures/ui/crosshair.png" id="25_ke2ow"]
+
+[sub_resource type="Shader" id="Shader_31cv2"]
+code = "shader_type spatial;
+render_mode skip_vertex_transform;
+render_mode depth_draw_always;
+//render_mode alpha_to_coverage_and_one;
+
+#include \"res://addons/godot-polyliner/shaders/include/polyliner_inc.gdshaderinc\"
+
+uniform float line_width = 0.03;
+uniform sampler2D width_curve : source_color;
+uniform bool tangent_facing = false;
+uniform bool rounded = false;
+uniform bool tube_normal = true;
+
+uniform bool uv_matches_width = true;
+uniform vec2 tex_scale = vec2(1.0,1.0);
+
+varying float is_end;
+void vertex(){
+	VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX,1.0)).xyz;
+	
+	NORMAL = mat3(MODELVIEW_MATRIX) * NORMAL;
+	TANGENT = mat3(MODELVIEW_MATRIX) * TANGENT;
+	BINORMAL = mat3(MODELVIEW_MATRIX) * BINORMAL;
+	
+	quick_line(line_width, rounded);
+	
+	if (uv_matches_width) { UV.x /= line_width; }
+	
+	
+	UV.x = 1.0-UV.x;
+	
+	float line_length = UV2.x;
+	UV2 = UV;
+	UV2.x *= line_length;
+	
+	// correct the texture coordinates at the rounded ends
+	// TODO: doesn't take angle of the rounded end into account at all
+	if (rounded) {
+		// the world may never know
+		// why 1.414 is the exact value which fixes the texcoords
+		const float SQ2 = sqrt(2.0);
+		float uv_correct = -is_end;
+		
+		if (uv_matches_width) { uv_correct *= line_width*SQ2; } 
+		else { uv_correct *= line_width/abs(tex_scale.x); }
+//		if (abs(is_end) > 0.001) {
+//			float i = acos(dot(TANGENT,normalize(cross(NORMAL,normalize(VERTEX)))));
+//			float xe = 1.0/(i*0.5+0.5);
+//			uv_correct *= xe*abs(tex_scale.x);
+//		}
+		UV.x += uv_correct;
+		UV2.x += uv_correct;
+	}
+	
+	// godot seems to reapply the modelview transform later
+	// we have no choice but to do the inverse transform
+	// af1d81d fixes this
+	TANGENT =  TANGENT * mat3(MODELVIEW_MATRIX);
+	BINORMAL = BINORMAL * mat3(MODELVIEW_MATRIX);
+}
+
+uniform sampler2D texture_alb : hint_default_white, source_color;
+uniform sampler2D texture_rgh : hint_default_white;
+uniform bool tex_stretch = true;
+
+uniform vec4 color : source_color = vec4(vec3(1.0),1.0);
+uniform float metallic  : hint_range(0.0,1.0,0.005) = 0.0;
+uniform float specular  : hint_range(0.0,1.0,0.005) = 0.5;
+uniform float roughness : hint_range(0.0,1.0,0.005) = 0.5;
+
+void fragment() {
+	if (!FRONT_FACING) { NORMAL = -NORMAL; }
+	
+	if (tube_normal && !tangent_facing) { 
+		NORMAL_MAP = getLineTubeNormal(UV,is_end,rounded);
+	}
+	
+	if (rounded && abs(is_end) > 0.0001) {
+		// pure heuristics
+		float softner = magic_aa(6000.0,VERTEX,VIEWPORT_SIZE);
+		softner *= (1.0/line_width) * (min(abs(is_end)*2.0,1.0));
+		ALPHA *= smoothstep(1.0,1.0+softner,getDistToLineCenter(UV,is_end));
+	}
+	
+	vec2 uv_alb = UV2;
+	if (tex_stretch) {
+		uv_alb = UV;
+	}
+	uv_alb *= tex_scale;
+	uv_alb = uv_alb.yx; // more intuitive
+	
+	vec4 alb_sample = texture(texture_alb,uv_alb.yx);
+	vec4 rgh_sample = texture(texture_rgh,uv_alb.yx);
+	
+	ALBEDO = alb_sample.rgb * alb_sample.a * color.rgb;
+	SPECULAR = specular;
+	ROUGHNESS = roughness * rgh_sample.r;
+	METALLIC = metallic;
+	
+	ALPHA_SCISSOR_THRESHOLD = 0.001; // comment out for alpha blending
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pf23h"]
+render_priority = 0
+shader = SubResource("Shader_31cv2")
+shader_parameter/line_width = 0.05
+shader_parameter/tangent_facing = false
+shader_parameter/rounded = false
+shader_parameter/tube_normal = true
+shader_parameter/uv_matches_width = true
+shader_parameter/tex_scale = Vector2(1, 1)
+shader_parameter/tex_stretch = true
+shader_parameter/color = Color(0, 0, 0, 1)
+shader_parameter/metallic = 1.0
+shader_parameter/specular = 0.5
+shader_parameter/roughness = 0.5
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_l71n6"]
 height = 1.8
@@ -95,6 +214,14 @@ collision_mask = 64
 hit_from_inside = true
 collide_with_areas = true
 collide_with_bodies = false
+
+[node name="GrappleHookLine" type="Node3D" parent="Head/Camera/GrappleHookRaycast"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+top_level = true
+script = ExtResource("3_ujl30")
+material = SubResource("ShaderMaterial_pf23h")
+points = PackedVector3Array(0, 0, 0, 0, 0, 0)
+metadata/_custom_type_script = "uid://dn58b3xgqy5be"
 
 [node name="Hand" type="Node3D" parent="Head/Camera"]
 

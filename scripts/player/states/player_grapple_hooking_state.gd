@@ -14,6 +14,14 @@ func _state_enter() -> void:
 	shared_vars[&"coyote_slide_active"] = false
 	shared_vars[&"coyote_walljump_active"] = false
 
+	_player.grapple_hook_line.show()
+	_player.grapple_hook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
+	_player.grapple_hook_line.points[1] = shared_vars[&"grapple_hook_point"].position - _player.grapple_hook_line.position
+
+
+func _state_exit() -> void:
+	_player.grapple_hook_line.hide()
+
 
 func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
@@ -54,7 +62,8 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"WallRunning")
 		return
 
-	DebugDraw3D.draw_line(_player.get_center_of_mass(), shared_vars[&"grapple_hook_point"].position, Color.BLACK)
+	_player.grapple_hook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
+	_player.grapple_hook_line.points[1] = shared_vars[&"grapple_hook_point"].position - _player.grapple_hook_line.position
 
 
 func update_stance() -> void:

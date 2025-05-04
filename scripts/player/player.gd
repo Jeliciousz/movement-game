@@ -227,6 +227,7 @@ var _air_crouching: bool = false
 
 @onready var head: Node3D = $Head
 @onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
+@onready var grapple_hook_line: Line3D = $Head/Camera/GrappleHookRaycast/GrappleHookLine
 @onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
 @onready var wallrun_hand_raycast: RayCast3D = $WallrunHandRaycast
 @onready var wallrun_floor_raycast: RayCast3D = $WallrunFloorRaycast
