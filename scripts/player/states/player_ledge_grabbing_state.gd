@@ -32,6 +32,8 @@ func _state_physics_process(delta: float) -> void:
 			shared_vars[&"wall_jumps"] = 0
 			_player.velocity += _player.up_direction * _player.ledge_grab_vault_power
 			_player.velocity += _player.get_forward_direction() * _player.ledge_grab_vault_horizontal_power
+			state_machine.change_state_to(&"Jumping")
+			return
 
 		state_machine.change_state_to(&"Airborne")
 		return
