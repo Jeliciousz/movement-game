@@ -50,7 +50,7 @@ enum Stances {
 ## How high the player can jump while standing still.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_standing_multiplier: float = 1.1
 ## How far the player jumps in the direction they're moving.
-@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_horizontal_force: float = 1.5
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var jump_horizontal_force: float = 1.25
 ## How far the player can jump backwards.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var jump_backwards_multiplier: float = 0.1
 ## How long the player can jump for.
@@ -68,7 +68,7 @@ enum Stances {
 ## How high the player jumps at max speed.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_force: float = 10.0
 ## How far the player jumps in the direction they're moving at max speed.
-@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_force: float = 0.5
+@export_range(0, 10, 0.05, "or_less", "or_greater", "suffix:m/s") var speed_jump_max_horizontal_force: float = 0.25
 
 @export_subgroup("Air Jumping", "air_jump_")
 ## Can the player air jump?
