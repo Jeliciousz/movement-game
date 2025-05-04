@@ -216,7 +216,7 @@ enum Stances {
 ## How much of the player's vertical speed is sent forwards when they climb a ledge.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var ledge_grab_vertical_speed_followthrough: float = 0.5
 
-var stance: Stances = Stances.SPRINTING:
+var stance: Stances = Stances.STANDING:
 	set = set_stance
 
 var _wish_direction: Vector3 = Vector3.ZERO
