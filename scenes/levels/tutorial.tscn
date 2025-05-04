@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_7ac3l"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_iig34"]
 [ext_resource type="Environment" uid="uid://bep57j4x8yodg" path="res://assets/other/lq_environment.tres" id="3_u4f7j"]
-[ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/wall.tres" id="4_g7bfq"]
+[ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="4_g7bfq"]
 
 [node name="World" type="Node3D"]
 
@@ -21,17 +21,16 @@ layers = 3
 
 [node name="CSG" type="Node3D" parent="."]
 
-[node name="Room" type="CSGBox3D" parent="CSG"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0)
+[node name="Box" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 use_collision = true
 collision_mask = 0
-flip_faces = true
-size = Vector3(40, 15, 40)
+size = Vector3(10, 4, 10)
 material = ExtResource("4_g7bfq")
 
-[node name="Box" type="CSGBox3D" parent="CSG"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -18)
+[node name="Box2" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, -12)
 use_collision = true
 collision_mask = 0
-size = Vector3(10, 4, 4)
+size = Vector3(10, 4, 10)
 material = ExtResource("4_g7bfq")
