@@ -3,7 +3,7 @@ extends Node
 ## Handles updating and switching between [State]s.
 
 ## Emitted when the [StateMachine] changes state.
-signal state_changed(last: StringName, current: StringName)
+signal state_changed(last_state: StringName, current_state: StringName)
 
 ## The [State] that this [StateMachine] will start in.
 @export var initial_state: State
