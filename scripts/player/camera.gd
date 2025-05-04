@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 
 	_target_position = _player.head.get_global_transform_interpolated().origin
 	_target_rotation = _player.head.global_rotation
-	_target_rotation += _rotation_offset
+	_target_rotation += _rotation_offset.clampf(deg_to_rad(-30.0), deg_to_rad(30.0))
 
 	position = _target_position
 	rotation = _target_rotation
