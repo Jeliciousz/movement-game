@@ -196,7 +196,15 @@ omni_range = 20.0
 omni_attenuation = 0.5
 
 [node name="OmniLight3D24" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.9938, 6.9794, -186.999)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63, 7, -187)
+light_color = Color(0.757665, 0.647448, 0.856106, 1)
+light_energy = 5.0
+light_bake_mode = 1
+omni_range = 20.0
+omni_attenuation = 0.5
+
+[node name="OmniLight3D25" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 7, -207)
 light_color = Color(0.757665, 0.647448, 0.856106, 1)
 light_energy = 5.0
 light_bake_mode = 1
