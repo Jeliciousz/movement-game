@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="FPS"
+config/name="Movement Game"
 run/main_scene="uid://dpgsmifow0gcw"
 config/features=PackedStringArray("4.4", "Forward Plus")
 
