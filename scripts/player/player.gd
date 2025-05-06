@@ -199,6 +199,8 @@ enum Stances {
 @export var grapple_hook_enabled: bool = true
 ## How fast the player is pulled towards the grapple point when grapple hooking.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var grapple_hook_speed: float = 6.0
+## How far from the grapple point the player must be to grapple to it.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_min_distance: float = 2.0
 ## How close to the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 14.0
 
@@ -588,7 +590,7 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 
 	while grapple_hook_raycast.is_colliding():
 		var collider: Node3D = grapple_hook_raycast.get_collider()
-		if collider is GrappleHookPoint:
+		if collider is GrappleHookPoint and head.global_position.distance_to(collider.position) >= grapple_hook_min_distance:
 			grapple_hook_points.push_back(collider)
 		else:
 			break
@@ -600,19 +602,19 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 		return null
 
 	grapple_hook_raycast.clear_exceptions()
+	grapple_hook_points.sort_custom(compare_grapple_hook_points)
 
-	var highest_proximity_to_crosshair: float = -1.0
+	for grapple_hook_point: GrappleHookPoint in grapple_hook_points:
+		if head.global_position.distance_to(grapple_hook_point.position) <= grapple_hook_max_distance:
+			return grapple_hook_point
 
-	var highest_proximity_point: GrappleHookPoint
+	return grapple_hook_points[0]
 
-	for i: int in grapple_hook_points.size():
-		var proximity_to_crosshair: float = head.global_position.direction_to(grapple_hook_points[i].position).dot(get_looking_direction())
 
-		if proximity_to_crosshair > highest_proximity_to_crosshair:
-			highest_proximity_to_crosshair = proximity_to_crosshair
-			highest_proximity_point = grapple_hook_points[i]
-
-	return highest_proximity_point
+func compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bool:
+	var proximity_to_crosshair_a: float = head.global_position.direction_to(a.position).dot(get_looking_direction())
+	var proximity_to_crosshair_b: float = head.global_position.direction_to(b.position).dot(get_looking_direction())
+	return proximity_to_crosshair_a > proximity_to_crosshair_b
 
 
 func _uncrouch() -> void:
