@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dpgsmifow0gcw"]
+[gd_scene load_steps=16 format=3 uid="uid://dpgsmifow0gcw"]
 
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_7ac3l"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_iig34"]
@@ -22,9 +22,6 @@ size = Vector3(6, 35, 48)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4a02d"]
 size = Vector3(56, 35, 38)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_uu0hj"]
-size = Vector3(8, 35, 28)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3e81p"]
 albedo_texture = ExtResource("7_iig34")
@@ -138,9 +135,6 @@ light_energy = 5.0
 light_bake_mode = 1
 omni_range = 20.0
 omni_attenuation = 0.5
-
-[node name="GrappleHookPoint" parent="." instance=ExtResource("4_7ac3l")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 10, -80)
 
 [node name="OmniLight3D11" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.9938, 7.9794, -64.9994)
@@ -302,6 +296,9 @@ light_bake_mode = 1
 omni_range = 20.0
 omni_attenuation = 0.5
 
+[node name="GrappleHookPoint" parent="." instance=ExtResource("4_7ac3l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 10, -80)
+
 [node name="DeathArea" parent="." instance=ExtResource("4_1wklo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
 
@@ -324,10 +321,6 @@ shape = SubResource("BoxShape3D_g7bfq")
 [node name="CollisionShape5" type="CollisionShape3D" parent="DeathArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -32.5, -167)
 shape = SubResource("BoxShape3D_4a02d")
-
-[node name="CollisionShape6" type="CollisionShape3D" parent="DeathArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, -32.5, -200)
-shape = SubResource("BoxShape3D_uu0hj")
 
 [node name="Level" type="Node3D" parent="."]
 
