@@ -185,7 +185,7 @@ wall_min_slide_angle = 0.0872665
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_block_on_wall = false
-floor_snap_length = 0.25
+floor_snap_length = 0.5
 script = ExtResource("1_3vyb7")
 
 [node name="Head" type="Node3D" parent="."]
