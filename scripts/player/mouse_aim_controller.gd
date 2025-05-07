@@ -4,6 +4,7 @@ extends Node
 ##
 ## Code courtesy of [url=https://yosoyfreeman.github.io/article/godot/tutorial/achieving-better-mouse-input-in-godot-4-the-perfect-camera-controller/]Yo Soy Freeman[/url]. Edited by Jeliciousz
 
+## How many radians should the camera rotate per dot of mouse movement.
 const RADIANS_PER_UNIT: float = deg_to_rad(0.1)
 
 ## Settings.
