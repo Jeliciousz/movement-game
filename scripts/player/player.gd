@@ -175,9 +175,9 @@ enum Stances {
 ## How long the player must wait after a wallrun until they can wallrun again.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var wallrun_cooldown: int = 250
 ## The largest external angle a wall can have for the player to stay running on it.
-@export_range(0, 89, 1, "radians_as_degrees") var wallrun_max_external_angle: float = 15
+@export_range(0, 89, 1, "radians_as_degrees") var wallrun_max_external_angle: float = deg_to_rad(15.0)
 ## The largest internal angle a wall can have for the player to stay running on it.
-@export_range(0, 89, 1, "radians_as_degrees") var wallrun_max_internal_angle: float = 45
+@export_range(0, 89, 1, "radians_as_degrees") var wallrun_max_internal_angle: float = deg_to_rad(45.0)
 
 @export_subgroup("Wall-Jumping", "walljump_")
 ## Can the player wall-jump?
