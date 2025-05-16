@@ -19,13 +19,12 @@ func spawn_random() -> void:
 		_player.position = spawn_node.position
 		_player.rotation.y = spawn_node.rotation.y
 		_player.head.rotation.x = spawn_node.rotation.x
-		_player.stance = spawn_node.spawn_stance
 	else:
 		_player.position = Vector3.ZERO
 		_player.rotation.y = 0.0
 		_player.head.rotation.x = 0.0
-		_player.stance = Player.Stances.STANDING
 
+	_player.stance = Player.Stances.STANDING
 	_player.velocity = Vector3.ZERO
 	_player.reset_physics_interpolation()
 
@@ -53,9 +52,7 @@ func spawn_random() -> void:
 	InputBuffer.clear_buffered_action("slide")
 	InputBuffer.clear_buffered_action("grapple_hook")
 
-	_player.check_surface(-_player.up_direction)
-
-	if _player.is_on_floor():
+	if _player.check_surface(-_player.up_direction):
 		state_machine.change_state_to(&"Grounded")
 	else:
 		state_machine.change_state_to(&"Airborne")
