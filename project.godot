@@ -134,6 +134,5 @@ anti_aliasing/screen_space_roughness_limiter/enabled=false
 textures/decals/filter=5
 textures/light_projectors/filter=5
 occlusion_culling/occlusion_rays_per_thread=2048
-lightmapping/denoising/denoiser=1
 anti_aliasing/quality/use_debanding=true
 occlusion_culling/use_occlusion_culling=true
