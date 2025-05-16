@@ -381,10 +381,6 @@ func get_amount_moving_backwards() -> float:
 	return maxf(0.0, _wish_direction.dot(basis.z))
 
 
-func kill() -> void:
-	state_machine.change_state_to(&"Spawning")
-
-
 func crouch() -> void:
 	if stance == Stances.CROUCHING:
 		return
@@ -602,7 +598,7 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 		return null
 
 	grapple_hook_raycast.clear_exceptions()
-	grapple_hook_points.sort_custom(compare_grapple_hook_points)
+	grapple_hook_points.sort_custom(_compare_grapple_hook_points)
 
 	for grapple_hook_point: GrappleHookPoint in grapple_hook_points:
 		if head.global_position.distance_to(grapple_hook_point.position) <= grapple_hook_max_distance:
@@ -611,7 +607,7 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	return grapple_hook_points[0]
 
 
-func compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bool:
+func _compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bool:
 	var proximity_to_crosshair_a: float = head.global_position.direction_to(a.position).dot(get_looking_direction())
 	var proximity_to_crosshair_b: float = head.global_position.direction_to(b.position).dot(get_looking_direction())
 	return proximity_to_crosshair_a > proximity_to_crosshair_b
@@ -628,3 +624,7 @@ func _uncrouch() -> void:
 	ledge_grab_head_raycast.target_position.y = ledge_grab_hand_raycast.position.y
 	ledge_grab_ledge_raycast.position.y = ledge_grab_hand_raycast.position.y
 	ledge_grab_ledge_raycast.target_position.y = -ledge_grab_hand_raycast.position.y
+
+
+func _on_health_component_died(_damage_taken: float) -> void:
+	state_machine.change_state_to(&"Spawning")
