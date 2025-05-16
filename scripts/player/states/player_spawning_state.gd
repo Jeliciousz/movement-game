@@ -24,7 +24,6 @@ func spawn_random() -> void:
 		_player.rotation.y = 0.0
 		_player.head.rotation.x = 0.0
 
-	_player.stance = Player.Stances.STANDING
 	_player.velocity = Vector3.ZERO
 	_player.reset_physics_interpolation()
 
