@@ -102,10 +102,6 @@ func update_stance() -> void:
 
 
 func update_physics() -> void:
-	_player.add_air_resistence(_player.physics_air_resistence)
-	_player.add_gravity(_player.physics_gravity)
-	_player.add_movement(_player.air_speed, _player.air_acceleration)
-
 	var direction_from_grapple: Vector3 = shared_vars[&"grapple_hook_point"].position.direction_to(_player.get_center_of_mass())
 	var distance_from_grapple: float = shared_vars[&"grapple_hook_point"].position.distance_to(_player.get_center_of_mass())
 	var weight: float = clampf((distance_from_grapple - _player.grapple_hook_min_distance) / (_player.grapple_hook_max_distance - _player.standing_height), 0, 1)
@@ -113,6 +109,10 @@ func update_physics() -> void:
 
 	_player.velocity += -direction_from_grapple * maxf(0, _player.velocity.dot(direction_from_grapple))
 	_player.velocity += -direction_from_grapple * maxf(0, (power - _player.velocity.dot(-direction_from_grapple)))
+
+	_player.add_air_resistence(_player.physics_air_resistence)
+	_player.add_gravity(_player.physics_gravity)
+	_player.add_movement(_player.air_speed, _player.air_acceleration)
 
 
 func wallrun_checks() -> bool:
