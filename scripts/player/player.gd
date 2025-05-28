@@ -215,6 +215,8 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_power: float = 8.0
 ## How far the player is sent forwards when vaulting over a ledge.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_horizontal_power: float = 1.0
+## How much of the player's horizontal speed is maintained when they climb a ledge.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var ledge_grab_horizontal_speed_followthrough: float = 0.75
 ## How much of the player's vertical speed is sent forwards when they climb a ledge.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var ledge_grab_vertical_speed_followthrough: float = 0.5
 

@@ -21,7 +21,7 @@ func _state_physics_process(delta: float) -> void:
 
 	if _player.position.is_equal_approx(ledge_grab_position):
 		_player.position += _player.up_direction * _player.safe_margin
-		_player.velocity = _player.get_forward_direction() * Vector3(shared_vars[&"ledge_grab_velocity"].x, shared_vars[&"ledge_grab_velocity"].y * _player.ledge_grab_vertical_speed_followthrough, shared_vars[&"ledge_grab_velocity"].z).length()
+		_player.velocity = _player.get_forward_direction() * Vector3(shared_vars[&"ledge_grab_velocity"].x * _player.ledge_grab_horizontal_speed_followthrough, shared_vars[&"ledge_grab_velocity"].y * _player.ledge_grab_vertical_speed_followthrough, shared_vars[&"ledge_grab_velocity"].z * _player.ledge_grab_horizontal_speed_followthrough).length()
 		_player.velocity += _player.up_direction * _player.ledge_grab_power
 
 		if Input.is_action_pressed(&"jump"):
