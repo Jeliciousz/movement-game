@@ -67,7 +67,7 @@ points = PackedVector3Array(0, 0, 0, 0, 0, -6, 8, 0, -6, 8, 0, 0, 8, 5, 0, 5, 5,
 [node name="PlayerSpawnPoint" parent="." instance=ExtResource("2_iig34")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="Environment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_1wklo")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
@@ -251,38 +251,6 @@ light_bake_mode = 1
 omni_range = 20.0
 omni_attenuation = 0.5
 
-[node name="OmniLight3D27" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -83, 38, -215)
-light_color = Color(0.812874, 0.646712, 0.711286, 1)
-light_energy = 5.0
-light_bake_mode = 1
-omni_range = 50.0
-omni_attenuation = 0.5
-
-[node name="OmniLight3D30" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -123, 38, -215)
-light_color = Color(0.812874, 0.646712, 0.711286, 1)
-light_energy = 5.0
-light_bake_mode = 1
-omni_range = 50.0
-omni_attenuation = 0.5
-
-[node name="OmniLight3D28" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103, 38, -235)
-light_color = Color(0.812874, 0.646712, 0.711286, 1)
-light_energy = 5.0
-light_bake_mode = 1
-omni_range = 50.0
-omni_attenuation = 0.5
-
-[node name="OmniLight3D29" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -103, 38, -195)
-light_color = Color(0.812874, 0.646712, 0.711286, 1)
-light_energy = 5.0
-light_bake_mode = 1
-omni_range = 50.0
-omni_attenuation = 0.5
-
 [node name="OmniLight3D19" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 7, -167)
 light_color = Color(0.757665, 0.647448, 0.856106, 1)
@@ -345,20 +313,24 @@ shape = SubResource("BoxShape3D_4a02d")
 light_data = ExtResource("6_3e81p")
 
 [node name="RoomMesh" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_iig34")
 skeleton = NodePath("../CSG")
 
 [node name="Stairs1Mesh" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("ArrayMesh_3e81p")
 skeleton = NodePath("../CSG")
 
 [node name="RoomBody" type="StaticBody3D" parent="."]
+visible = false
 
 [node name="CollisionShape" type="CollisionShape3D" parent="RoomBody"]
 shape = SubResource("ConcavePolygonShape3D_3e81p")
 
 [node name="Stairs1Body" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56, 1, -204)
+visible = false
 collision_mask = 0
 
 [node name="CollisionShape" type="CollisionShape3D" parent="Stairs1Body"]
@@ -367,7 +339,7 @@ shape = SubResource("ConvexPolygonShape3D_7ac3l")
 [node name="CSG" type="Node3D" parent="."]
 
 [node name="Room" type="CSGCombiner3D" parent="CSG"]
-visible = false
+use_collision = true
 collision_mask = 0
 
 [node name="1" type="CSGBox3D" parent="CSG/Room"]
@@ -650,7 +622,6 @@ size = Vector3(7, 51, 6)
 material = ExtResource("4_g7bfq")
 
 [node name="StairsCSG" type="CSGCombiner3D" parent="CSG"]
-visible = false
 
 [node name="Box29" type="CSGBox3D" parent="CSG/StairsCSG"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.5, 3.5, -207)
