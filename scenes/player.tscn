@@ -298,7 +298,7 @@ _player = NodePath("../..")
 
 [node name="GrappleHookRaycast" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -200)
-collision_mask = 65
+collision_mask = 257
 hit_from_inside = true
 collide_with_areas = true
 
