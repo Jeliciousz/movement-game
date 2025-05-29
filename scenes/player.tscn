@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=38 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://mvnof2ryv8nf" path="res://scripts/player/states/player_ledge_grabbing_state.gd" id="12_ke2ow"]
 [ext_resource type="AudioStream" uid="uid://b67ihi2sr2j5a" path="res://assets/sounds/player/grapple/grapple_hook_fire.wav" id="12_qfm1y"]
 [ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/player/viewmodel/viewmodel_viewport.gd" id="15_l71n6"]
+[ext_resource type="PackedScene" uid="uid://b12fhok278rrf" path="res://scenes/components/hurtbox_component.tscn" id="15_pf23h"]
 [ext_resource type="Script" uid="uid://dy0ilnerqu2pn" path="res://scripts/player/viewmodel/viewmodel_camera.gd" id="17_31cv2"]
 [ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/hud/debug_info.gd" id="19_4ni07"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
@@ -159,6 +160,10 @@ shader_parameter/color = Color(0, 0, 0, 1)
 shader_parameter/metallic = 1.0
 shader_parameter/specular = 0.5
 shader_parameter/roughness = 0.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dt7fs"]
+radius = 0.4
+height = 1.8
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_l71n6"]
 random_pitch = 1.1
@@ -319,6 +324,14 @@ _body = NodePath("..")
 _head = NodePath("../Head")
 
 [node name="HealthComponent" parent="." instance=ExtResource("21_pf23h")]
+
+[node name="HurtboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("15_pf23h")]
+collision_layer = 2
+health_component = NodePath("../HealthComponent")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_dt7fs")
 
 [node name="FootstepAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamRandomizer_l71n6")
