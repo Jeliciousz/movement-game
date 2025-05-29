@@ -8,6 +8,8 @@ signal damaged(damage_taken: float, new_health: float)
 signal healed(health_gained: float, new_health: float)
 ## Emitted when the entity dies.
 signal died(damage_taken: float)
+## Emitted when the entity is revived.
+signal revived()
 
 ## The maximum health this entity has.
 @export var max_health: float = 3.0
@@ -63,6 +65,9 @@ func heal(amount: float, ignore_max_health: bool) -> void:
 
 ## Kill the health component.
 func kill() -> void:
+	if not is_alive:
+		return
+
 	is_alive = false
 
 	var damage_taken: float = current_health
@@ -76,4 +81,6 @@ func revive() -> void:
 		return
 
 	is_alive = true
+
 	current_health = max_health
+	revived.emit()
