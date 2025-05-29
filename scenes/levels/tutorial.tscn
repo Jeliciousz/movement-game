@@ -3,9 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_7ac3l"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_iig34"]
 [ext_resource type="Environment" uid="uid://vsihxa0nm5p7" path="res://assets/other/lq_indoor_environment.tres" id="3_1wklo"]
-[ext_resource type="PackedScene" uid="uid://bcjt3vxgfsn8i" path="res://scenes/damage_area.tscn" id="4_1wklo"]
 [ext_resource type="PackedScene" uid="uid://cqkeqglbsx1tw" path="res://scenes/grapple_hook_point.tscn" id="4_7ac3l"]
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="4_g7bfq"]
+[ext_resource type="Script" uid="uid://dmowi7ydfoty6" path="res://scripts/components/hitbox_component.gd" id="5_iig34"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7ac3l"]
 size = Vector3(10, 35, 33)
@@ -252,28 +252,30 @@ omni_attenuation = 0.5
 [node name="GrappleHookPoint" parent="." instance=ExtResource("4_7ac3l")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 10, -80)
 
-[node name="DamageArea" parent="." instance=ExtResource("4_1wklo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6)
-kill = true
+[node name="HitboxComponent" type="Area3D" parent="."]
+collision_mask = 14
+script = ExtResource("5_iig34")
+kills = true
+metadata/_custom_type_script = "uid://dmowi7ydfoty6"
 
-[node name="CollisionShape1" type="CollisionShape3D" parent="DamageArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -32.5, -15.5)
+[node name="CollisionShape1" type="CollisionShape3D" parent="HitboxComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -32.5, -21.5)
 shape = SubResource("BoxShape3D_7ac3l")
 
-[node name="CollisionShape2" type="CollisionShape3D" parent="DamageArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.5, -32.5, -47.5)
+[node name="CollisionShape2" type="CollisionShape3D" parent="HitboxComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.5, -32.5, -53.5)
 shape = SubResource("BoxShape3D_iig34")
 
-[node name="CollisionShape3" type="CollisionShape3D" parent="DamageArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -32.5, -73)
+[node name="CollisionShape3" type="CollisionShape3D" parent="HitboxComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -32.5, -79)
 shape = SubResource("BoxShape3D_3e81p")
 
-[node name="CollisionShape4" type="CollisionShape3D" parent="DamageArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -32.5, -124)
+[node name="CollisionShape4" type="CollisionShape3D" parent="HitboxComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, -32.5, -130)
 shape = SubResource("BoxShape3D_g7bfq")
 
-[node name="CollisionShape5" type="CollisionShape3D" parent="DamageArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -32.5, -167)
+[node name="CollisionShape5" type="CollisionShape3D" parent="HitboxComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38, -32.5, -173)
 shape = SubResource("BoxShape3D_4a02d")
 
 [node name="Stairs1Body" type="StaticBody3D" parent="."]
