@@ -121,7 +121,7 @@ func wallrun_checks() -> bool:
 
 		wall_normal = Vector3(_player.wallrun_foot_raycast.get_collision_normal().x, 0.0, _player.wallrun_foot_raycast.get_collision_normal().z).normalized()
 
-		if wall_normal.angle_to(shared_vars[&"wallrun_wall_normal"]) > deg_to_rad(_player.wallrun_max_external_angle + 1):
+		if wall_normal.angle_to(shared_vars[&"wallrun_wall_normal"]) > _player.wallrun_max_external_angle + deg_to_rad(1):
 			return false
 
 		_player.move_and_collide(-shared_vars[&"wallrun_wall_normal"] * _player.floor_snap_length, false, _player.safe_margin)
@@ -130,7 +130,7 @@ func wallrun_checks() -> bool:
 	else:
 		wall_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 
-		if wall_normal.angle_to(shared_vars[&"wallrun_wall_normal"]) > deg_to_rad(_player.wallrun_max_internal_angle + 1):
+		if wall_normal.angle_to(shared_vars[&"wallrun_wall_normal"]) > _player.wallrun_max_internal_angle + deg_to_rad(1):
 			return false
 
 	if wall_normal != shared_vars[&"wallrun_wall_normal"]:
