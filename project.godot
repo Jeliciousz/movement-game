@@ -116,7 +116,7 @@ interact={
 3d_physics/layer_4="NoCollideNPCs"
 3d_physics/layer_5="PhysicsDetailNodes"
 3d_physics/layer_6="PhysicsGameNodes"
-3d_physics/layer_7="GrappleHookPoints"
+3d_physics/layer_9="GrappleHookPoints"
 
 [physics]
 

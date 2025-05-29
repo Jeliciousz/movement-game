@@ -14,7 +14,7 @@ height = 0.5
 [node name="GrappleHookPoint" type="Area3D"]
 process_priority = -3
 top_level = true
-collision_layer = 64
+collision_layer = 256
 collision_mask = 0
 script = ExtResource("1_v2vg0")
 
