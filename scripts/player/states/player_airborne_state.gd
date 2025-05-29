@@ -76,7 +76,7 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.ledge_grab_enabled and ledgegrab_checks() and _player._input_vector.y < -0.2:
+	if _player.ledge_grab_enabled and ledgegrab_checks():
 		shared_vars[&"ledge_grab_velocity"] = player_velocity_before_move
 		state_machine.change_state_to(&"LedgeGrabbing")
 		return
@@ -219,6 +219,9 @@ func wallrun_checks() -> bool:
 
 func ledgegrab_checks() -> bool:
 	if not _player.is_on_wall():
+		return false
+
+	if _player._input_vector.y >= -0.2:
 		return false
 
 	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
