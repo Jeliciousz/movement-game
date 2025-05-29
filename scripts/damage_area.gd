@@ -14,7 +14,7 @@ func _on_body_entered(body: PhysicsBody3D) -> void:
 
 	var health_component: HealthComponent = body.get_node(^"HealthComponent")
 
-	if not health_component.is_alive:
+	if not health_component.alive:
 		return
 
 	if kill:

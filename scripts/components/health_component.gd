@@ -15,7 +15,7 @@ signal revived()
 @export var max_health: float = 3.0
 
 ## Whether the health component is alive.
-var is_alive: bool = true
+var alive: bool = true
 
 ## The current health of the entity.
 @onready var current_health: float = max_health
@@ -25,7 +25,7 @@ var is_alive: bool = true
 ##
 ## Returns whether the health component died from the damage dealt.
 func damage(amount: float) -> bool:
-	if not is_alive:
+	if not alive:
 		return false
 
 	if amount <= 0.0:
@@ -48,7 +48,7 @@ func heal(amount: float, ignore_max_health: bool) -> void:
 		return
 
 	if current_health == 0.0:
-		is_alive = true
+		alive = true
 
 	if not ignore_max_health:
 		if current_health == max_health:
@@ -65,10 +65,10 @@ func heal(amount: float, ignore_max_health: bool) -> void:
 
 ## Kill the health component.
 func kill() -> void:
-	if not is_alive:
+	if not alive:
 		return
 
-	is_alive = false
+	alive = false
 
 	var damage_taken: float = current_health
 	current_health = 0.0
@@ -77,10 +77,10 @@ func kill() -> void:
 
 ## Revive the health component.
 func revive() -> void:
-	if is_alive:
+	if alive:
 		return
 
-	is_alive = true
+	alive = true
 
 	current_health = max_health
 	revived.emit()
