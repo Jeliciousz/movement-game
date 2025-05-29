@@ -230,6 +230,9 @@ var _crouch_timestamp: int = 0
 var _air_crouching: bool = false
 
 @onready var head: Node3D = $Head
+@onready var state_machine: StateMachine = $StateMachine
+@onready var collision_shape: CollisionShape3D = $CollisionShape
+@onready var health_component: HealthComponent = $HealthComponent
 @onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
 @onready var grapple_hook_line: Line3D = $Head/Camera/GrappleHookRaycast/GrappleHookLine
 @onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
@@ -239,8 +242,6 @@ var _air_crouching: bool = false
 @onready var ledge_grab_hand_raycast: RayCast3D = $LedgeGrabHandRaycast
 @onready var ledge_grab_head_raycast: RayCast3D = $LedgeGrabHeadRaycast
 @onready var ledge_grab_ledge_raycast: RayCast3D = $LedgeGrabLedgeRaycast
-@onready var state_machine: StateMachine = $StateMachine
-@onready var collision_shape: CollisionShape3D = $CollisionShape
 @onready var standing_height: float = collision_shape.shape.height
 @onready var standing_head_y: float = head.position.y
 @onready var grounded_uncrouch_area: Area3D = $GroundedUncrouchArea
@@ -633,3 +634,4 @@ func _uncrouch() -> void:
 
 func _on_health_component_died(_damage_taken: float) -> void:
 	state_machine.change_state_to(&"Spawning")
+	health_component.revive()
