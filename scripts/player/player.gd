@@ -257,7 +257,6 @@ func _physics_process(delta: float) -> void:
 		InputBuffer.clear_buffered_action("sprint")
 		InputBuffer.clear_buffered_action("slide")
 		InputBuffer.clear_buffered_action("grapple_hook")
-		_input_vector = Vector2.ZERO
 
 	_wish_direction = basis * Vector3(_input_vector.x, 0.0, _input_vector.y).normalized()
 
@@ -282,7 +281,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	#
 	#	-Jeliciousz
 
-	if event.echo or Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if event.echo:
+		return
+
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		_input_vector = Vector2.ZERO
 		return
 
 	if event.is_action(&"move_forward"):
