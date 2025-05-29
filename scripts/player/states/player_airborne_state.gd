@@ -188,9 +188,6 @@ func wallrun_checks() -> bool:
 
 	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 
-	if _player.get_forward_direction().dot(-normal) >= 0.8:
-		return false
-
 	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
 	var horizontal_velocity: Vector3 = Vector3(player_velocity_before_move.x, 0.0, player_velocity_before_move.z)
