@@ -1,6 +1,6 @@
 class_name HealthComponent
 extends Node
-## Represents the health of an entity.
+## The health of an entity.
 
 ## Emitted when the entity is damaged.
 signal damaged(damage_taken: float, new_health: float)
