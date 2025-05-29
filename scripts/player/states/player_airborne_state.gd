@@ -38,6 +38,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 			else:
 				force = _player.walljump_force
 
+			_player.velocity -= shared_vars[&"wallrun_wall_normal"] * _player.wallrun_cancel_force
 			_player.wall_jump(shared_vars[&"wallrun_wall_normal"], shared_vars[&"wallrun_run_direction"], force)
 			shared_vars[&"coyote_walljump_active"] = false
 			state_machine.change_state_to(&"Jumping")
