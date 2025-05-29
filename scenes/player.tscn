@@ -296,12 +296,6 @@ near = 0.005
 script = ExtResource("2_l71n6")
 _player = NodePath("../..")
 
-[node name="WeaponRaycast" type="RayCast3D" parent="Head/Camera"]
-enabled = false
-target_position = Vector3(0, 0, -200)
-collision_mask = 41
-hit_from_inside = true
-
 [node name="GrappleHookRaycast" type="RayCast3D" parent="Head/Camera"]
 target_position = Vector3(0, 0, -200)
 collision_mask = 65
