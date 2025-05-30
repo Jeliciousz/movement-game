@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://6ph2i46tp68q"]
+
+[ext_resource type="Material" uid="uid://coce5ywpsi54n" path="res://assets/materials/dodgeball.tres" id="1_6j3e4"]
+[ext_resource type="Script" uid="uid://bn54sq2rvx80e" path="res://scripts/dodgeball.gd" id="1_35qfo"]
+[ext_resource type="PackedScene" uid="uid://dseolbtimb3mt" path="res://scenes/components/pickup_collect_component.tscn" id="2_kirfa"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_tdmlc"]
+radius = 0.4
+
+[sub_resource type="SphereMesh" id="SphereMesh_tdmlc"]
+material = ExtResource("1_6j3e4")
+radius = 0.4
+height = 0.8
+radial_segments = 32
+rings = 16
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6j3e4"]
+radius = 0.8
+
+[node name="Dodgeball" type="RigidBody3D"]
+collision_layer = 32
+collision_mask = 47
+script = ExtResource("1_35qfo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_tdmlc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_tdmlc")
+
+[node name="PickupCollectComponent" parent="." instance=ExtResource("2_kirfa")]
+collision_layer = 32
+collision_mask = 0
+collection_layer = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupCollectComponent"]
+shape = SubResource("SphereShape3D_6j3e4")
+
+[connection signal="pickup_collected" from="PickupCollectComponent" to="." method="_on_pickup_collect_component_pickup_collected"]

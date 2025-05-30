@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqnywlxwu6t71"]
+
+[ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="1_6eu43"]
+[ext_resource type="Environment" uid="uid://vsihxa0nm5p7" path="res://assets/other/lq_indoor_environment.tres" id="1_d30w0"]
+[ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="3_myrex"]
+[ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="4_5cda3"]
+[ext_resource type="PackedScene" uid="uid://6ph2i46tp68q" path="res://scenes/dodgeball.tscn" id="5_myrex"]
+
+[node name="Arena" type="Node3D"]
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_d30w0")
+
+[node name="Room" type="CSGCombiner3D" parent="."]
+use_collision = true
+collision_mask = 0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Room"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
+flip_faces = true
+size = Vector3(40, 12, 40)
+material = ExtResource("1_6eu43")
+
+[node name="Player" parent="." instance=ExtResource("3_myrex")]
+
+[node name="PlayerSpawnPoint" parent="." instance=ExtResource("4_5cda3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 0)
+light_energy = 10.0
+omni_range = 4096.0
+
+[node name="Dodgeball" parent="." instance=ExtResource("5_myrex")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2.25)
