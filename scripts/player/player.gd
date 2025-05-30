@@ -594,7 +594,7 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 		var collider: Node3D = grapple_hook_raycast.get_collider()
 		if collider is GrappleHookPoint and head.global_position.distance_to(collider.position) >= grapple_hook_min_distance:
 			grapple_hook_points.push_back(collider)
-		else:
+		elif not collider is Area3D:
 			break
 
 		grapple_hook_raycast.add_exception(collider)
