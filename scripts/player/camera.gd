@@ -5,73 +5,56 @@ extends Camera3D
 
 ## The [Player].
 @export var _player: Player
-# ## How much a change in rotation is damped.
-# @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var rotation_velocity_damping: float = 60.0
-# ## How quickly the rotation will zero-out.
-# @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s/s") var rotation_zeroing_acceleration: float = 250.0
-# ## How much can the camera's rotation be offset.
-# @export_range(0, 89, 1, "radians_as_degrees") var rotation_max_offset: float = deg_to_rad(15.0)
+## How quickly the camera rotates.
+@export var rotation_offset_speed: float = 10.0
+## How much the player's velocity influences the camera rotation.
+@export var rotation_offset_velocity_influence: float = 0.5
+## How much the camera is tilted away from a wall the player is running on.
+@export var rotation_offset_wallrun_influence: float = 5.0
+## How much the camera is tilted upwards when sliding.
+@export var rotation_offset_slide_pitch_influence: float = 5.0
+## How much the camera is rolled when sliding sideways.
+@export var rotation_offset_slide_roll_influence: float = 1.0
+## How quickly the camera goes back down after starting a slide.
+@export var rotation_offset_slide_return_speed: float = 2.0
+## How much the camera is tilted up while ledge grabbing.
+@export var rotation_offset_ledge_grab_influence: float = 15.0
 
-# var _target_position: Vector3 = Vector3.ZERO
-# var _target_rotation: Vector3 = Vector3.ZERO
-# var _rotation_offset: Vector3 = Vector3.ZERO
-# var _rotation_offset_velocity: Vector3 = Vector3.ZERO
-# var _head_velocity: Vector3 = Vector3.ZERO
-# var _last_head_position: Vector3 = Vector3.ZERO
+var rotation_offset: Vector3 = Vector3.ZERO
+var _head_velocity: Vector3 = Vector3.ZERO
+var _last_head_position: Vector3 = Vector3.ZERO
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	var target_rotation_offset: Vector3 = -Vector3(deg_to_rad(rotation_offset_velocity_influence) * _head_velocity.dot(_player.basis.y), 0.0, deg_to_rad(rotation_offset_velocity_influence) * _head_velocity.dot(_player.basis.x))
+
+	match _player.state_machine.get_state_name():
+		&"WallRunning":
+			target_rotation_offset.z -= deg_to_rad(rotation_offset_wallrun_influence) * _player.state_machine.shared_vars[&"wallrun_wall_normal"].dot(_player.basis.x)
+		&"Sliding":
+			var slide_time: float = float(Time.get_ticks_msec() - _player.state_machine.shared_vars[&"slide_timestamp"]) / float(_player.slide_duration)
+			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_slide_pitch_influence) * maxf(1.0 - slide_time * rotation_offset_slide_return_speed, 0.0), 0.0, deg_to_rad(rotation_offset_slide_roll_influence) * _head_velocity.dot(_player.basis.x))
+		&"LedgeGrabbing":
+			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_ledge_grab_influence), 0.0, 0.0)
+
+	rotation_offset.x += angle_difference(rotation_offset.x, target_rotation_offset.x) * delta * rotation_offset_speed
+	rotation_offset.y += angle_difference(rotation_offset.y, target_rotation_offset.y) * delta * rotation_offset_speed
+	rotation_offset.z += angle_difference(rotation_offset.z, target_rotation_offset.z) * delta * rotation_offset_speed
+
 	position = _player.head.get_global_transform_interpolated().origin
-	rotation = _player.head.global_rotation
-
-	# _target_position = _player.head.get_global_transform_interpolated().origin
-	# _target_rotation = _player.head.global_rotation
-
-	# _rotation_offset_velocity += -_rotation_offset_velocity * rotation_velocity_damping * delta
-	# _rotation_offset_velocity += (Vector3.ZERO - _rotation_offset) * rotation_zeroing_acceleration * delta
-
-	# match _player.state_machine.get_state_name():
-	# 	&"WallRunning":
-	# 		_rotation_offset_velocity += Vector3(0.0, 0.0, deg_to_rad(-1250.0) * _player.state_machine.shared_vars[&"wallrun_wall_normal"].dot(_player.basis.x)) * delta
-	# 	&"LedgeGrabbing":
-	# 		_rotation_offset_velocity += Vector3(deg_to_rad(-5000.0), 0.0, 0.0) * delta
-	# 	&"Sliding":
-	# 		_rotation_offset_velocity += Vector3(deg_to_rad(-50.0) * _head_velocity.dot(_player.basis.z), 0.0, deg_to_rad(150.0) * _head_velocity.dot(_player.basis.x)) * delta
-	# 	&"Jumping":
-	# 		_rotation_offset_velocity += Vector3(deg_to_rad(-100.0) + deg_to_rad(-100.0) * _head_velocity.dot(_player.basis.y), 0.0, deg_to_rad(-100.0) * _head_velocity.dot(_player.basis.x)) * delta
-	# 	_:
-	# 		_rotation_offset_velocity += Vector3(deg_to_rad(-100.0) * _head_velocity.dot(_player.basis.y), 0.0, deg_to_rad(-100.0) * _head_velocity.dot(_player.basis.x)) * delta
-
-	# _rotation_offset += _rotation_offset_velocity * delta
-	# _target_rotation += _rotation_offset.clampf(-rotation_max_offset, rotation_max_offset)
-
-	# position = _target_position
-	# rotation = _target_rotation
+	rotation = _player.head.global_rotation + rotation_offset
 
 
-# func _physics_process(_delta: float) -> void:
-# 	_head_velocity = (_player.head.global_position - _last_head_position) / get_physics_process_delta_time()
-# 	_last_head_position = _player.head.global_position
+func _physics_process(_delta: float) -> void:
+	_head_velocity = (_player.head.global_position - _last_head_position) / get_physics_process_delta_time()
+	_last_head_position = _player.head.global_position
 
 
-# func _on_state_machine_state_changed(_last_state: StringName, current_state: StringName) -> void:
-# 	match current_state:
-# 		&"LedgeGrabbing":
-# 			_rotation_offset_velocity += Vector3(deg_to_rad(375.0), 0.0, 0.0)
-# 			return
-# 		&"Sliding":
-# 			_rotation_offset_velocity += Vector3(deg_to_rad(250.0), 0.0, 0.0)
-# 			return
-# 		&"Jumping":
-# 			_rotation_offset_velocity += Vector3(deg_to_rad(-125.0), 0.0, 0.0)
-# 			return
-# 		&"Spawning":
-# 			_target_position = _player.head.global_position
-# 			_target_rotation = _player.head.global_rotation
-# 			_last_head_position = _player.head.global_position
-# 			_head_velocity = Vector3.ZERO
-# 			_rotation_offset = Vector3.ZERO
-# 			_rotation_offset_velocity = Vector3.ZERO
-# 			position = _target_position
-# 			rotation = _target_rotation
-# 			return
+func _on_state_machine_state_changed(last_state: StringName, _current_state: StringName) -> void:
+	if last_state == &"Spawning":
+		_last_head_position = _player.head.global_position
+		_head_velocity = Vector3.ZERO
+		position = _player.head.global_position
+		rotation = _player.head.global_rotation
+		rotation_offset = Vector3.ZERO
+		return
