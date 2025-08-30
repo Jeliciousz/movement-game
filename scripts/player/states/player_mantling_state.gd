@@ -25,17 +25,6 @@ func _state_physics_process(delta: float) -> void:
 		_player.velocity.y += maxf(shared_vars[&"mantle_velocity"].y, 0.0) * (1.0 - _player.mantle_speed_penalty)
 		_player.velocity += _player.up_direction * _player.mantle_power
 
-		if InputBuffer.is_action_buffered(&"jump"):
-			InputBuffer.clear_buffered_action(&"jump")
-			shared_vars[&"coyote_jump_active"] = false
-			shared_vars[&"coyote_slide_active"] = false
-			shared_vars[&"air_jumps"] = 0
-			shared_vars[&"wall_jumps"] = 0
-			_player.velocity += _player.up_direction * _player.mantle_vault_power
-			_player.velocity += _player.get_forward_direction() * _player.mantle_vault_horizontal_power
-			state_machine.change_state_to(&"Jumping")
-			return
-
 		state_machine.change_state_to(&"Airborne")
 		return
 

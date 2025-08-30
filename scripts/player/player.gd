@@ -221,10 +221,6 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_speed: float = 18.0
 ## How high the player is sent upwards when mantling.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_power: float = 2.0
-## How far the player is sent upwards when vaulting over a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_vault_power: float = 2.0
-## How far the player is sent forwards when vaulting over a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_vault_horizontal_power: float = 1.0
 ## How much of the player's speed is lost when they mantle.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var mantle_speed_penalty: float = 0.1
 
