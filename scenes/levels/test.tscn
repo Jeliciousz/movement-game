@@ -5,8 +5,8 @@
 [ext_resource type="Environment" uid="uid://djf1eie3ckyjs" path="res://assets/other/indoor_environment.tres" id="3_kw13u"]
 [ext_resource type="PackedScene" uid="uid://cqkeqglbsx1tw" path="res://scenes/grapple_hook_point.tscn" id="4_f5esd"]
 [ext_resource type="LightmapGIData" uid="uid://bmu126frqdwuk" path="res://assets/other/test.lmbake" id="4_kw13u"]
-[ext_resource type="Script" uid="uid://dmowi7ydfoty6" path="res://scripts/components/hitbox_component.gd" id="5_53yew"]
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="6_5tpx0"]
+[ext_resource type="PackedScene" uid="uid://bw0gfnxekrreo" path="res://scenes/components/hitbox_component.tscn" id="7_im2du"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7ac3l"]
 size = Vector3(10, 35, 33)
@@ -286,11 +286,9 @@ omni_attenuation = 0.5
 [node name="GrappleHookPoint" parent="." instance=ExtResource("4_f5esd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 10, -80)
 
-[node name="HitboxComponent" type="Area3D" parent="."]
-collision_mask = 14
-script = ExtResource("5_53yew")
+[node name="HitboxComponent" parent="." instance=ExtResource("7_im2du")]
+collision_layer = 1
 kills = true
-metadata/_custom_type_script = "uid://dmowi7ydfoty6"
 
 [node name="CollisionShape1" type="CollisionShape3D" parent="HitboxComponent"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -32.5, -21.5)
