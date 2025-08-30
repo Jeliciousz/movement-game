@@ -230,11 +230,11 @@ enum Stances {
 var stance: Stances = Stances.STANDING:
 	set = set_stance
 
-var _wish_direction: Vector3 = Vector3.ZERO
-var _input_vector: Vector2 = Vector2.ZERO
-var _last_stance: Stances = Stances.STANDING
-var _crouch_timestamp: int = 0
-var _air_crouching: bool = false
+var wish_direction: Vector3 = Vector3.ZERO
+var input_vector: Vector2 = Vector2.ZERO
+var last_stance: Stances = Stances.STANDING
+var crouch_timestamp: int = 0
+var air_crouching: bool = false
 
 @onready var head: Node3D = $Head
 @onready var state_machine: StateMachine = $StateMachine
@@ -266,7 +266,7 @@ func _physics_process(delta: float) -> void:
 		InputBuffer.clear_buffered_action("slide")
 		InputBuffer.clear_buffered_action("grapple_hook")
 
-	_wish_direction = basis * Vector3(_input_vector.x, 0.0, _input_vector.y).normalized()
+	wish_direction = basis * Vector3(input_vector.x, 0.0, input_vector.y).normalized()
 
 	if stance == Stances.CROUCHING:
 		head.position.y = move_toward(head.position.y, standing_head_y - standing_height * (1.0 - crouch_height_multiplier), crouch_animate_speed * delta)
@@ -293,37 +293,37 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-		_input_vector = Vector2.ZERO
+		input_vector = Vector2.ZERO
 		return
 
 	if event.is_action(&"move_forward"):
 		if event.pressed:
-			_input_vector.y = -1.0
+			input_vector.y = -1.0
 		else:
-			_input_vector.y = 1.0 if Input.is_action_pressed(&"move_back") else 0.0
+			input_vector.y = 1.0 if Input.is_action_pressed(&"move_back") else 0.0
 
 	elif event.is_action(&"move_back"):
 		if event.pressed:
-			_input_vector.y = 1.0
+			input_vector.y = 1.0
 		else:
-			_input_vector.y = -1.0 if Input.is_action_pressed(&"move_forward") else 0.0
+			input_vector.y = -1.0 if Input.is_action_pressed(&"move_forward") else 0.0
 
 	elif event.is_action(&"move_left"):
 		if event.pressed:
-			_input_vector.x = -1.0
+			input_vector.x = -1.0
 		else:
-			_input_vector.x = 1.0 if Input.is_action_pressed(&"move_right") else 0.0
+			input_vector.x = 1.0 if Input.is_action_pressed(&"move_right") else 0.0
 
 	elif event.is_action(&"move_right"):
 		if event.pressed:
-			_input_vector.x = 1.0
+			input_vector.x = 1.0
 		else:
-			_input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
+			input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
 
 
 func set_stance(value: Stances) -> void:
 	if value != stance:
-		_last_stance = stance
+		last_stance = stance
 		stance = value
 
 
@@ -339,6 +339,40 @@ func get_stance_as_text() -> String:
 			return "Sprinting"
 
 	return ""
+
+
+## Returns the wish direction of the player.
+func get_wish_direction() -> Vector3:
+	return wish_direction
+
+
+## Returns the forward direction of the player.
+func get_forward_direction() -> Vector3:
+	return -basis.z
+
+
+## Returns the looking direction of the player.
+func get_looking_direction() -> Vector3:
+	return -head.global_basis.z
+
+
+## Returns the horizontal velocity of the player.
+func get_horizontal_velocity() -> Vector3:
+	return Vector3(velocity.x, 0.0, velocity.z)
+
+
+## Returns how much the player is moving backwards.
+##
+## 0: Player is strafing or moving forwards[br]
+## 0 - 1: Player is moving diagonally backwards[br]
+## 1: Player is moving directly backwards
+func get_amount_moving_backwards() -> float:
+	return maxf(0.0, wish_direction.dot(basis.z))
+
+
+## Returns the position of the player's center of mass.
+func get_center_of_mass() -> Vector3:
+	return collision_shape.global_position
 
 
 func update() -> void:
@@ -396,7 +430,7 @@ func crouch() -> void:
 		return
 
 	stance = Stances.CROUCHING
-	_crouch_timestamp = Time.get_ticks_msec()
+	crouch_timestamp = Time.get_ticks_msec()
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
 	collision_shape.position.y = (standing_height * crouch_height_multiplier) / 2.0
 	wallrun_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
@@ -407,15 +441,18 @@ func crouch() -> void:
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 	if is_on_floor():
-		_air_crouching = false
+		air_crouching = false
 	else:
 		position.y += standing_height * (1.0 - crouch_height_multiplier)
-		_air_crouching = true
+		air_crouching = true
 
 
 func _uncrouch() -> void:
-	stance =_last_stance
-	_crouch_timestamp = Time.get_ticks_msec()
+	if stance != Stances.CROUCHING:
+		return
+
+	stance = last_stance
+	crouch_timestamp = Time.get_ticks_msec()
 	collision_shape.shape.height = standing_height
 	collision_shape.position.y = standing_height / 2.0
 	wallrun_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
@@ -437,7 +474,7 @@ func add_friction(friction: float, top_speed: float) -> void:
 
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
-	var friction_product: float = minf(friction_direction.dot(_wish_direction) + 1.0, 1.0)
+	var friction_product: float = minf(friction_direction.dot(wish_direction) + 1.0, 1.0)
 
 	# If player is faster than the top speed they can move at, it will always apply friction. A reduced amount if going against the movement direction
 	var current_speed: float = velocity.length()
@@ -481,7 +518,7 @@ func add_movement(top_speed: float, acceleration: float) -> void:
 	var backwards_multiplier: float = lerpf(1.0, move_backwards_multiplier, get_amount_moving_backwards())
 
 	var old_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
-	velocity += _wish_direction * acceleration * backwards_multiplier * get_physics_process_delta_time()
+	velocity += wish_direction * acceleration * backwards_multiplier * get_physics_process_delta_time()
 	var new_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 
 	if new_horizontal_speed <= old_horizontal_speed:
@@ -503,7 +540,7 @@ func add_movement(top_speed: float, acceleration: float) -> void:
 
 func jump() -> void:
 	var backwards_multiplier: float = lerpf(1.0, jump_backwards_multiplier, get_amount_moving_backwards())
-	var standing_multiplier: float = lerpf(jump_standing_multiplier, 1.0, _wish_direction.length())
+	var standing_multiplier: float = lerpf(jump_standing_multiplier, 1.0, wish_direction.length())
 
 	# Speed Jumping
 	var current_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
@@ -513,7 +550,7 @@ func jump() -> void:
 	var horizontal_power: float = lerpf(jump_horizontal_force, speed_jump_max_horizontal_force, weight) * backwards_multiplier
 
 	velocity += up_direction * power
-	velocity += _wish_direction * horizontal_power
+	velocity += wish_direction * horizontal_power
 
 
 func slide() -> void:
@@ -521,14 +558,14 @@ func slide() -> void:
 	crouch()
 
 	velocity -= up_direction * velocity.dot(up_direction)
-	velocity += _wish_direction * slide_start_force
+	velocity += wish_direction * slide_start_force
 
 
 func air_jump() -> void:
 	velocity = Vector3.ZERO
 
 	var backwards_multiplier: float = lerpf(1.0, jump_backwards_multiplier, get_amount_moving_backwards())
-	var standing_multiplier: float = lerpf(jump_standing_multiplier, 1.0, _wish_direction.length())
+	var standing_multiplier: float = lerpf(jump_standing_multiplier, 1.0, wish_direction.length())
 
 	# Speed Jumping
 	var current_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
@@ -538,7 +575,7 @@ func air_jump() -> void:
 	var horizontal_power: float = air_jump_horizontal_force * backwards_multiplier
 
 	velocity += up_direction * power
-	velocity += _wish_direction * horizontal_power
+	velocity += wish_direction * horizontal_power
 
 
 func slide_jump() -> void:
@@ -547,7 +584,7 @@ func slide_jump() -> void:
 
 
 func add_wallrun_movement(run_direction: Vector3) -> void:
-	var direction: Vector3 = run_direction * _wish_direction.dot(run_direction)
+	var direction: Vector3 = run_direction * wish_direction.dot(run_direction)
 
 	var old_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
 	velocity += direction * wallrun_acceleration * get_physics_process_delta_time()

@@ -33,7 +33,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		elif _player.crouch_jump_enabled and (_player.crouch_jump_window == 0.0 or Time.get_ticks_msec() - _player._crouch_timestamp <= _player.crouch_jump_window):
+		elif _player.crouch_jump_enabled and (_player.crouch_jump_window == 0.0 or Time.get_ticks_msec() - _player.crouch_timestamp <= _player.crouch_jump_window):
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.attempt_uncrouch()
 			_player.jump()
