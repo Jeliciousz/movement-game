@@ -15,7 +15,7 @@ radial_segments = 32
 rings = 16
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_6j3e4"]
-radius = 0.8
+radius = 0.4
 
 [node name="Dodgeball" type="RigidBody3D"]
 collision_layer = 32
