@@ -5,7 +5,7 @@ extends Node
 ## Code courtesy of [url=https://yosoyfreeman.github.io/article/godot/tutorial/achieving-better-mouse-input-in-godot-4-the-perfect-camera-controller/]Yo Soy Freeman[/url]. Edited by Jeliciousz
 
 ## How many radians should the camera rotate per dot of mouse movement.
-const RADIANS_PER_UNIT: float = deg_to_rad(0.1)
+const RADIANS_PER_DOT: float = deg_to_rad(0.08)
 
 ## Settings.
 @export_group("Settings")
@@ -48,7 +48,7 @@ func aim(event: InputEventMouseMotion) -> void:
 	var viewport_transform: Transform2D = get_tree().root.get_final_transform()
 	var motion: Vector2 = event.xformed_by(viewport_transform).relative
 
-	motion *= RADIANS_PER_UNIT
+	motion *= RADIANS_PER_DOT
 	motion *= sensitivity
 
 	add_yaw(motion.x)
