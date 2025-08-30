@@ -40,7 +40,7 @@ func _state_physics_process(_delta: float) -> void:
 	update_stance()
 	update_physics()
 	player_velocity_before_move = _player.velocity
-	_player.update()
+	_player.apply_velocity()
 
 	if _player.is_on_floor():
 		_player.footstep_audio.play()
@@ -178,11 +178,6 @@ func wallrun_checks() -> bool:
 
 func mantle_checks() -> bool:
 	if not _player.is_on_wall():
-		return false
-
-	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-
-	if _player.get_forward_direction().dot(-normal) < 0.7:
 		return false
 
 	_player.mantle_foot_raycast.force_raycast_update()

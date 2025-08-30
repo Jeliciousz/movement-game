@@ -41,7 +41,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 func _state_physics_process(delta: float) -> void:
 	update_physics(delta)
-	_player.update()
+	_player.apply_velocity()
 
 	if not _player.is_on_floor():
 		shared_vars[&"coyote_jump_active"] = false

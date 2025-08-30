@@ -56,7 +56,7 @@ func _state_physics_process(delta: float) -> void:
 	update_stance()
 	update_physics(delta)
 	player_velocity_before_move = _player.velocity
-	_player.update()
+	_player.apply_velocity()
 
 	if _player.is_on_floor():
 		state_machine.change_state_to(&"Grounded")
