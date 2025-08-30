@@ -3,4 +3,8 @@
 [ext_resource type="Script" uid="uid://dmowi7ydfoty6" path="res://scripts/components/hitbox_component.gd" id="1_okvui"]
 
 [node name="HitboxComponent" type="Area3D"]
+collision_layer = 0
+collision_mask = 0
+input_ray_pickable = false
+monitoring = false
 script = ExtResource("1_okvui")

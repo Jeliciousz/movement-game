@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://nurkds4wunvy" path="res://scripts/components/pickup_receiver_component.gd" id="1_vjjay"]
 
 [node name="PickupReceiverComponent" type="Area3D"]
+collision_layer = 0
+collision_mask = 0
+input_ray_pickable = false
+monitorable = false
 script = ExtResource("1_vjjay")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

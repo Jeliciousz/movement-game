@@ -239,7 +239,9 @@ target_position = Vector3(0.65, 0, 0)
 
 [node name="GroundedUncrouchArea" type="Area3D" parent="."]
 collision_layer = 2
-collision_mask = 9
+collision_mask = 5
+input_ray_pickable = false
+monitorable = false
 
 [node name="CollisionShape" type="CollisionShape3D" parent="GroundedUncrouchArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -248,7 +250,9 @@ shape = SubResource("CylinderShape3D_ke2ow")
 [node name="AirborneUncrouchArea" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
 collision_layer = 2
-collision_mask = 9
+collision_mask = 5
+input_ray_pickable = false
+monitorable = false
 
 [node name="CollisionShape" type="CollisionShape3D" parent="AirborneUncrouchArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -310,6 +314,7 @@ _player = NodePath("../..")
 target_position = Vector3(0, 0, -200)
 collision_mask = 257
 hit_from_inside = true
+hit_back_faces = false
 collide_with_areas = true
 
 [node name="GrappleHookLine" type="Node3D" parent="Head/Camera/GrappleHookRaycast"]
@@ -331,7 +336,7 @@ _head = NodePath("../Head")
 [node name="HealthComponent" parent="." instance=ExtResource("21_pf23h")]
 
 [node name="HurtboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("15_pf23h")]
-collision_layer = 2
+collision_mask = 1
 health_component = NodePath("../HealthComponent")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
@@ -339,7 +344,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_dt7fs")
 
 [node name="PickupReceiverComponent" parent="." instance=ExtResource("16_wqfne")]
-collision_layer = 2
 collision_mask = 32
 collection_mask = 1
 
