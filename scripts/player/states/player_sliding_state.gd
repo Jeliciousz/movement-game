@@ -34,6 +34,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"slide") and _player.slide_cancel_enabled and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_cancel_delay:
 		InputBuffer.clear_buffered_action(&"slide")
+		_player.velocity -= _player.velocity.normalized() * _player.slide_cancel_force
 		state_machine.change_state_to(&"Grounded")
 		return
 

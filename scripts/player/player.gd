@@ -138,6 +138,8 @@ enum Stances {
 @export var slide_cancel_enabled: bool = true
 ## How long the player must wait after starting a slide until they can slide cancel.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_cancel_delay: int = 200
+## How much the player is slowed when they slide cancel.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_cancel_force: float = 5.0
 
 @export_subgroup("Slide Jumping", "slide_jump_")
 ## Can the player slide jump?
