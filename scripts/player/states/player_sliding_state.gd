@@ -10,6 +10,7 @@ func _state_enter() -> void:
 	_player.floor_constant_speed = false
 	shared_vars[&"slide_timestamp"] = Time.get_ticks_msec()
 	shared_vars[&"coyote_slide_active"] = false
+	shared_vars[&"coyote_slide_jump_active"] = true
 	_player.slide_audio.play()
 
 
@@ -25,6 +26,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"jump") and _player.slide_jump_enabled and Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] >= _player.slide_jump_delay:
 		InputBuffer.clear_buffered_action(&"jump")
+		shared_vars[&"coyote_slide_jump_active"] = false
 		_player.attempt_uncrouch()
 		_player.slide_jump()
 		state_machine.change_state_to(&"Jumping")
@@ -41,6 +43,7 @@ func _state_physics_process(delta: float) -> void:
 	_player.update()
 
 	if not _player.is_on_floor():
+		shared_vars[&"coyote_jump_active"] = false
 		state_machine.change_state_to(&"Airborne")
 		return
 

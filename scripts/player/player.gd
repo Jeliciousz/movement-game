@@ -21,6 +21,8 @@ enum Stances {
 @export var coyote_jump_enabled: bool = true
 ## Is there coyote time for slides?
 @export var coyote_slide_enabled: bool = true
+## Is there coyote time for slide jumps?
+@export var coyote_slide_jump_enabled: bool = true
 ## Is there coyote time for walljumps?
 @export var coyote_walljump_enabled: bool = true
 ## How long coyote time lasts.
@@ -146,6 +148,13 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_jump_horizontal_force: float = -7.0
 ## How long the player must wait after starting a slide until they can slide jump.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var slide_jump_delay: int = 250
+
+@export_subgroup("Ledge Jumping", "ledge_jump_")
+## Can the player ledge jump?
+@export var ledge_jump_enabled: bool = true
+## How long after sliding off a ledge can the player still ledge jump.
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var ledge_jump_window: int = 125
+
 
 @export_group("Wall-Running", "wallrun")
 ## Can the player wall-run?

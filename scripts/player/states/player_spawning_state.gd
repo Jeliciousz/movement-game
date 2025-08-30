@@ -32,6 +32,7 @@ func spawn_random() -> void:
 
 	shared_vars[&"coyote_jump_active"] = false
 	shared_vars[&"coyote_slide_active"] = false
+	shared_vars[&"coyote_slide_jump_active"] = false
 	shared_vars[&"coyote_walljump_active"] = false
 	shared_vars[&"air_jumps"] = Global.MAX_INT
 	shared_vars[&"air_crouches"] = Global.MAX_INT

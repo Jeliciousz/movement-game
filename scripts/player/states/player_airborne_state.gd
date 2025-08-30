@@ -44,6 +44,23 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
+		if _player.ledge_jump_enabled and shared_vars[&"coyote_slide_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.ledge_jump_window:
+			InputBuffer.clear_buffered_action(&"jump")
+			shared_vars[&"coyote_slide_jump_active"] = false
+			_player.attempt_uncrouch()
+			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
+			_player.jump()
+			state_machine.change_state_to(&"Jumping")
+			return
+
+		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and shared_vars[&"coyote_slide_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
+			InputBuffer.clear_buffered_action(&"jump")
+			shared_vars[&"coyote_slide_jump_active"] = false
+			_player.attempt_uncrouch()
+			_player.slide_jump()
+			state_machine.change_state_to(&"Jumping")
+			return
+
 		if _player.jump_enabled and _player.coyote_jump_enabled and shared_vars[&"coyote_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.attempt_uncrouch()
