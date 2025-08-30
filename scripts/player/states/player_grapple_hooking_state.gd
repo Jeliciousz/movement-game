@@ -61,7 +61,7 @@ func _state_physics_process(_delta: float) -> void:
 		shared_vars[&"wallrun_wall_normal"] = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 		shared_vars[&"wallrun_run_direction"] = shared_vars[&"wallrun_wall_normal"].rotated(Vector3.UP, deg_to_rad(90.0))
 
-		if shared_vars[&"wallrun_run_direction"].dot(_player.get_forward_direction()) < 0.0:
+		if shared_vars[&"wallrun_run_direction"].dot(_player.get_horizontal_velocity().normalized()) < 0.0:
 			shared_vars[&"wallrun_run_direction"] *= -1.0
 
 		var new_velocity: Vector3 = shared_vars[&"wallrun_run_direction"] * Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
@@ -134,7 +134,7 @@ func wallrun_checks() -> bool:
 
 	var horizontal_velocity: Vector3 = Vector3(player_velocity_before_move.x, 0.0, player_velocity_before_move.z)
 
-	if run_direction.dot(_player.get_forward_direction()) < 0.0:
+	if run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
 		run_direction *= -1.0
 
 	if horizontal_velocity.length() < _player.wallrun_start_speed:
