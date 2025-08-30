@@ -365,38 +365,30 @@ func check_surface(direction: Vector3) -> bool:
 	return collided
 
 
-## Returns the wish direction of the player.
-func get_wish_direction() -> Vector3:
-	return _wish_direction
+func attempt_uncrouch() -> bool:
+	if stance != Stances.CROUCHING:
+		return true
 
+	if air_crouching:
+		airborne_uncrouch_area.position.y = -standing_height * (1.0 - crouch_height_multiplier)
 
-## Returns the forward direction of the player.
-func get_forward_direction() -> Vector3:
-	return -basis.z
+		if not airborne_uncrouch_area.has_overlapping_bodies():
+			_uncrouch()
 
+			position.y -= standing_height * (1.0 - crouch_height_multiplier)
+			air_crouching = false
 
-## Returns the horizontal velocity of the player.
-func get_horizontal_velocity() -> Vector3:
-	return Vector3(velocity.x, 0.0, velocity.z)
+			return true
 
+	if not grounded_uncrouch_area.has_overlapping_bodies():
+		_uncrouch()
 
-## Returns the looking direction of the player.
-func get_looking_direction() -> Vector3:
-	return -head.global_basis.z
+		if air_crouching:
+			air_crouching = false
 
+		return true
 
-## Returns the position of the player's center of mass.
-func get_center_of_mass() -> Vector3:
-	return collision_shape.global_position
-
-
-## Returns how much the player is moving backwards.
-##
-## 0: Player is strafing or moving forwards[br]
-## 0 - 1: Player is moving diagonally backwards[br]
-## 1: Player is moving directly backwards
-func get_amount_moving_backwards() -> float:
-	return maxf(0.0, _wish_direction.dot(basis.z))
+	return false
 
 
 func crouch() -> void:
@@ -432,32 +424,6 @@ func _uncrouch() -> void:
 	mantle_head_raycast.target_position.y = mantle_hand_raycast.position.y
 	mantle_ledge_raycast.position.y = mantle_hand_raycast.position.y
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
-
-
-func attempt_uncrouch() -> bool:
-	if stance != Stances.CROUCHING:
-		return true
-
-	if _air_crouching:
-		airborne_uncrouch_area.position.y = -standing_height * (1.0 - crouch_height_multiplier)
-
-		if not airborne_uncrouch_area.has_overlapping_bodies():
-			_uncrouch()
-
-			position.y -= standing_height * (1.0 - crouch_height_multiplier)
-			_air_crouching = false
-
-		return true
-
-	if not grounded_uncrouch_area.has_overlapping_bodies():
-		_uncrouch()
-
-		if _air_crouching:
-			_air_crouching = false
-
-		return true
-
-	return false
 
 
 func add_air_resistence(air_resistence: float) -> void:
