@@ -608,18 +608,20 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 
 	while grapple_hook_raycast.is_colliding():
 		var collider: Node3D = grapple_hook_raycast.get_collider()
+
 		if collider is GrappleHookPoint and head.global_position.distance_to(collider.position) >= grapple_hook_min_distance:
 			grapple_hook_points.push_back(collider)
-		elif not collider is Area3D:
+		elif not collider is Area3D:  # If it's not an Area3D in the collision layers the raycast is colliding with, then it must be a StaticBody3D; a wall.
 			break
 
 		grapple_hook_raycast.add_exception(collider)
 		grapple_hook_raycast.force_raycast_update()
 
+	grapple_hook_raycast.clear_exceptions()
+
 	if grapple_hook_points.is_empty():
 		return null
 
-	grapple_hook_raycast.clear_exceptions()
 	grapple_hook_points.sort_custom(_compare_grapple_hook_points)
 
 	for grapple_hook_point: GrappleHookPoint in grapple_hook_points:
