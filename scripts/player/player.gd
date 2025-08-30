@@ -180,7 +180,7 @@ enum Stances {
 ## How hard the player is pushed from the wall when they cancel a wall-run.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_cancel_force: float = 5.0
 ## How fast the player must be to start wall-running.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_start_speed: float = 7.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_start_speed: float = 5.5
 ## How fast the player must be until they stop wall-running.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var wallrun_stop_speed: float = 2.0
 ## How long the player must wait after a wallrun until they can wallrun again.
