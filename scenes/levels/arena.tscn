@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bqnywlxwu6t71"]
 
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="1_6eu43"]
-[ext_resource type="Environment" uid="uid://vsihxa0nm5p7" path="res://assets/other/lq_indoor_environment.tres" id="1_d30w0"]
+[ext_resource type="Environment" uid="uid://djf1eie3ckyjs" path="res://assets/other/indoor_environment.tres" id="1_myrex"]
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="3_myrex"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="4_5cda3"]
 [ext_resource type="PackedScene" uid="uid://6ph2i46tp68q" path="res://scenes/dodgeball.tscn" id="5_myrex"]
@@ -9,7 +9,7 @@
 [node name="Arena" type="Node3D"]
 
 [node name="Environment" type="WorldEnvironment" parent="."]
-environment = ExtResource("1_d30w0")
+environment = ExtResource("1_myrex")
 
 [node name="Room" type="CSGCombiner3D" parent="."]
 use_collision = true
