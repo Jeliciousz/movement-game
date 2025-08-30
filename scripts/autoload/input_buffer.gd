@@ -2,7 +2,7 @@ extends Node
 ## Buffers just pressed inputs for a window of time.
 
 ## How long actions will be buffered for in milliseconds.
-const BUFFER_WINDOW: int = 125
+const BUFFER_WINDOW: int = 100
 
 var _key_timestamps: Dictionary[Key, int] = {}
 var _joy_button_timestamps: Dictionary[JoyButton, int] = {}
