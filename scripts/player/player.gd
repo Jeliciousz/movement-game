@@ -101,7 +101,7 @@ enum Stances {
 @export_subgroup("Crouch Jumping", "crouch_jump_")
 ## Can the player jump while crouching?
 @export var crouch_jump_enabled: bool = true
-## How long after the crouching can the player jump?[br]
+## How long after the crouching can the player still jump?[br]
 ## 0 = The player can always jump while crouching.
 @export_range(0, 1000, 1, "or_greater", "suffix:ms") var crouch_jump_window: int = 200
 
@@ -204,6 +204,7 @@ enum Stances {
 ## How close to the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 14.0
 
+
 @export_group("Mantling", "mantle_")
 ## Can the player mantle?
 @export var mantle_enabled: bool = true
@@ -217,6 +218,7 @@ enum Stances {
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_vault_horizontal_power: float = 1.0
 ## How much of the player's speed is lost when they mantle.
 @export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var mantle_speed_penalty: float = 0.1
+
 
 var stance: Stances = Stances.STANDING:
 	set = set_stance
