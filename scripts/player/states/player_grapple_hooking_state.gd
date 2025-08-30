@@ -52,9 +52,9 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.ledge_grab_enabled and ledgegrab_checks() and _player._input_vector.y < -0.2:
-		shared_vars[&"ledge_grab_velocity"] = player_velocity_before_move
-		state_machine.change_state_to(&"LedgeGrabbing")
+	if _player.mantle_enabled and mantle_checks():
+		shared_vars[&"mantle_velocity"] = player_velocity_before_move
+		state_machine.change_state_to(&"Mantling")
 		return
 
 	if _player.wallrun_enabled and wallrun_checks():
@@ -156,26 +156,28 @@ func wallrun_checks() -> bool:
 	return true
 
 
-func ledgegrab_checks() -> bool:
+func mantle_checks() -> bool:
 	if not _player.is_on_wall():
 		return false
 
 	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 
-	if _player.get_forward_direction().dot(-normal) < 0.8:
+	if _player.get_forward_direction().dot(-normal) < 0.7:
 		return false
 
-	_player.ledge_grab_foot_raycast.force_raycast_update()
-	_player.ledge_grab_hand_raycast.force_raycast_update()
-	_player.ledge_grab_head_raycast.force_raycast_update()
+	_player.mantle_foot_raycast.force_raycast_update()
 
-	if not _player.ledge_grab_foot_raycast.is_colliding():
+	if not _player.mantle_foot_raycast.is_colliding():
 		return false
 
-	if _player.ledge_grab_hand_raycast.is_colliding():
+	_player.mantle_hand_raycast.force_raycast_update()
+
+	if _player.mantle_hand_raycast.is_colliding():
 		return false
 
-	if _player.ledge_grab_head_raycast.is_colliding():
+	_player.mantle_head_raycast.force_raycast_update()
+
+	if _player.mantle_head_raycast.is_colliding():
 		return false
 
 	return true

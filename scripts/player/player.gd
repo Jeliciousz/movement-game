@@ -204,21 +204,19 @@ enum Stances {
 ## How close to the grapple point the player must be to grapple to it.
 @export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m") var grapple_hook_max_distance: float = 14.0
 
-@export_group("Ledge Grabbing", "ledge_grab_")
-## Can the player ledge-grab?
-@export var ledge_grab_enabled: bool = true
-## How quickly the player climbs a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_speed: float = 18.0
-## How high the player is sent upwards when ledge-grabbing.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_power: float = 2.0
+@export_group("Mantling", "mantle_")
+## Can the player mantle?
+@export var mantle_enabled: bool = true
+## How quickly the player mantles over a ledge.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_speed: float = 18.0
+## How high the player is sent upwards when mantling.
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_power: float = 2.0
 ## How far the player is sent upwards when vaulting over a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_power: float = 4.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_vault_power: float = 2.0
 ## How far the player is sent forwards when vaulting over a ledge.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var ledge_grab_vault_horizontal_power: float = 0.0
-## How much of the player's horizontal speed is maintained when they climb a ledge.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var ledge_grab_horizontal_speed_followthrough: float = 0.9
-## How much of the player's vertical speed is sent forwards when they climb a ledge.
-@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var ledge_grab_vertical_speed_followthrough: float = 0.5
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var mantle_vault_horizontal_power: float = 1.0
+## How much of the player's speed is lost when they mantle.
+@export_range(-1, 2, 0.05, "or_less", "or_greater", "suffix:×") var mantle_speed_penalty: float = 0.1
 
 var stance: Stances = Stances.STANDING:
 	set = set_stance
@@ -238,10 +236,10 @@ var _air_crouching: bool = false
 @onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
 @onready var wallrun_hand_raycast: RayCast3D = $WallrunHandRaycast
 @onready var wallrun_floor_raycast: RayCast3D = $WallrunFloorRaycast
-@onready var ledge_grab_foot_raycast: RayCast3D = $LedgeGrabFootRaycast
-@onready var ledge_grab_hand_raycast: RayCast3D = $LedgeGrabHandRaycast
-@onready var ledge_grab_head_raycast: RayCast3D = $LedgeGrabHeadRaycast
-@onready var ledge_grab_ledge_raycast: RayCast3D = $LedgeGrabLedgeRaycast
+@onready var mantle_foot_raycast: RayCast3D = $MantleFootRaycast
+@onready var mantle_hand_raycast: RayCast3D = $MantleHandRaycast
+@onready var mantle_head_raycast: RayCast3D = $MantleHeadRaycast
+@onready var mantle_ledge_raycast: RayCast3D = $MantleLedgeRaycast
 @onready var standing_height: float = collision_shape.shape.height
 @onready var standing_head_y: float = head.position.y
 @onready var grounded_uncrouch_area: Area3D = $GroundedUncrouchArea
@@ -401,17 +399,30 @@ func crouch() -> void:
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
 	collision_shape.position.y = (standing_height * crouch_height_multiplier) / 2.0
 	wallrun_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
-	ledge_grab_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
-	ledge_grab_head_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
-	ledge_grab_head_raycast.target_position.y = ledge_grab_hand_raycast.position.y
-	ledge_grab_ledge_raycast.position.y = ledge_grab_hand_raycast.position.y
-	ledge_grab_ledge_raycast.target_position.y = -ledge_grab_hand_raycast.position.y
+	mantle_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
+	mantle_head_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
+	mantle_head_raycast.target_position.y = mantle_hand_raycast.position.y
+	mantle_ledge_raycast.position.y = mantle_hand_raycast.position.y
+	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 	if is_on_floor():
 		_air_crouching = false
 	else:
 		position.y += standing_height * (1.0 - crouch_height_multiplier)
 		_air_crouching = true
+
+
+func _uncrouch() -> void:
+	stance =_last_stance
+	_crouch_timestamp = Time.get_ticks_msec()
+	collision_shape.shape.height = standing_height
+	collision_shape.position.y = standing_height / 2.0
+	wallrun_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	mantle_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	mantle_head_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	mantle_head_raycast.target_position.y = mantle_hand_raycast.position.y
+	mantle_ledge_raycast.position.y = mantle_hand_raycast.position.y
+	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 
 func attempt_uncrouch() -> bool:
@@ -622,19 +633,6 @@ func _compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> b
 	var proximity_to_crosshair_a: float = head.global_position.direction_to(a.position).dot(get_looking_direction())
 	var proximity_to_crosshair_b: float = head.global_position.direction_to(b.position).dot(get_looking_direction())
 	return proximity_to_crosshair_a > proximity_to_crosshair_b
-
-
-func _uncrouch() -> void:
-	stance =_last_stance
-	_crouch_timestamp = Time.get_ticks_msec()
-	collision_shape.shape.height = standing_height
-	collision_shape.position.y = standing_height / 2.0
-	wallrun_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
-	ledge_grab_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
-	ledge_grab_head_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
-	ledge_grab_head_raycast.target_position.y = ledge_grab_hand_raycast.position.y
-	ledge_grab_ledge_raycast.position.y = ledge_grab_hand_raycast.position.y
-	ledge_grab_ledge_raycast.target_position.y = -ledge_grab_hand_raycast.position.y
 
 
 func _on_health_component_died(_damage_taken: float) -> void:
