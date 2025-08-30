@@ -368,6 +368,11 @@ func get_forward_direction() -> Vector3:
 	return -basis.z
 
 
+## Returns the horizontal velocity of the player.
+func get_horizontal_velocity() -> Vector3:
+	return Vector3(velocity.x, 0.0, velocity.z)
+
+
 ## Returns the looking direction of the player.
 func get_looking_direction() -> Vector3:
 	return -head.global_basis.z
