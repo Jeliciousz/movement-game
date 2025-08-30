@@ -24,7 +24,7 @@ enum Stances {
 ## Is there coyote time for walljumps?
 @export var coyote_walljump_enabled: bool = true
 ## How long coyote time lasts.
-@export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 125
+@export_range(0, 1000, 1, "or_greater", "suffix:ms") var coyote_duration: int = 100
 
 @export_group("Movement", "move_")
 ## How fast the player can move.
