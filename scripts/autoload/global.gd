@@ -4,6 +4,8 @@ extends Node
 const MAX_INT: int = 9223372036854775807
 const MIN_INT: int = -9223372036854775808
 
+var time: float = 0.0
+
 
 func _init() -> void:
 	Input.use_accumulated_input = false
@@ -22,3 +24,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func _physics_process(delta: float) -> void:
+	time += delta
+
+
+func reset_time() -> void:
+	time = 0.0
