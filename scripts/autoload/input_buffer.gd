@@ -4,12 +4,25 @@ extends Node
 ## How long actions will be buffered for in milliseconds.
 const BUFFER_WINDOW: int = 100
 
+var enabled: bool = true:
+	set(value):
+		if enabled and not value:
+			_key_timestamps.clear()
+			_joy_button_timestamps.clear()
+			_mouse_button_timestamps.clear()
+
+		enabled = value
+
+
 var _key_timestamps: Dictionary[Key, int] = {}
 var _joy_button_timestamps: Dictionary[JoyButton, int] = {}
 var _mouse_button_timestamps: Dictionary[MouseButton, int] = {}
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not enabled:
+		return
+
 	if event is InputEventKey:
 		if event.pressed and not event.echo:
 			_key_timestamps[event.physical_keycode] = Time.get_ticks_msec()
