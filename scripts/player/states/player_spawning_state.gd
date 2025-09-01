@@ -27,25 +27,8 @@ func spawn_random() -> void:
 	_player.velocity = Vector3.ZERO
 	_player.reset_physics_interpolation()
 
-	if shared_vars.has(&"grapple_hook_point"):
+	if _player.active_grapple_hook_point:
 		clear_grapple_hook_point()
-
-	shared_vars[&"coyote_jump_active"] = false
-	shared_vars[&"coyote_slide_active"] = false
-	shared_vars[&"coyote_slide_jump_active"] = false
-	shared_vars[&"coyote_walljump_active"] = false
-	shared_vars[&"air_jumps"] = Global.MAX_INT
-	shared_vars[&"air_crouches"] = Global.MAX_INT
-	shared_vars[&"airborne_timestamp"] = 0
-	shared_vars[&"jump_timestamp"] = 0
-	shared_vars[&"slide_timestamp"] = 0
-	shared_vars[&"wallrun_timestamp"] = 0
-	shared_vars[&"wallrun_wall_normal"] = Vector3.ZERO
-	shared_vars[&"wallrun_run_direction"] = Vector3.ZERO
-	shared_vars[&"grapple_hook_point"] = null
-	shared_vars[&"grapple_hook_point_in_range"] = false
-	shared_vars[&"ledge_grab_velocity"] = Vector3.ZERO
-	shared_vars[&"wall_jumps"] = 0
 
 	InputBuffer.clear_buffered_action("jump")
 	InputBuffer.clear_buffered_action("sprint")
@@ -59,6 +42,6 @@ func spawn_random() -> void:
 
 
 func clear_grapple_hook_point() -> void:
-	if shared_vars[&"grapple_hook_point"] != null:
-		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
-		shared_vars[&"grapple_hook_point"] = null
+	if _player.active_grapple_hook_point:
+		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
+		_player.active_grapple_hook_point = null

@@ -21,8 +21,8 @@ func _state_physics_process(delta: float) -> void:
 
 	if _player.position.is_equal_approx(mantle_position):
 		_player.position += _player.up_direction * _player.safe_margin
-		_player.velocity = _player.get_forward_direction() * Vector2(shared_vars[&"mantle_velocity"].x, shared_vars[&"mantle_velocity"].z).length() * (1.0 - _player.mantle_speed_penalty)
-		_player.velocity.y += maxf(shared_vars[&"mantle_velocity"].y, 0.0) * (1.0 - _player.mantle_speed_penalty)
+		_player.velocity = _player.get_forward_direction() * Vector2(_player.mantle_velocity.x, _player.mantle_velocity.z).length() * (1.0 - _player.mantle_speed_penalty)
+		_player.velocity.y += maxf(_player.mantle_velocity.y, 0.0) * (1.0 - _player.mantle_speed_penalty)
 		_player.velocity += _player.up_direction * _player.mantle_power
 
 		state_machine.change_state_to(&"Airborne")

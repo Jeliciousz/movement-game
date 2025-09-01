@@ -9,16 +9,16 @@ var player_velocity_before_move: Vector3 = Vector3.ZERO
 
 
 func _state_enter() -> void:
-	shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
-	shared_vars[&"coyote_jump_active"] = false
-	shared_vars[&"coyote_slide_active"] = false
-	shared_vars[&"coyote_walljump_active"] = false
+	_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
+	_player.coyote_jump_ready = false
+	_player.coyote_slide_ready = false
+	_player.coyote_wall_jump_ready = false
 
 	_player.grapple_hook_line.show()
 	_player.grapple_hook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
-	_player.grapple_hook_line.points[1] = shared_vars[&"grapple_hook_point"].position - _player.grapple_hook_line.position
+	_player.grapple_hook_line.points[1] = _player.active_grapple_hook_point.position - _player.grapple_hook_line.position
 
-	var direction_from_grapple: Vector3 = shared_vars[&"grapple_hook_point"].position.direction_to(_player.get_center_of_mass())
+	var direction_from_grapple: Vector3 = _player.active_grapple_hook_point.position.direction_to(_player.get_center_of_mass())
 	_player.velocity += -direction_from_grapple * _player.grapple_hook_speed
 
 
@@ -28,7 +28,7 @@ func _state_exit() -> void:
 
 func _state_process(_delta: float) -> void:
 	_player.grapple_hook_line.position = _player.head.get_global_transform_interpolated().origin + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
-	_player.grapple_hook_line.points[1] = shared_vars[&"grapple_hook_point"].position - _player.grapple_hook_line.position
+	_player.grapple_hook_line.points[1] = _player.active_grapple_hook_point.position - _player.grapple_hook_line.position
 
 
 func _state_physics_preprocess(_delta: float) -> void:
@@ -45,7 +45,7 @@ func _state_physics_process(_delta: float) -> void:
 	update_stance()
 	update_physics()
 	player_velocity_before_move = _player.velocity
-	_player.apply_velocity()
+	_player.move()
 
 	if _player.is_on_floor():
 		_player.footstep_audio.play()
@@ -53,18 +53,18 @@ func _state_physics_process(_delta: float) -> void:
 		return
 
 	if _player.mantle_enabled and mantle_checks():
-		shared_vars[&"mantle_velocity"] = player_velocity_before_move
+		_player.mantle_velocity = player_velocity_before_move
 		state_machine.change_state_to(&"Mantling")
 		return
 
-	if _player.wallrun_enabled and wallrun_checks():
-		shared_vars[&"wallrun_wall_normal"] = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-		shared_vars[&"wallrun_run_direction"] = shared_vars[&"wallrun_wall_normal"].rotated(Vector3.UP, deg_to_rad(90.0))
+	if _player.wall_run_enabled and wallrun_checks():
+		_player.wall_run_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
+		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
-		if shared_vars[&"wallrun_run_direction"].dot(_player.get_horizontal_velocity().normalized()) < 0.0:
-			shared_vars[&"wallrun_run_direction"] *= -1.0
+		if _player.wall_run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
+			_player.wall_run_direction *= -1.0
 
-		var new_velocity: Vector3 = shared_vars[&"wallrun_run_direction"] * Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
+		var new_velocity: Vector3 = _player.wall_run_direction * Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
 		_player.velocity.x = new_velocity.x
 		_player.velocity.z = new_velocity.z
 		state_machine.change_state_to(&"WallRunning")
@@ -82,9 +82,9 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
 				_player.crouch()
-				shared_vars[&"air_crouches"] += 1
+				_player.air_crouches += 1
 
 		Player.Stances.CROUCHING:
 			if not Input.is_action_pressed(&"crouch") or not _player.crouch_enabled:
@@ -96,14 +96,14 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
 				_player.crouch()
-				shared_vars[&"air_crouches"] += 1
+				_player.air_crouches += 1
 
 
 func update_physics() -> void:
-	var direction_from_grapple: Vector3 = shared_vars[&"grapple_hook_point"].position.direction_to(_player.get_center_of_mass())
-	var distance_from_grapple: float = shared_vars[&"grapple_hook_point"].position.distance_to(_player.get_center_of_mass())
+	var direction_from_grapple: Vector3 = _player.active_grapple_hook_point.position.direction_to(_player.get_center_of_mass())
+	var distance_from_grapple: float = _player.active_grapple_hook_point.position.distance_to(_player.get_center_of_mass())
 	var weight: float = clampf((distance_from_grapple - _player.grapple_hook_min_distance) / (_player.grapple_hook_max_distance - _player.standing_height), 0, 1)
 	var power: float = lerpf(0, _player.grapple_hook_speed, weight)
 
@@ -116,7 +116,7 @@ func update_physics() -> void:
 
 
 func wallrun_checks() -> bool:
-	if Time.get_ticks_msec() - shared_vars[&"wallrun_timestamp"] < _player.wallrun_cooldown:
+	if Global.time - _player.wall_run_timestamp < _player.wall_run_cooldown:
 		return false
 
 	if not _player.is_on_wall():
@@ -137,7 +137,7 @@ func wallrun_checks() -> bool:
 	if run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
 		run_direction *= -1.0
 
-	if horizontal_velocity.length() < _player.wallrun_start_speed:
+	if horizontal_velocity.length() < _player.wall_run_start_speed:
 		return false
 
 	_player.wallrun_floor_raycast.force_raycast_update()

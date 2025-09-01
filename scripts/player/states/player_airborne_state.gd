@@ -9,7 +9,8 @@ var player_velocity_before_move: Vector3 = Vector3.ZERO
 
 
 func _state_enter() -> void:
-	shared_vars[&"airborne_timestamp"] = Time.get_ticks_msec()
+	_player.coyote_engine_timestamp = Time.get_ticks_msec()
+	_player.airborne_timestamp = Global.time
 	player_velocity_before_move = Vector3.ZERO
 
 
@@ -19,49 +20,39 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and shared_vars[&"coyote_slide_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration and slide_checks():
+	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and _player.coyote_slide_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration and slide_checks():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
 		_player.attempt_uncrouch()
 
 	if InputBuffer.is_action_buffered(&"jump"):
-		if _player.walljump_enabled and _player.coyote_walljump_enabled and shared_vars[&"coyote_walljump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
+		if _player.wall_run_enabled and _player.coyote_walljump_enabled and _player.coyote_wall_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
-			shared_vars[&"wall_jumps"] += 1
 
-			var force: float
-
-			if shared_vars[&"wall_jumps"] == _player.walljump_max_limit:
-				force = 0.0
-			elif shared_vars[&"wall_jumps"] > _player.walljump_min_limit:
-				force = lerpf(_player.walljump_force, 0.0, float(shared_vars[&"wall_jumps"] - _player.walljump_min_limit) / float(_player.walljump_max_limit - _player.walljump_min_limit))
-			else:
-				force = _player.walljump_force
-
-			_player.velocity -= shared_vars[&"wallrun_wall_normal"] * _player.wallrun_cancel_force
-			_player.wall_jump(shared_vars[&"wallrun_wall_normal"], shared_vars[&"wallrun_run_direction"], force)
-			shared_vars[&"coyote_walljump_active"] = false
+			_player.velocity -= _player.wall_run_normal * _player.wall_run_cancel_impulse
+			_player.wall_jump(_player.wall_run_normal, _player.wall_run_direction)
+			_player.coyote_wall_jump_ready = false
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.ledge_jump_enabled and shared_vars[&"coyote_slide_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.ledge_jump_window:
+		if _player.ledge_jump_enabled and _player.ledge_jump_ready and Global.time - _player.airborne_timestamp <= _player.ledge_jump_window:
 			InputBuffer.clear_buffered_action(&"jump")
-			shared_vars[&"coyote_slide_jump_active"] = false
+			_player.ledge_jump_ready = false
 			_player.attempt_uncrouch()
 			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and shared_vars[&"coyote_slide_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
+		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and _player.coyote_slide_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
-			shared_vars[&"coyote_slide_jump_active"] = false
+			_player.coyote_slide_jump_ready = false
 			_player.attempt_uncrouch()
 			_player.slide_jump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.jump_enabled and _player.coyote_jump_enabled and shared_vars[&"coyote_jump_active"] and Time.get_ticks_msec() - shared_vars[&"airborne_timestamp"] <= _player.coyote_duration:
+		if _player.jump_enabled and _player.coyote_jump_enabled and _player.coyote_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.attempt_uncrouch()
 			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
@@ -69,14 +60,14 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.air_jump_enabled and shared_vars[&"air_jumps"] < _player.air_jump_limit:
+		if _player.air_jump_enabled and _player.air_jumps < _player.air_jump_limit:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.air_jump()
-			shared_vars[&"air_jumps"] += 1
+			_player.air_jumps += 1
 			state_machine.change_state_to(&"Jumping")
 			return
 
-	if InputBuffer.is_action_buffered(&"grapple_hook") and shared_vars[&"grapple_hook_point"] != null and shared_vars[&"grapple_hook_point_in_range"]:
+	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.active_grapple_hook_point != null and _player.grapple_hook_point_in_range:
 		InputBuffer.clear_buffered_action(&"grapple_hook")
 		_player.grapple_hook_fire_audio.play()
 		state_machine.change_state_to(&"GrappleHooking")
@@ -87,7 +78,7 @@ func _state_physics_process(_delta: float) -> void:
 	update_stance()
 	update_physics()
 	player_velocity_before_move = _player.velocity
-	_player.apply_velocity()
+	_player.move()
 
 	if _player.is_on_floor():
 		_player.footstep_audio.play()
@@ -95,18 +86,18 @@ func _state_physics_process(_delta: float) -> void:
 		return
 
 	if _player.mantle_enabled and mantle_checks():
-		shared_vars[&"mantle_velocity"] = player_velocity_before_move
+		_player.mantle_velocity = player_velocity_before_move
 		state_machine.change_state_to(&"Mantling")
 		return
 
-	if _player.wallrun_enabled and wallrun_checks():
-		shared_vars[&"wallrun_wall_normal"] = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-		shared_vars[&"wallrun_run_direction"] = shared_vars[&"wallrun_wall_normal"].rotated(Vector3.UP, deg_to_rad(90.0))
+	if _player.wall_run_enabled and wallrun_checks():
+		_player.wall_run_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
+		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
-		if shared_vars[&"wallrun_run_direction"].dot(_player.get_horizontal_velocity().normalized()) < 0.0:
-			shared_vars[&"wallrun_run_direction"] *= -1.0
+		if _player.wall_run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
+			_player.wall_run_direction *= -1.0
 
-		var new_velocity: Vector3 = shared_vars[&"wallrun_run_direction"] * Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
+		var new_velocity: Vector3 = _player.wall_run_direction * Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
 		_player.velocity.x = new_velocity.x
 		_player.velocity.z = new_velocity.z
 		state_machine.change_state_to(&"WallRunning")
@@ -124,9 +115,9 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
 				_player.crouch()
-				shared_vars[&"air_crouches"] += 1
+				_player.air_crouches += 1
 
 		Player.Stances.CROUCHING:
 			if not Input.is_action_pressed(&"crouch") or not _player.crouch_enabled:
@@ -138,9 +129,9 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.STANDING
 				return
 
-			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and shared_vars[&"air_crouches"] < _player.air_crouch_limit:
+			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
 				_player.crouch()
-				shared_vars[&"air_crouches"] += 1
+				_player.air_crouches += 1
 
 
 func handle_grapple_hooking() -> void:
@@ -153,23 +144,23 @@ func handle_grapple_hooking() -> void:
 	if target_grapple_hook_point == null:
 		clear_grapple_hook_point()
 		return
-	elif shared_vars[&"grapple_hook_point"] != target_grapple_hook_point:
+	elif _player.active_grapple_hook_point != target_grapple_hook_point:
 		clear_grapple_hook_point()
-		shared_vars[&"grapple_hook_point"] = target_grapple_hook_point
+		_player.active_grapple_hook_point = target_grapple_hook_point
 
-	shared_vars[&"grapple_hook_point_in_range"] = shared_vars[&"grapple_hook_point"].position.distance_to(_player.head.global_position) <= _player.grapple_hook_max_distance
+	_player.grapple_hook_point_in_range = _player.active_grapple_hook_point.position.distance_to(_player.head.global_position) <= _player.grapple_hook_max_distance
 
-	if not shared_vars[&"grapple_hook_point_in_range"]:
-		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.INVALID_TARGET
-	elif shared_vars[&"grapple_hook_point"].targeted != GrappleHookPoint.Target.TARGETED:
-		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.TARGETED
+	if not _player.grapple_hook_point_in_range:
+		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.INVALID_TARGET
+	elif _player.active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
+		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
 		_player.grapple_hook_indicator_audio.play()
 
 
 func clear_grapple_hook_point() -> void:
-	if shared_vars[&"grapple_hook_point"] != null:
-		shared_vars[&"grapple_hook_point"].targeted = GrappleHookPoint.Target.NOT_TARGETED
-		shared_vars[&"grapple_hook_point"] = null
+	if _player.active_grapple_hook_point != null:
+		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
+		_player.active_grapple_hook_point = null
 
 
 func slide_checks() -> bool:
@@ -182,7 +173,7 @@ func slide_checks() -> bool:
 	if _player.velocity.length() < _player.slide_start_speed:
 		return false
 
-	if Time.get_ticks_msec() - shared_vars[&"slide_timestamp"] < _player.slide_cooldown:
+	if Global.time - _player.slide_timestamp < _player.slide_cooldown:
 		return false
 
 	return true
@@ -195,7 +186,7 @@ func update_physics() -> void:
 
 
 func wallrun_checks() -> bool:
-	if Time.get_ticks_msec() - shared_vars[&"wallrun_timestamp"] < _player.wallrun_cooldown:
+	if Global.time - _player.wall_run_timestamp < _player.wall_run_cooldown:
 		return false
 
 	if not _player.is_on_wall():
@@ -213,7 +204,7 @@ func wallrun_checks() -> bool:
 	if run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
 		run_direction *= -1.0
 
-	if horizontal_velocity.length() < _player.wallrun_start_speed:
+	if horizontal_velocity.length() < _player.wall_run_start_speed:
 		return false
 
 	_player.wallrun_floor_raycast.force_raycast_update()

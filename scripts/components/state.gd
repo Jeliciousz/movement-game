@@ -7,9 +7,6 @@ extends Node
 ## Reference to the parent [StateMachine].
 var state_machine: StateMachine
 
-## The dictionary of values shared between the states in a state machine.
-var shared_vars: Dictionary[StringName, Variant]
-
 
 ## Called when the [StateMachine] changes to this state.
 func _state_enter() -> void:
