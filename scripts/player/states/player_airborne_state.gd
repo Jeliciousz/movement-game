@@ -25,6 +25,12 @@ func _state_physics_preprocess(_delta: float) -> void:
 		_player.slide()
 		_player.attempt_uncrouch()
 
+	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.active_grapple_hook_point != null and _player.grapple_hook_point_in_range:
+		InputBuffer.clear_buffered_action(&"grapple_hook")
+		_player.grapple_hook_fire_audio.play()
+		state_machine.change_state_to(&"GrappleHooking")
+		return
+
 	if InputBuffer.is_action_buffered(&"jump"):
 		if _player.wall_run_enabled and _player.coyote_walljump_enabled and _player.coyote_wall_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
@@ -66,12 +72,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 			_player.air_jumps += 1
 			state_machine.change_state_to(&"Jumping")
 			return
-
-	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.active_grapple_hook_point != null and _player.grapple_hook_point_in_range:
-		InputBuffer.clear_buffered_action(&"grapple_hook")
-		_player.grapple_hook_fire_audio.play()
-		state_machine.change_state_to(&"GrappleHooking")
-		return
 
 
 func _state_physics_process(_delta: float) -> void:
