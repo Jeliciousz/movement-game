@@ -35,7 +35,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 		elif _player.crouch_jump_enabled and (_player.crouch_jump_window == 0.0 or Global.time - _player.crouch_timestamp <= _player.crouch_jump_window):
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.attempt_uncrouch()
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
@@ -86,7 +85,7 @@ func update_stance() -> void:
 
 
 func slide_checks() -> bool:
-	if _player.get_wish_direction().is_zero_approx():
+	if _player.wish_direction.is_zero_approx():
 		return false
 
 	if not is_zero_approx(_player.get_amount_moving_backwards()):

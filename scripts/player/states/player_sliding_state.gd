@@ -35,7 +35,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 		InputBuffer.clear_buffered_action(&"jump")
 		_player.coyote_slide_jump_ready = false
 		_player.ledge_jump_ready = false
-		_player.attempt_uncrouch()
 		_player.slide_jump()
 		state_machine.change_state_to(&"Jumping")
 		return

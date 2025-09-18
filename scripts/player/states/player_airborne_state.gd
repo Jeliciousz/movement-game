@@ -44,8 +44,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		if _player.ledge_jump_enabled and _player.ledge_jump_ready and Global.time - _player.airborne_timestamp <= _player.ledge_jump_window:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.ledge_jump_ready = false
-			_player.attempt_uncrouch()
-			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
+			_player.make_vertical_velocity_zero()
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
@@ -53,15 +52,13 @@ func _state_physics_preprocess(_delta: float) -> void:
 		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and _player.coyote_slide_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.coyote_slide_jump_ready = false
-			_player.attempt_uncrouch()
 			_player.slide_jump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
 		if _player.jump_enabled and _player.coyote_jump_enabled and _player.coyote_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.attempt_uncrouch()
-			_player.velocity -= _player.up_direction * _player.velocity.dot(_player.up_direction)
+			_player.make_vertical_velocity_zero()
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
@@ -164,7 +161,7 @@ func clear_grapple_hook_point() -> void:
 
 
 func slide_checks() -> bool:
-	if _player.get_wish_direction().is_zero_approx():
+	if _player.wish_direction.is_zero_approx():
 		return false
 
 	if not is_zero_approx(_player.get_amount_moving_backwards()):

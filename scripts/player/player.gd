@@ -486,11 +486,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 ##################################################
 
 
-## Returns the wish direction of the player.
-func get_wish_direction() -> Vector3:
-	return wish_direction
-
-
 ## Returns how much the player is moving backwards.
 ##
 ## 0: Player is strafing or moving forwards[br]
@@ -520,9 +515,24 @@ func get_direction_of_velocity() -> Vector3:
 	return velocity.normalized()
 
 
+## Returns the vertical velocity of the player.
+func get_vertical_velocity() -> Vector3:
+	return up_direction * velocity.dot(up_direction)
+
+
+## Returns the vertical speed of the player.
+func get_vertical_speed() -> float:
+	return absf(velocity.dot(up_direction))
+
+
+## Returns the normalized vertical velocity of the player.
+func get_direction_of_vertical_velocity() -> float:
+	return signf(velocity.dot(up_direction))
+
+
 ## Returns the horizontal velocity of the player.
 func get_horizontal_velocity() -> Vector3:
-	return Vector3(velocity.x, 0.0, velocity.z)
+	return velocity - get_vertical_velocity()
 
 
 ## Returns the horizontal speed of the player.
@@ -643,14 +653,18 @@ func _uncrouch() -> void:
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 
+func make_vertical_velocity_zero() -> void:
+	velocity = get_horizontal_velocity()
+
+
 func add_air_resistence(air_resistence: float) -> void:
-	var current_speed: float = velocity.length()
+	var current_speed: float = get_speed()
 
 	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * current_speed * get_physics_process_delta_time())
 
 
 func add_friction(friction: float, top_speed: float) -> void:
-	var friction_direction: Vector3 = -velocity.normalized()
+	var friction_direction: Vector3 = -get_direction_of_velocity()
 
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
@@ -719,6 +733,8 @@ func add_movement(top_speed: float, acceleration: float) -> void:
 
 
 func jump() -> void:
+	attempt_uncrouch()
+
 	var effective_impulse: float = lerpf(jump_standing_impulse, jump_impulse, wish_direction.length())
 	var effective_horizontal_impulse: float = jump_horizontal_impulse
 
@@ -734,6 +750,8 @@ func jump() -> void:
 
 
 func air_jump() -> void:
+	attempt_uncrouch()
+
 	velocity = Vector3.ZERO
 
 	var effective_impulse: float = lerpf(air_jump_standing_impulse, air_jump_impulse, wish_direction.length())
@@ -746,11 +764,13 @@ func slide() -> void:
 	stance = Stances.SPRINTING
 	crouch()
 
-	velocity -= up_direction * velocity.dot(up_direction)
+	make_vertical_velocity_zero()
 	velocity += wish_direction * slide_start_impulse
 
 
 func slide_jump() -> void:
+	attempt_uncrouch()
+
 	velocity += up_direction * slide_jump_force
 	velocity += velocity.normalized() * slide_jump_horizontal_force
 
