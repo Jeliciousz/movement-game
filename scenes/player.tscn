@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene load_steps=38 format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -21,10 +21,8 @@
 [ext_resource type="Script" uid="uid://b117okbn2mj8o" path="res://scripts/player/head.gd" id="11_wqfne"]
 [ext_resource type="Script" uid="uid://mvnof2ryv8nf" path="res://scripts/player/states/player_mantling_state.gd" id="12_ke2ow"]
 [ext_resource type="AudioStream" uid="uid://b67ihi2sr2j5a" path="res://assets/sounds/player/grapple/grapple_hook_fire.wav" id="12_qfm1y"]
-[ext_resource type="Script" uid="uid://6bjo4bpfgew5" path="res://scripts/player/viewmodel/viewmodel_viewport.gd" id="15_l71n6"]
 [ext_resource type="PackedScene" uid="uid://b12fhok278rrf" path="res://scenes/components/hurtbox_component.tscn" id="15_pf23h"]
 [ext_resource type="PackedScene" uid="uid://c5c1npap2fqt8" path="res://scenes/components/pickup_receiver_component.tscn" id="16_wqfne"]
-[ext_resource type="Script" uid="uid://dy0ilnerqu2pn" path="res://scripts/player/viewmodel/viewmodel_camera.gd" id="17_31cv2"]
 [ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/hud/debug_info.gd" id="19_4ni07"]
 [ext_resource type="AudioStream" uid="uid://0504swc7qvpo" path="res://assets/sounds/player/slide.wav" id="21_31cv2"]
 [ext_resource type="PackedScene" uid="uid://ctl1lfsdpvhmk" path="res://scenes/components/health_component.tscn" id="21_pf23h"]
@@ -186,9 +184,6 @@ random_volume_offset_db = 1.5
 streams_count = 1
 stream_0/stream = ExtResource("21_31cv2")
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_l71n6"]
-viewport_path = NodePath("ViewmodelTexture/ViewmodelViewport")
-
 [node name="Player" type="CharacterBody3D"]
 top_level = true
 collision_layer = 2
@@ -297,10 +292,9 @@ script = ExtResource("12_ke2ow")
 _player = NodePath("../..")
 metadata/_custom_type_script = "uid://c11sddh62rt7v"
 
-[node name="Head" type="Node3D" parent="." node_paths=PackedStringArray("player")]
+[node name="Head" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 script = ExtResource("11_wqfne")
-player = NodePath("..")
 
 [node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("_player")]
 physics_interpolation_mode = 2
@@ -380,32 +374,6 @@ attenuation_filter_cutoff_hz = 20500.0
 [node name="GrappleHookIndicatorAudio" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_a8ls1")
 volume_db = -12.0
-
-[node name="ViewmodelTexture" type="TextureRect" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("ViewportTexture_l71n6")
-expand_mode = 1
-
-[node name="ViewmodelViewport" type="SubViewport" parent="ViewmodelTexture"]
-transparent_bg = true
-handle_input_locally = false
-use_debanding = true
-size = Vector2i(1280, 720)
-render_target_update_mode = 4
-script = ExtResource("15_l71n6")
-
-[node name="ViewmodelCamera" type="Camera3D" parent="ViewmodelTexture/ViewmodelViewport" node_paths=PackedStringArray("_world_camera")]
-physics_interpolation_mode = 2
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
-top_level = true
-cull_mask = 2
-fov = 90.0
-script = ExtResource("17_31cv2")
-_world_camera = NodePath("../../../Head/Camera")
 
 [node name="PlayerHUD" type="Control" parent="."]
 z_index = 1
