@@ -16,3 +16,7 @@ func _process(delta: float) -> void:
 	_label_speed = move_toward(_label_speed, horizontal_speed, _speed_track_rate * delta)
 
 	text = "%.f kph" % _label_speed
+
+
+func reset_spedometer() -> void:
+	_label_speed = _player.get_horizontal_speed()
