@@ -77,7 +77,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var move_acceleration: float = 60.0
 
 ## How quickly the player can move backwards relative to base speed.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var move_backwards_multiplier: float = 0.5
+@export_range(0.0, 1.0, 0.05, "suffix:×") var move_backwards_multiplier: float = 0.9
 
 ## How much friction is reduced when going against the wish direction of the player.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var move_friction_multiplier: float = 0.75
