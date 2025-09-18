@@ -430,6 +430,7 @@ offset_right = 16.0
 offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("25_ke2ow")
 expand_mode = 1
 
@@ -446,6 +447,7 @@ offset_right = 43.0
 offset_bottom = 146.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 theme = ExtResource("22_ke2ow")
 
 [node name="Spedometer" type="Label" parent="PlayerHUD/SpedometerPanel" node_paths=PackedStringArray("_player")]
