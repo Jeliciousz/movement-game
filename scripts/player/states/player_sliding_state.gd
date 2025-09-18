@@ -24,7 +24,6 @@ func _state_enter() -> void:
 func _state_exit() -> void:
 	_player.floor_constant_speed = true
 	_player.slide_timestamp = Global.time
-	_player.velocity -= _player.velocity.normalized() * _player.slide_stop_impulse
 
 
 func _state_physics_preprocess(_delta: float) -> void:

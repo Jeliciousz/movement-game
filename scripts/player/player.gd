@@ -206,9 +206,6 @@ func get_stance_as_text() -> String:
 ## How fast the player slides.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_impulse: float = 5.0
 
-## How much the player is slowed when they stop sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_impulse: float = 1.5
-
 ## How long the player can slide for.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_duration: float = 0.75
 
@@ -219,7 +216,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.05, "suffix:×") var slide_friction_multiplier: float = 0.1
 
 ## How fast the player must be moving to slide.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_speed: float = 7.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_speed: float = 6.5
 
 ## How fast the player must be to stay sliding.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 5.0
