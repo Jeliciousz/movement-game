@@ -9,7 +9,7 @@ signal hit(damage_taken: float, new_health: float)
 @export var health_component: HealthComponent
 
 var hitboxes: Array[HitboxComponent] = []
-var last_hit_timestamps: Array[int] = []
+var last_hit_timestamps: Array[float] = []
 
 
 func _physics_process(_delta: float) -> void:
@@ -21,12 +21,12 @@ func _physics_process(_delta: float) -> void:
 
 	for index in hitboxes.size():
 		var hitbox: HitboxComponent = hitboxes[index]
-		var time_delta: int = Time.get_ticks_msec() - last_hit_timestamps[index]
+		var time_delta: float = Global.time - last_hit_timestamps[index]
 
 		if time_delta < hitbox.damage_interval:
 			continue
 
-		var damage_ticks: int = time_delta / hitbox.damage_interval
+		var damage_ticks: int = floor(time_delta / hitbox.damage_interval)
 		var damage_dealt: float = hitbox.damage * damage_ticks
 
 		last_hit_timestamps[index] += hitbox.damage_interval * damage_ticks
@@ -61,7 +61,7 @@ func _on_area_entered(area: Area3D) -> void:
 		hit.emit(hitbox.damage, health_component.current_health)
 
 		hitboxes.push_back(hitbox)
-		last_hit_timestamps.push_back(Time.get_ticks_msec())
+		last_hit_timestamps.push_back(Global.time)
 
 
 func _on_area_exited(area: Area3D) -> void:
@@ -71,9 +71,10 @@ func _on_area_exited(area: Area3D) -> void:
 	if not area is HitboxComponent:
 		return
 
-	if not hitboxes.has(area):
+	var index: int = hitboxes.find(area)
+
+	if index == -1:
 		return
 
-	var index: int = hitboxes.find(area)
 	hitboxes.remove_at(index)
 	last_hit_timestamps.remove_at(index)

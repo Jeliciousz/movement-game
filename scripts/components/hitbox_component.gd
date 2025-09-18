@@ -8,5 +8,5 @@ extends Area3D
 @export var hit_once: bool = true
 ## How much damage the hitbox deals.
 @export var damage: float = 1.0
-## The interval in milliseconds between damage ticks.
-@export var damage_interval: int = 500
+## The interval in seconds between damage ticks.
+@export var damage_interval: float = 0.5
