@@ -834,4 +834,4 @@ func _compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> b
 
 func _on_health_component_died(_damage_taken: float) -> void:
 	state_machine.change_state_to(&"Spawning")
-	health_component.revive()
+	health_component.revive(health_component.maximum_health)
