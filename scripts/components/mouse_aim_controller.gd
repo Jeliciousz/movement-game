@@ -20,10 +20,10 @@ const RADIANS_PER_DOT: float = deg_to_rad(0.1)
 @export_subgroup("Clamping")
 
 ## Maximum camera pitch in radians.
-@export_range(0, 90, 0.5, "radians_as_degrees") var max_pitch: float = deg_to_rad(89.5)
+@export_range(0, 90, 0.5, "radians_as_degrees") var max_pitch: float = deg_to_rad(89.9)
 
 ## Minimum camera pitch in radians.
-@export_range(-90, 0, 0.5, "radians_as_degrees") var min_pitch: float = deg_to_rad(-89.5)
+@export_range(-90, 0, 0.5, "radians_as_degrees") var min_pitch: float = deg_to_rad(-89.9)
 
 ## Node references.
 @export_group("Nodes")
