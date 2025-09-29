@@ -20,7 +20,7 @@ extends Camera3D
 ## How much the camera is tilted up while ledge grabbing.
 @export var rotation_offset_ledge_grab_influence: float = 15.0
 
-var rotation_offset: Vector3 = Vector3.ZERO
+var _rotation_offset: Vector3 = Vector3.ZERO
 var _head_velocity: Vector3 = Vector3.ZERO
 var _last_head_position: Vector3 = Vector3.ZERO
 
@@ -37,12 +37,12 @@ func _process(delta: float) -> void:
 		&"LedgeGrabbing":
 			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_ledge_grab_influence), 0.0, 0.0)
 
-	rotation_offset.x += angle_difference(rotation_offset.x, target_rotation_offset.x) * delta * rotation_offset_speed
-	rotation_offset.y += angle_difference(rotation_offset.y, target_rotation_offset.y) * delta * rotation_offset_speed
-	rotation_offset.z += angle_difference(rotation_offset.z, target_rotation_offset.z) * delta * rotation_offset_speed
+	_rotation_offset.x += angle_difference(_rotation_offset.x, target_rotation_offset.x) * delta * rotation_offset_speed
+	_rotation_offset.y += angle_difference(_rotation_offset.y, target_rotation_offset.y) * delta * rotation_offset_speed
+	_rotation_offset.z += angle_difference(_rotation_offset.z, target_rotation_offset.z) * delta * rotation_offset_speed
 
 	position = _player.head.get_global_transform_interpolated().origin
-	rotation = _player.head.global_rotation + rotation_offset
+	rotation = _player.head.global_rotation + _rotation_offset
 
 
 func _physics_process(_delta: float) -> void:
@@ -56,5 +56,5 @@ func _on_state_machine_state_changed(last_state: StringName, _current_state: Str
 		_head_velocity = Vector3.ZERO
 		position = _player.head.global_position
 		rotation = _player.head.global_rotation
-		rotation_offset = Vector3.ZERO
+		_rotation_offset = Vector3.ZERO
 		return
