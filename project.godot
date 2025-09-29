@@ -41,6 +41,7 @@ enabled=PackedStringArray("res://addons/godot-polyliner/plugin.cfg")
 [global_group]
 
 PlayerSpawnPoints="Points the player can spawn at."
+Pickups=""
 
 [input]
 

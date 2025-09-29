@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://dseolbtimb3mt"]
+
+[ext_resource type="Script" uid="uid://y02j12fuq0eh" path="res://scripts/components/pickup_component.gd" id="1_qcm8s"]
+
+[node name="PickupComponent" type="Area3D" groups=["Pickups"]]
+collision_layer = 0
+collision_mask = 0
+input_ray_pickable = false
+monitoring = false
+script = ExtResource("1_qcm8s")
