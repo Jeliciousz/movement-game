@@ -7,6 +7,6 @@ extends Area3D
 ## Should the hitbox only hit once when it overlaps a hurtbox.
 @export var hit_once: bool = true
 ## How much damage the hitbox deals.
-@export var damage: float = 1.0
+@export var damage: int = 1
 ## The interval in seconds between damage ticks.
 @export var damage_interval: float = 0.5

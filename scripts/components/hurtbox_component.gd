@@ -3,7 +3,7 @@ extends Area3D
 ## The hurtbox of an entity.
 
 ## Emitted when the hurtbox is hit.
-signal hit(damage_taken: float, new_health: float)
+signal hit(damage_taken: int, new_health: int)
 
 ## The health component of the same entity.
 @export var health_component: HealthComponent
@@ -13,7 +13,7 @@ var last_hit_timestamps: Array[float] = []
 
 
 func _physics_process(_delta: float) -> void:
-	if not health_component.alive:
+	if health_component.health <= 0:
 		return
 
 	if hitboxes.is_empty():
@@ -27,21 +27,21 @@ func _physics_process(_delta: float) -> void:
 			continue
 
 		var damage_ticks: int = floor(time_delta / hitbox.damage_interval)
-		var damage_dealt: float = hitbox.damage * damage_ticks
+		var damage_dealt: int = hitbox.damage * damage_ticks
 
 		last_hit_timestamps[index] += hitbox.damage_interval * damage_ticks
 
 		health_component.damage(damage_dealt)
-		hit.emit(damage_dealt, health_component.current_health)
+		hit.emit(damage_dealt, health_component.health)
 
-		if not health_component.alive:
+		if health_component.health <= 0:
 			hitboxes.clear()
 			last_hit_timestamps.clear()
 			return
 
 
 func _on_area_entered(area: Area3D) -> void:
-	if not health_component.alive:
+	if health_component.health <= 0:
 		return
 
 	if not area is HitboxComponent:
@@ -50,22 +50,22 @@ func _on_area_entered(area: Area3D) -> void:
 	var hitbox: HitboxComponent = area
 
 	if hitbox.kills:
-		var damage_dealt: float = health_component.current_health
-		health_component.kill()
+		var damage_dealt: int = health_component.health
+		health_component.kill(true)
 		hit.emit(damage_dealt, 0.0)
 	elif hitbox.hit_once:
 		health_component.damage(hitbox.damage)
-		hit.emit(hitbox.damage, health_component.current_health)
+		hit.emit(hitbox.damage, health_component.health)
 	else:
 		health_component.damage(hitbox.damage)
-		hit.emit(hitbox.damage, health_component.current_health)
+		hit.emit(hitbox.damage, health_component.health)
 
 		hitboxes.push_back(hitbox)
 		last_hit_timestamps.push_back(Global.time)
 
 
 func _on_area_exited(area: Area3D) -> void:
-	if not health_component.alive:
+	if health_component.health <= 0:
 		return
 
 	if not area is HitboxComponent:

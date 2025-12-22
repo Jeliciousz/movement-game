@@ -2,99 +2,106 @@ class_name HealthComponent
 extends Node
 ## The health of an entity.
 
-## Emitted when the entity is damaged.
-signal damaged(damage_taken: float, new_health: float)
+signal max_health_changed(change: int)
+signal health_changed(change: int)
+signal healed(amount: int)
+signal damaged(amount: int)
+signal died(damage_taken: int)
+signal revived()
 
-## Emitted when the entity is healed.
-signal healed(health_gained: float, new_health: float)
+@export var max_health: int = 3 : set = set_max_health
+@export var invulnerable: bool = false : set = set_invulnerable
 
-## Emitted when the entity dies.
-signal died(damage_taken: float)
+var invulnerability_timer: Timer = null
 
-## Emitted when the entity is revived.
-signal revived(health_gained: float)
-
-## The maximum health this entity has.
-@export var maximum_health: float = 3.0
-
-## Whether the health component is alive.
-var alive: bool = true
-
-## The current health of the entity.
-@onready var current_health: float = maximum_health
+@onready var health: int = max_health
 
 
-## Damage the health component.
-##
-## Does nothing if [param amount] <= 0 or the health component isn't [member alive].
-func damage(amount: float) -> void:
+func set_max_health(value: int) -> void:
+	if value <= 0.0:
+		push_error("max health can't be lower than or equal to 0.0")
+		return
+
+	if value == max_health:
+		return
+
+	var change: int = value - max_health
+	max_health = value
+
+	if health > max_health:
+		health = max_health
+
+	max_health_changed.emit(change)
+
+
+func set_invulnerable(value: bool) -> void:
+	invulnerable = value
+
+
+func grant_temporary_invulnerability(seconds: float) -> void:
+	if invulnerability_timer == null:
+		invulnerability_timer = Timer.new()
+		invulnerability_timer.one_shot = true
+		invulnerability_timer.timeout.connect(set_invulnerable.bind(false))
+		add_child(invulnerability_timer)
+
+	invulnerable = true
+	invulnerability_timer.start(seconds)
+
+
+func damage(amount: int) -> void:
+	if health <= 0.0:
+		return
+
+	if invulnerable:
+		return
+
 	if amount <= 0.0:
 		return
 
-	if not alive:
-		return
+	var clamped_damage: int = mini(amount, health)
 
-	# If the damage is enough or more than enough to kill the entity, call kill().
-	if amount >= current_health:
-		kill()
-		return
+	health -= clamped_damage
+	health_changed.emit(-clamped_damage)
 
-	# Otherwise, emit damaged.
-	current_health -= amount
-	damaged.emit(amount, current_health)
+	if health == 0.0:
+		died.emit(clamped_damage)
+	else:
+		damaged.emit(clamped_damage)
 
 
-## Heal the health component to the [member maximum_health].
-##
-## Does nothing if [param amount] <= 0 or [member current_health] == [member maximum_health]
-func heal(amount: float) -> void:
-	heal_to(amount, maximum_health)
-
-
-## Heal the health component to a unique maximum health.
-##
-## Does nothing if [param amount] <= 0 or the health component isn't [member alive].
-func heal_to(amount: float, max_health: float) -> void:
+func heal(amount: int) -> void:
 	if amount <= 0.0:
 		return
 
-	if not alive:
-		revive(amount if amount < max_health else max_health)
+	var clamped_amount: int = mini(amount, max_health - health)
+
+	health += clamped_amount
+	health_changed.emit(clamped_amount)
+
+	if clamped_amount == health:
+		revived.emit(clamped_amount)
+	else:
+		healed.emit(clamped_amount)
+
+
+func kill(ignore_invulnerability: bool) -> void:
+	if invulnerable and not ignore_invulnerability:
 		return
 
-	if current_health == max_health:
+	var damage_taken: int = health
+	health = 0
+
+	if damage_taken != 0:
+		health_changed.emit(-damage_taken)
+		died.emit(damage_taken)
+
+
+func revive() -> void:
+	if health > 0.0:
 		return
 
-	if current_health + amount >= max_health:
-		var health_gained: float = max_health - current_health
-		current_health = max_health
-		healed.emit(health_gained, current_health)
-		return
+	health = max_health
 
-	current_health += amount
-	healed.emit(amount, current_health)
-
-
-## Kill the health component.
-func kill() -> void:
-	if not alive:
-		return
-
-	alive = false
-
-	var damage_taken: float = current_health
-	current_health = 0.0
-	died.emit(damage_taken)
-
-
-## Revive the health component with a certain amount of health.
-##
-## Does nothing if the health component is alive.
-func revive(revive_health: float) -> void:
-	if alive:
-		return
-
-	alive = true
-
-	current_health = revive_health
-	revived.emit(current_health)
+	health_changed.emit(max_health)
+	revived.emit()
