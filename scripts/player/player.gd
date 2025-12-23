@@ -204,7 +204,7 @@ func get_stance_as_text() -> String:
 @export var slide_enabled: bool = true
 
 ## How fast the player slides.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_impulse: float = 5.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_impulse: float = 3.0
 
 ## How long the player can slide for.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_duration: float = 0.75
@@ -258,10 +258,10 @@ func get_stance_as_text() -> String:
 @export var ledge_jump_enabled: bool = true
 
 ## How high the player ledge jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 10.0
 
 ## How far the player ledge jumps in the direction they're moving.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = -3.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 1.0
 
 ## How long after sliding off a ledge can the player ledge jump.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.125
@@ -327,10 +327,10 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_impulse: float = 9.0
 
 ## How far the player jumps forwards while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_forward_impulse: float = -4.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_forward_impulse: float = -4.5
 
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 9.0
 
 
 @export_group("Mantling", "mantle_")
