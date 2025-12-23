@@ -209,7 +209,7 @@ func get_stance_as_text() -> String:
 ## How quickly the player accelerates (to change direction of velocity) while sliding.
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var slide_acceleration: float = 16.0
 
-## How much friction is reduced while sliding.
+## How much friction is applied while sliding.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var slide_friction_multiplier: float = 0.15
 
 ## How fast the player must be moving to slide.
