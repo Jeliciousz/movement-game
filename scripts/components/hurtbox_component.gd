@@ -3,7 +3,7 @@ extends Area3D
 ## The hurtbox of an entity.
 
 ## Emitted when the hurtbox is hit.
-signal hit(damage_taken: int, new_health: int)
+signal hit(damage_taken: int)
 
 ## The health component of the same entity.
 @export var health_component: HealthComponent
@@ -32,7 +32,7 @@ func _physics_process(_delta: float) -> void:
 		last_hit_timestamps[index] += hitbox.damage_interval * damage_ticks
 
 		health_component.damage(damage_dealt, hitbox.ignore_invulnerability)
-		hit.emit(damage_dealt, health_component.health)
+		hit.emit(damage_dealt)
 
 		if health_component.health <= 0:
 			hitboxes.clear()
@@ -52,13 +52,13 @@ func _on_area_entered(area: Area3D) -> void:
 	if hitbox.kills:
 		var damage_dealt: int = health_component.health
 		health_component.kill(hitbox.ignore_invulnerability)
-		hit.emit(damage_dealt, 0.0)
+		hit.emit(damage_dealt)
 	elif hitbox.hit_once:
 		health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
-		hit.emit(hitbox.damage, health_component.health)
+		hit.emit(hitbox.damage)
 	else:
 		health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
-		hit.emit(hitbox.damage, health_component.health)
+		hit.emit(hitbox.damage)
 
 		hitboxes.push_back(hitbox)
 		last_hit_timestamps.push_back(Global.time)
