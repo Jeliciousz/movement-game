@@ -18,15 +18,13 @@ var invulnerability_timer: Timer = null
 
 
 func set_max_health(value: int) -> void:
-	if value <= 0.0:
-		push_error("max health can't be lower than or equal to 0.0")
+	var clamped_value: int = maxi(value, 1)
+
+	if clamped_value == max_health:
 		return
 
-	if value == max_health:
-		return
-
-	var change: int = value - max_health
-	max_health = value
+	var change: int = clamped_value - max_health
+	max_health = clamped_value
 
 	if health > max_health:
 		health = max_health
