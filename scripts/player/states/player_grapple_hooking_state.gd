@@ -111,7 +111,7 @@ func update_physics() -> void:
 	_player.velocity += -direction_from_grapple * maxf(0, (power - _player.velocity.dot(-direction_from_grapple)))
 
 	_player.add_air_resistence(_player.physics_air_resistence)
-	_player.add_gravity(_player.physics_gravity)
+	_player.add_gravity(_player.physics_gravity_multiplier)
 	_player.add_movement(_player.air_speed, _player.air_acceleration)
 
 

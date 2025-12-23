@@ -80,7 +80,7 @@ func update_physics(delta: float) -> void:
 	if Global.time - _player.wall_run_timestamp > _player.wall_run_duration:
 		_player.add_air_resistence(_player.physics_air_resistence)
 		_player.add_friction(_player.physics_friction * _player.wall_run_friction_multiplier, _player.wall_run_speed)
-		_player.add_gravity(_player.physics_gravity * _player.wall_run_gravity_multiplier)
+		_player.add_gravity(_player.physics_gravity_multiplier * _player.wall_run_gravity_multiplier)
 	else:
 		_player.add_air_resistence(_player.physics_air_resistence * _player.wall_run_air_resistence_multiplier)
 

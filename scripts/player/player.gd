@@ -46,8 +46,8 @@ func get_stance_as_text() -> String:
 ## The acceleration applied opposite and proportional to the player's velocity.
 @export_range(0.0, 1.0, 0.001, "suffix:m/s/s") var physics_air_resistence: float = 0.025
 
-## The acceleration applied towards the ground.
-@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var physics_gravity: float = 30.0
+## How much gravity is applied to the player.
+@export_range(0.0, 1.0, 0.05, "suffix:×") var physics_gravity_multiplier: float = 1.0
 
 
 @export_group("Coyote Time", "coyote_")
@@ -400,6 +400,9 @@ var mantle_velocity: Vector3 = Vector3.ZERO
 
 var active_grapple_hook_point: GrappleHookPoint = null
 
+var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gravity_vector")
+
 
 ##################################################
 # Child References
@@ -650,8 +653,8 @@ func add_friction(friction: float, top_speed: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, friction * friction_product * get_physics_process_delta_time())
 
 
-func add_gravity(gravity: float) -> void:
-	velocity += -up_direction * gravity * get_physics_process_delta_time()
+func add_gravity(gravity_multiplier: float) -> void:
+	velocity += gravity_vector * gravity * gravity_multiplier * get_physics_process_delta_time()
 
 
 func add_movement(top_speed: float, acceleration: float) -> void:
