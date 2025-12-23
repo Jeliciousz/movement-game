@@ -21,6 +21,10 @@ func _physics_process(_delta: float) -> void:
 
 	for index in hitboxes.size():
 		var hitbox: HitboxComponent = hitboxes[index]
+
+		if health_component.invulnerable and not hitbox.ignore_invulnerability:
+			continue
+
 		var time_delta: float = Global.time - last_hit_timestamps[index]
 
 		if time_delta < hitbox.damage_interval:
@@ -50,18 +54,25 @@ func _on_area_entered(area: Area3D) -> void:
 	var hitbox: HitboxComponent = area
 
 	if hitbox.kills:
-		var damage_dealt: int = health_component.health
-		health_component.kill(hitbox.ignore_invulnerability)
-		hit.emit(damage_dealt)
+		if not health_component.invulnerable or hitbox.ignore_invulnerability:
+			var damage_dealt: int = health_component.health
+			health_component.kill(hitbox.ignore_invulnerability)
+			hit.emit(damage_dealt)
 	elif hitbox.hit_once:
-		health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
-		hit.emit(hitbox.damage)
+		if not health_component.invulnerable or hitbox.ignore_invulnerability:
+			var damage_dealt: int = mini(hitbox.damage, health_component.health)
+			health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
+			hit.emit(damage_dealt)
 	else:
-		health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
-		hit.emit(hitbox.damage)
+		if not health_component.invulnerable or hitbox.ignore_invulnerability:
+			var damage_dealt: int = mini(hitbox.damage, health_component.health)
+			health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
+			hit.emit(damage_dealt)
+			last_hit_timestamps.push_back(Global.time)
+		else:
+			last_hit_timestamps.push_back(0.0)
 
 		hitboxes.push_back(hitbox)
-		last_hit_timestamps.push_back(Global.time)
 
 
 func _on_area_exited(area: Area3D) -> void:
