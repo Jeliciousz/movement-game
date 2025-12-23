@@ -10,7 +10,7 @@ var _label_speed: float = 0.0
 
 
 func _process(delta: float) -> void:
-	var horizontal_speed: float = _player.get_horizontal_speed() * 3.6 # Kilometers Per Hour
+	var horizontal_speed: float = _player.get_horizontal_velocity().length() * 3.6 # Kilometers Per Hour
 
 	_label_speed = lerpf(_label_speed, horizontal_speed, _spedometer_lerp_speed * delta)
 
@@ -18,4 +18,4 @@ func _process(delta: float) -> void:
 
 
 func reset_spedometer() -> void:
-	_label_speed = _player.get_horizontal_speed() * 3.6	# Kilometers Per Hour
+	_label_speed = _player.get_horizontal_velocity().length() * 3.6	# Kilometers Per Hour

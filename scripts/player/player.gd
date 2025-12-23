@@ -505,44 +505,14 @@ func get_looking_direction() -> Vector3:
 	return -head.global_basis.z
 
 
-## Returns the speed of the player.
-func get_speed() -> float:
-	return velocity.length()
-
-
-## Returns the normalized velocity of the player.
-func get_direction_of_velocity() -> Vector3:
-	return velocity.normalized()
-
-
 ## Returns the vertical velocity of the player.
 func get_vertical_velocity() -> Vector3:
-	return up_direction * velocity.dot(up_direction)
-
-
-## Returns the vertical speed of the player.
-func get_vertical_speed() -> float:
-	return absf(velocity.dot(up_direction))
-
-
-## Returns the normalized vertical velocity of the player.
-func get_direction_of_vertical_velocity() -> float:
-	return signf(velocity.dot(up_direction))
+	return Vector3(0.0, velocity.y, 0.0)
 
 
 ## Returns the horizontal velocity of the player.
 func get_horizontal_velocity() -> Vector3:
-	return velocity - get_vertical_velocity()
-
-
-## Returns the horizontal speed of the player.
-func get_horizontal_speed() -> float:
-	return get_horizontal_velocity().length()
-
-
-## Returns the normalized horizontal velocity of the player.
-func get_direction_of_horizontal_velocity() -> Vector3:
-	return get_horizontal_velocity().normalized()
+	return Vector3(velocity.x, 0.0, velocity.z)
 
 
 ## Returns the player's center of mass.
@@ -653,18 +623,14 @@ func _uncrouch() -> void:
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 
-func make_vertical_velocity_zero() -> void:
-	velocity = get_horizontal_velocity()
-
-
 func add_air_resistence(air_resistence: float) -> void:
-	var current_speed: float = get_speed()
+	var current_speed: float = velocity.length()
 
 	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * current_speed * get_physics_process_delta_time())
 
 
 func add_friction(friction: float, top_speed: float) -> void:
-	var friction_direction: Vector3 = -get_direction_of_velocity()
+	var friction_direction: Vector3 = -velocity.normalized()
 
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
@@ -771,9 +737,9 @@ func slide() -> void:
 	stance = Stances.SPRINTING
 	crouch()
 
-	make_vertical_velocity_zero()
+	velocity.y = 0.0
 
-	if get_speed() < slide_speed:
+	if velocity.length() < slide_speed:
 		velocity = wish_direction * slide_speed
 
 

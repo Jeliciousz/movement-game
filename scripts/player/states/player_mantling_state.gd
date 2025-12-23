@@ -22,8 +22,8 @@ func _state_physics_process(delta: float) -> void:
 		_player.position += _player.up_direction * _player.safe_margin
 		_player.velocity = _player.mantle_velocity * (1.0 - _player.mantle_speed_penalty)
 
-		if _player.get_direction_of_vertical_velocity() < 0.0:
-			_player.make_vertical_velocity_zero()
+		if _player.velocity.y < 0.0:
+			_player.velocity.y = 0.0
 
 		_player.velocity += _player.up_direction * _player.mantle_power
 

@@ -44,7 +44,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		if _player.ledge_jump_enabled and _player.ledge_jump_ready and _player.slide_timestamp == _player.airborne_timestamp and Global.time - _player.airborne_timestamp <= _player.ledge_jump_window:
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.ledge_jump_ready = false
-			_player.make_vertical_velocity_zero()
+			_player.velocity.y = 0.0
 			_player.ledge_jump()
 			state_machine.change_state_to(&"Jumping")
 			return
@@ -58,7 +58,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 		if _player.jump_enabled and _player.coyote_jump_enabled and _player.coyote_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.make_vertical_velocity_zero()
+			_player.velocity.y = 0.0
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
