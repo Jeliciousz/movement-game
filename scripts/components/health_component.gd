@@ -7,7 +7,7 @@ signal health_changed(change: int)
 signal healed(amount: int)
 signal damaged(amount: int)
 signal died(damage_taken: int)
-signal revived()
+signal revived(health: int)
 
 @export var max_health: int = 3 : set = set_max_health
 @export var invulnerable: bool = false : set = set_invulnerable
@@ -105,4 +105,4 @@ func revive() -> void:
 	health = max_health
 
 	health_changed.emit(max_health)
-	revived.emit()
+	revived.emit(health)
