@@ -321,10 +321,10 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_impulse: float = 9.0
 
 ## How far the player jumps forwards while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_forward_impulse: float = -3.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_forward_impulse: float = -4.0
 
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 8.0
 
 
 @export_group("Mantling", "mantle_")
