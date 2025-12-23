@@ -12,7 +12,7 @@ extends Camera3D
 ## How much the camera is tilted away from a wall the player is running on.
 @export var rotation_offset_wallrun_influence: float = 5.0
 ## How much the camera is tilted upwards when sliding.
-@export var rotation_offset_slide_pitch_influence: float = 2.0
+@export var rotation_offset_slide_pitch_influence: float = 1.0
 ## How much the camera is rolled when sliding sideways.
 @export var rotation_offset_slide_roll_influence: float = 1.0
 ## How quickly the camera goes back down after starting a slide.
