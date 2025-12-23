@@ -257,7 +257,13 @@ func get_stance_as_text() -> String:
 ## Can the player ledge jump?
 @export var ledge_jump_enabled: bool = true
 
-## How long after sliding off a ledge can the player still ledge jump.
+## How high the player ledge jumps.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 8.0
+
+## How far the player ledge jumps in the direction they're moving.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = -3.0
+
+## How long after sliding off a ledge can the player ledge jump.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.125
 
 
@@ -744,6 +750,13 @@ func jump() -> void:
 
 	velocity += up_direction * effective_impulse
 	velocity += wish_direction * effective_horizontal_impulse
+
+
+func ledge_jump() -> void:
+	attempt_uncrouch()
+
+	velocity += up_direction * ledge_jump_impulse
+	velocity += wish_direction * ledge_jump_horizontal_impulse
 
 
 func air_jump() -> void:
