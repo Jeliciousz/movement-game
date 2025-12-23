@@ -69,6 +69,9 @@ func damage(amount: int) -> void:
 
 
 func heal(amount: int) -> void:
+	if health == max_health:
+		return
+
 	if amount <= 0:
 		return
 
