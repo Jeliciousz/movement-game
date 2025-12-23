@@ -31,7 +31,7 @@ func _physics_process(_delta: float) -> void:
 			continue
 
 		var damage_ticks: int = floor(time_delta / hitbox.damage_interval)
-		var damage_dealt: int = hitbox.damage * damage_ticks
+		var damage_dealt: int = mini(hitbox.damage * damage_ticks, health_component.health)
 
 		last_hit_timestamps[index] += hitbox.damage_interval * damage_ticks
 
