@@ -203,23 +203,20 @@ func get_stance_as_text() -> String:
 ## Can the player slide?
 @export var slide_enabled: bool = true
 
-## How fast the player slides.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_impulse: float = 3.0
-
-## How long the player can slide for.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var slide_duration: float = 0.75
+## How fast the player slides at the slowest.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_speed: float = 12.0
 
 ## How quickly the player accelerates (to change direction of velocity) while sliding.
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var slide_acceleration: float = 16.0
 
 ## How much friction is reduced while sliding.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var slide_friction_multiplier: float = 0.1
+@export_range(0.0, 1.0, 0.05, "suffix:×") var slide_friction_multiplier: float = 0.15
 
 ## How fast the player must be moving to slide.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_speed: float = 6.5
 
 ## How fast the player must be to stay sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 5.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 9.0
 
 ## How long the player must wait after sliding until they can slide again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_cooldown: float = 0.25
@@ -261,7 +258,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 10.0
 
 ## How far the player ledge jumps in the direction they're moving.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 1.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.0
 
 ## How long after sliding off a ledge can the player ledge jump.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.125
@@ -775,7 +772,9 @@ func slide() -> void:
 	crouch()
 
 	make_vertical_velocity_zero()
-	velocity += wish_direction * slide_start_impulse
+
+	if get_speed() < slide_speed:
+		velocity = wish_direction * slide_speed
 
 
 func slide_jump() -> void:

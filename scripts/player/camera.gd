@@ -12,7 +12,7 @@ extends Camera3D
 ## How much the camera is tilted away from a wall the player is running on.
 @export var rotation_offset_wallrun_influence: float = 5.0
 ## How much the camera is tilted upwards when sliding.
-@export var rotation_offset_slide_pitch_influence: float = 5.0
+@export var rotation_offset_slide_pitch_influence: float = 2.0
 ## How much the camera is rolled when sliding sideways.
 @export var rotation_offset_slide_roll_influence: float = 1.0
 ## How quickly the camera goes back down after starting a slide.
@@ -32,8 +32,7 @@ func _process(delta: float) -> void:
 		&"WallRunning":
 			target_rotation_offset.z -= deg_to_rad(rotation_offset_wallrun_influence) * _player.wall_run_normal.dot(_player.basis.x)
 		&"Sliding":
-			var slide_time: float = float(Global.time - _player.slide_timestamp) / float(_player.slide_duration)
-			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_slide_pitch_influence) * maxf(1.0 - slide_time * rotation_offset_slide_return_speed, 0.0), 0.0, deg_to_rad(rotation_offset_slide_roll_influence) * _head_velocity.dot(_player.basis.x))
+			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_slide_pitch_influence) * (_head_velocity.dot(-_player.basis.z) - _player.slide_stop_speed), 0.0, deg_to_rad(rotation_offset_slide_roll_influence) * _head_velocity.dot(_player.basis.x))
 		&"LedgeGrabbing":
 			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_ledge_grab_influence), 0.0, 0.0)
 
