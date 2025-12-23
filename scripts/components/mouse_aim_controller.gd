@@ -19,11 +19,14 @@ const RADIANS_PER_DOT: float = deg_to_rad(0.1)
 ## Camera pitch clamping.
 @export_subgroup("Clamping")
 
+## Whether the camera pitch will be clamped
+@export var clamping_enabled: bool = true
+
 ## Maximum camera pitch in radians.
-@export_range(0, 90, 0.5, "radians_as_degrees") var max_pitch: float = deg_to_rad(89.9)
+@export_range(0, 90, 0.5, "radians_as_degrees") var max_pitch: float = deg_to_rad(90)
 
 ## Minimum camera pitch in radians.
-@export_range(-90, 0, 0.5, "radians_as_degrees") var min_pitch: float = deg_to_rad(-89.9)
+@export_range(-90, 0, 0.5, "radians_as_degrees") var min_pitch: float = deg_to_rad(-90)
 
 ## Node references.
 @export_group("Nodes")
@@ -53,7 +56,9 @@ func aim(event: InputEventMouseMotion) -> void:
 
 	add_yaw(motion.x)
 	add_pitch(motion.y)
-	clamp_pitch()
+
+	if clamping_enabled:
+		clamp_pitch()
 
 
 ## Rotates the body around the local Y axis by a given amount (in radians) to achieve yaw.
