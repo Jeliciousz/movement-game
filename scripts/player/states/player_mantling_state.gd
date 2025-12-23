@@ -15,8 +15,6 @@ func _state_enter() -> void:
 
 
 func _state_physics_process(delta: float) -> void:
-	update_stance()
-
 	_player.position = _player.position.move_toward(mantle_position, delta * _player.mantle_speed)
 
 	if _player.position.is_equal_approx(mantle_position):
@@ -27,13 +25,3 @@ func _state_physics_process(delta: float) -> void:
 
 		state_machine.change_state_to(&"Airborne")
 		return
-
-
-func update_stance() -> void:
-	match _player.stance:
-		Player.Stances.STANDING:
-			_player.stance = Player.Stances.SPRINTING
-
-		Player.Stances.CROUCHING:
-			if _player.attempt_uncrouch():
-				_player.stance = Player.Stances.SPRINTING
