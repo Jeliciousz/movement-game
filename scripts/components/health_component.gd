@@ -47,11 +47,11 @@ func grant_temporary_invulnerability(seconds: float) -> void:
 	invulnerability_timer.start(seconds)
 
 
-func damage(amount: int) -> void:
-	if health <= 0:
+func damage(amount: int, ignore_invulnerability: bool) -> void:
+	if invulnerable and not ignore_invulnerability:
 		return
 
-	if invulnerable:
+	if health <= 0:
 		return
 
 	if amount <= 0:
