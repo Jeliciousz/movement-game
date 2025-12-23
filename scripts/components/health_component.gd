@@ -50,13 +50,13 @@ func grant_temporary_invulnerability(seconds: float) -> void:
 
 
 func damage(amount: int) -> void:
-	if health <= 0.0:
+	if health <= 0:
 		return
 
 	if invulnerable:
 		return
 
-	if amount <= 0.0:
+	if amount <= 0:
 		return
 
 	var clamped_damage: int = mini(amount, health)
@@ -64,14 +64,14 @@ func damage(amount: int) -> void:
 	health -= clamped_damage
 	health_changed.emit(-clamped_damage)
 
-	if health == 0.0:
+	if health == 0:
 		died.emit(clamped_damage)
 	else:
 		damaged.emit(clamped_damage)
 
 
 func heal(amount: int) -> void:
-	if amount <= 0.0:
+	if amount <= 0:
 		return
 
 	var clamped_amount: int = mini(amount, max_health - health)
@@ -98,7 +98,7 @@ func kill(ignore_invulnerability: bool) -> void:
 
 
 func revive() -> void:
-	if health > 0.0:
+	if health > 0:
 		return
 
 	health = max_health
