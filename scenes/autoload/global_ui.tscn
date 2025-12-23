@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://byrobby5lo0r7"]
+[gd_scene format=3 uid="uid://byrobby5lo0r7"]
 
 [ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/hud/fps_counter.gd" id="1_lutsk"]
 
-[node name="GlobalUI" type="Control"]
+[node name="GlobalUI" type="Control" unique_id=1961702217]
 z_index = 99
 layout_mode = 3
 anchors_preset = 15
@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="FPSDisplay" type="Label" parent="."]
+[node name="FPSDisplay" type="Label" parent="." unique_id=1763043925]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cqkeqglbsx1tw"]
+[gd_scene format=3 uid="uid://cqkeqglbsx1tw"]
 
 [ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/grapple_hook_point.gd" id="1_v2vg0"]
 [ext_resource type="Texture2D" uid="uid://c7yqxl0eho0vt" path="res://assets/textures/ui/grapple_hook_point_targeted.png" id="2_wc45q"]
@@ -11,7 +11,7 @@ radius = 3.0
 radius = 0.25
 height = 0.5
 
-[node name="GrappleHookPoint" type="Area3D"]
+[node name="GrappleHookPoint" type="Area3D" unique_id=782577365]
 process_priority = -3
 top_level = true
 collision_layer = 256
@@ -21,14 +21,13 @@ monitoring = false
 monitorable = false
 script = ExtResource("1_v2vg0")
 
-[node name="CollisionShape" type="CollisionShape3D" parent="."]
+[node name="CollisionShape" type="CollisionShape3D" parent="." unique_id=312264771]
 shape = SubResource("SphereShape3D_2xim0")
 
-[node name="MeshInstance" type="MeshInstance3D" parent="."]
+[node name="MeshInstance" type="MeshInstance3D" parent="." unique_id=424835199]
 mesh = SubResource("SphereMesh_2xim0")
-skeleton = NodePath("")
 
-[node name="TargetedSprite" type="Sprite3D" parent="."]
+[node name="TargetedSprite" type="Sprite3D" parent="." unique_id=1934061080]
 visible = false
 layers = 8
 cast_shadow = 0
@@ -39,7 +38,7 @@ no_depth_test = true
 fixed_size = true
 texture = ExtResource("2_wc45q")
 
-[node name="InvalidTargetSprite" type="Sprite3D" parent="."]
+[node name="InvalidTargetSprite" type="Sprite3D" parent="." unique_id=1050648145]
 visible = false
 layers = 8
 cast_shadow = 0

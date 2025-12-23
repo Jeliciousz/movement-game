@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqnywlxwu6t71"]
+[gd_scene format=3 uid="uid://bqnywlxwu6t71"]
 
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="1_6eu43"]
 [ext_resource type="Environment" uid="uid://djf1eie3ckyjs" path="res://assets/other/indoor_environment.tres" id="1_myrex"]
@@ -6,30 +6,30 @@
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="4_5cda3"]
 [ext_resource type="PackedScene" uid="uid://6ph2i46tp68q" path="res://scenes/dodgeball.tscn" id="5_myrex"]
 
-[node name="Arena" type="Node3D"]
+[node name="Arena" type="Node3D" unique_id=297132604]
 
-[node name="Environment" type="WorldEnvironment" parent="."]
+[node name="Environment" type="WorldEnvironment" parent="." unique_id=1274241344]
 environment = ExtResource("1_myrex")
 
-[node name="Room" type="CSGCombiner3D" parent="."]
+[node name="Room" type="CSGCombiner3D" parent="." unique_id=1151790220]
 use_collision = true
 collision_mask = 0
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Room"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Room" unique_id=573861746]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
 flip_faces = true
 size = Vector3(40, 12, 40)
 material = ExtResource("1_6eu43")
 
-[node name="Player" parent="." instance=ExtResource("3_myrex")]
+[node name="Player" parent="." unique_id=562360367 instance=ExtResource("3_myrex")]
 
-[node name="PlayerSpawnPoint" parent="." instance=ExtResource("4_5cda3")]
+[node name="PlayerSpawnPoint" parent="." unique_id=1571995852 instance=ExtResource("4_5cda3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1931060699]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 0)
 light_energy = 10.0
 omni_range = 4096.0
 
-[node name="Dodgeball" parent="." instance=ExtResource("5_myrex")]
+[node name="Dodgeball" parent="." unique_id=1386815069 instance=ExtResource("5_myrex")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2.25)

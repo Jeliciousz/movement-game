@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5c1npap2fqt8"]
+[gd_scene format=3 uid="uid://c5c1npap2fqt8"]
 
 [ext_resource type="Script" uid="uid://nurkds4wunvy" path="res://scripts/components/pickup_receiver_component.gd" id="1_vjjay"]
 
-[node name="PickupReceiverComponent" type="Area3D"]
+[node name="PickupReceiverComponent" type="Area3D" unique_id=1821804116]
 collision_layer = 0
 collision_mask = 0
 input_ray_pickable = false

@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bw0gfnxekrreo"]
+[gd_scene format=3 uid="uid://bw0gfnxekrreo"]
 
 [ext_resource type="Script" uid="uid://dmowi7ydfoty6" path="res://scripts/components/hitbox_component.gd" id="1_okvui"]
 
-[node name="HitboxComponent" type="Area3D"]
+[node name="HitboxComponent" type="Area3D" unique_id=647635840]
 collision_layer = 0
 collision_mask = 0
 input_ray_pickable = false
