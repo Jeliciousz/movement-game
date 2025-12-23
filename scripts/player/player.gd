@@ -204,7 +204,7 @@ func get_stance_as_text() -> String:
 @export var slide_enabled: bool = true
 
 ## How fast the player slides at the slowest.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_speed: float = 12.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_speed: float = 10.0
 
 ## How quickly the player accelerates (to change direction of velocity) while sliding.
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var slide_acceleration: float = 16.0
@@ -216,7 +216,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_speed: float = 6.5
 
 ## How fast the player must be to stay sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 7.5
 
 ## How long the player must wait after sliding until they can slide again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_cooldown: float = 0.25
@@ -258,7 +258,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 10.0
 
 ## How far the player ledge jumps in the direction they're moving.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.5
 
 ## How long after sliding off a ledge can the player ledge jump.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.125
