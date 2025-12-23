@@ -31,7 +31,7 @@ func _physics_process(_delta: float) -> void:
 
 		last_hit_timestamps[index] += hitbox.damage_interval * damage_ticks
 
-		health_component.damage(damage_dealt)
+		health_component.damage(damage_dealt, hitbox.ignore_invulnerability)
 		hit.emit(damage_dealt, health_component.health)
 
 		if health_component.health <= 0:
@@ -51,13 +51,13 @@ func _on_area_entered(area: Area3D) -> void:
 
 	if hitbox.kills:
 		var damage_dealt: int = health_component.health
-		health_component.kill(true)
+		health_component.kill(hitbox.ignore_invulnerability)
 		hit.emit(damage_dealt, 0.0)
 	elif hitbox.hit_once:
-		health_component.damage(hitbox.damage)
+		health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
 		hit.emit(hitbox.damage, health_component.health)
 	else:
-		health_component.damage(hitbox.damage)
+		health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
 		hit.emit(hitbox.damage, health_component.health)
 
 		hitboxes.push_back(hitbox)

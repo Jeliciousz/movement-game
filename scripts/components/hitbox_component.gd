@@ -4,6 +4,8 @@ extends Area3D
 
 ## Should the hitbox kill entities immediately.
 @export var kills: bool = false
+## Should the hitbox ignore invulnerability.
+@export var ignore_invulnerability: bool = false
 ## Should the hitbox only hit once when it overlaps a hurtbox.
 @export var hit_once: bool = true
 ## How much damage the hitbox deals.
