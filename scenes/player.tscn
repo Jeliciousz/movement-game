@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://doauiwrabhqsc"]
+[gd_scene format=3 uid="uid://doauiwrabhqsc"]
 
 [ext_resource type="Script" uid="uid://dx3c20w0lqwuq" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="AudioStream" uid="uid://dwj3f5bj2tsfk" path="res://assets/sounds/player/footsteps/tile1.wav" id="2_60mlk"]
@@ -184,7 +184,7 @@ random_volume_offset_db = 1.5
 streams_count = 1
 stream_0/stream = ExtResource("21_31cv2")
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=1448995669]
 top_level = true
 collision_layer = 2
 collision_mask = 5
@@ -195,11 +195,11 @@ floor_block_on_wall = false
 floor_snap_length = 0.5
 script = ExtResource("1_3vyb7")
 
-[node name="CollisionShape" type="CollisionShape3D" parent="."]
+[node name="CollisionShape" type="CollisionShape3D" parent="." unique_id=747010979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_l71n6")
 
-[node name="MeshInstance" type="MeshInstance3D" parent="."]
+[node name="MeshInstance" type="MeshInstance3D" parent="." unique_id=1141271557]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 layers = 4
 cast_shadow = 3
@@ -207,96 +207,96 @@ gi_mode = 0
 mesh = SubResource("CapsuleMesh_y4r1p")
 skeleton = NodePath("../..")
 
-[node name="MantleFootRaycast" type="RayCast3D" parent="."]
+[node name="MantleFootRaycast" type="RayCast3D" parent="." unique_id=1203838202]
 target_position = Vector3(0, 0, -0.65)
 
-[node name="MantleHandRaycast" type="RayCast3D" parent="."]
+[node name="MantleHandRaycast" type="RayCast3D" parent="." unique_id=808908967]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 target_position = Vector3(0, 0, -0.65)
 
-[node name="MantleLedgeRaycast" type="RayCast3D" parent="."]
+[node name="MantleLedgeRaycast" type="RayCast3D" parent="." unique_id=368020780]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -0.65)
 target_position = Vector3(0, -2.5, 0)
 
-[node name="MantleHeadRaycast" type="RayCast3D" parent="."]
+[node name="MantleHeadRaycast" type="RayCast3D" parent="." unique_id=1797347773]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 target_position = Vector3(0, 2.5, 0)
 
-[node name="WallrunFloorRaycast" type="RayCast3D" parent="."]
+[node name="WallrunFloorRaycast" type="RayCast3D" parent="." unique_id=1175856795]
 target_position = Vector3(0, -0.4, 0)
 
-[node name="WallrunFootRaycast" type="RayCast3D" parent="."]
+[node name="WallrunFootRaycast" type="RayCast3D" parent="." unique_id=991719123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 target_position = Vector3(0.65, 0, 0)
 
-[node name="WallrunHandRaycast" type="RayCast3D" parent="."]
+[node name="WallrunHandRaycast" type="RayCast3D" parent="." unique_id=1331587608]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 target_position = Vector3(0.65, 0, 0)
 
-[node name="GroundedUncrouchArea" type="Area3D" parent="."]
+[node name="GroundedUncrouchArea" type="Area3D" parent="." unique_id=648763814]
 collision_layer = 2
 collision_mask = 5
 input_ray_pickable = false
 monitorable = false
 
-[node name="CollisionShape" type="CollisionShape3D" parent="GroundedUncrouchArea"]
+[node name="CollisionShape" type="CollisionShape3D" parent="GroundedUncrouchArea" unique_id=837776996]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_ke2ow")
 
-[node name="AirborneUncrouchArea" type="Area3D" parent="."]
+[node name="AirborneUncrouchArea" type="Area3D" parent="." unique_id=768080490]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
 collision_layer = 2
 collision_mask = 5
 input_ray_pickable = false
 monitorable = false
 
-[node name="CollisionShape" type="CollisionShape3D" parent="AirborneUncrouchArea"]
+[node name="CollisionShape" type="CollisionShape3D" parent="AirborneUncrouchArea" unique_id=1023656027]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_ke2ow")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=2130024275 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("3_qfm1y")
 initial_state = NodePath("Spawning")
 
-[node name="Spawning" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="Spawning" type="Node" parent="StateMachine" unique_id=1765024397 node_paths=PackedStringArray("_player")]
 script = ExtResource("4_fulsm")
 _player = NodePath("../..")
 
-[node name="Grounded" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="Grounded" type="Node" parent="StateMachine" unique_id=1867071282 node_paths=PackedStringArray("_player")]
 script = ExtResource("5_fulsm")
 _player = NodePath("../..")
 
-[node name="Airborne" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="Airborne" type="Node" parent="StateMachine" unique_id=1194320566 node_paths=PackedStringArray("_player")]
 script = ExtResource("6_4r5pv")
 _player = NodePath("../..")
 
-[node name="Jumping" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="Jumping" type="Node" parent="StateMachine" unique_id=1709873267 node_paths=PackedStringArray("_player")]
 script = ExtResource("7_60mlk")
 _player = NodePath("../..")
 
-[node name="Sliding" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="Sliding" type="Node" parent="StateMachine" unique_id=799049640 node_paths=PackedStringArray("_player")]
 script = ExtResource("8_i4ail")
 _player = NodePath("../..")
 
-[node name="WallRunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="WallRunning" type="Node" parent="StateMachine" unique_id=349448390 node_paths=PackedStringArray("_player")]
 script = ExtResource("9_a38lo")
 _player = NodePath("../..")
 
-[node name="GrappleHooking" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="GrappleHooking" type="Node" parent="StateMachine" unique_id=1292952420 node_paths=PackedStringArray("_player")]
 script = ExtResource("10_4ni07")
 _player = NodePath("../..")
 metadata/_custom_type_script = "uid://c11sddh62rt7v"
 
-[node name="Mantling" type="Node" parent="StateMachine" node_paths=PackedStringArray("_player")]
+[node name="Mantling" type="Node" parent="StateMachine" unique_id=1958390138 node_paths=PackedStringArray("_player")]
 script = ExtResource("12_ke2ow")
 _player = NodePath("../..")
 metadata/_custom_type_script = "uid://c11sddh62rt7v"
 
-[node name="Head" type="Node3D" parent="."]
+[node name="Head" type="Node3D" parent="." unique_id=1641763773]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 script = ExtResource("11_wqfne")
 
-[node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("_player")]
+[node name="Camera" type="Camera3D" parent="Head" unique_id=303542951 node_paths=PackedStringArray("_player")]
 physics_interpolation_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 top_level = true
@@ -307,14 +307,14 @@ near = 0.005
 script = ExtResource("2_l71n6")
 _player = NodePath("../..")
 
-[node name="GrappleHookRaycast" type="RayCast3D" parent="Head/Camera"]
+[node name="GrappleHookRaycast" type="RayCast3D" parent="Head/Camera" unique_id=130836546]
 target_position = Vector3(0, 0, -200)
 collision_mask = 257
 hit_from_inside = true
 hit_back_faces = false
 collide_with_areas = true
 
-[node name="GrappleHookLine" type="Node3D" parent="Head/Camera/GrappleHookRaycast"]
+[node name="GrappleHookLine" type="Node3D" parent="Head/Camera/GrappleHookRaycast" unique_id=2003415409]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 top_level = true
 visible = false
@@ -323,32 +323,31 @@ material = SubResource("ShaderMaterial_pf23h")
 points = PackedVector3Array(0, 0, 0, 0, 0, 0)
 metadata/_custom_type_script = "uid://dn58b3xgqy5be"
 
-[node name="Hand" type="Node3D" parent="Head/Camera"]
+[node name="Hand" type="Node3D" parent="Head/Camera" unique_id=601641731]
 
-[node name="MouseAimController" type="Node" parent="." node_paths=PackedStringArray("_body", "_head")]
+[node name="MouseAimController" type="Node" parent="." unique_id=1150320394 node_paths=PackedStringArray("_body", "_head")]
 script = ExtResource("2_ke2ow")
 _body = NodePath("..")
 _head = NodePath("../Head")
 
-[node name="HealthComponent" parent="." instance=ExtResource("21_pf23h")]
+[node name="HealthComponent" parent="." unique_id=823374211 instance=ExtResource("21_pf23h")]
 
-[node name="HurtboxComponent" parent="." node_paths=PackedStringArray("health_component") instance=ExtResource("15_pf23h")]
+[node name="HurtboxComponent" parent="." unique_id=759089063 node_paths=PackedStringArray("health_component") instance=ExtResource("15_pf23h")]
 collision_mask = 1
 health_component = NodePath("../HealthComponent")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent" unique_id=1566733346]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_dt7fs")
 
-[node name="PickupReceiverComponent" parent="." instance=ExtResource("16_wqfne")]
+[node name="PickupReceiverComponent" parent="." unique_id=1409990730 instance=ExtResource("16_wqfne")]
 collision_mask = 32
-collection_mask = 1
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupReceiverComponent"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PickupReceiverComponent" unique_id=878586002]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_pf23h")
 
-[node name="FootstepAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="FootstepAudio" type="AudioStreamPlayer3D" parent="." unique_id=1040157337]
 stream = SubResource("AudioStreamRandomizer_l71n6")
 attenuation_model = 3
 volume_db = -12.0
@@ -356,14 +355,14 @@ max_distance = 10.0
 max_polyphony = 2
 attenuation_filter_cutoff_hz = 20500.0
 
-[node name="SlideAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="SlideAudio" type="AudioStreamPlayer3D" parent="." unique_id=1956210633]
 stream = SubResource("AudioStreamRandomizer_pf23h")
 attenuation_model = 3
 volume_db = -12.0
 max_distance = 10.0
 attenuation_filter_cutoff_hz = 20500.0
 
-[node name="GrappleHookFireAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="GrappleHookFireAudio" type="AudioStreamPlayer3D" parent="." unique_id=2002442512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 stream = ExtResource("12_qfm1y")
 attenuation_model = 3
@@ -371,11 +370,11 @@ volume_db = -12.0
 max_distance = 30.0
 attenuation_filter_cutoff_hz = 20500.0
 
-[node name="GrappleHookIndicatorAudio" type="AudioStreamPlayer" parent="."]
+[node name="GrappleHookIndicatorAudio" type="AudioStreamPlayer" parent="." unique_id=1205374769]
 stream = ExtResource("11_a8ls1")
 volume_db = -12.0
 
-[node name="PlayerHUD" type="Control" parent="."]
+[node name="PlayerHUD" type="Control" parent="." unique_id=1516916]
 z_index = 1
 layout_mode = 3
 anchors_preset = 15
@@ -385,7 +384,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Crosshair" type="TextureRect" parent="PlayerHUD"]
+[node name="Crosshair" type="TextureRect" parent="PlayerHUD" unique_id=625573806]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -402,7 +401,7 @@ mouse_filter = 2
 texture = ExtResource("25_ke2ow")
 expand_mode = 1
 
-[node name="SpedometerPanel" type="PanelContainer" parent="PlayerHUD"]
+[node name="SpedometerPanel" type="PanelContainer" parent="PlayerHUD" unique_id=1279491525]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -418,13 +417,13 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("22_ke2ow")
 
-[node name="Spedometer" type="Label" parent="PlayerHUD/SpedometerPanel" node_paths=PackedStringArray("_player")]
+[node name="Spedometer" type="Label" parent="PlayerHUD/SpedometerPanel" unique_id=634438543 node_paths=PackedStringArray("_player")]
 layout_mode = 2
 horizontal_alignment = 1
 script = ExtResource("8_smehm")
 _player = NodePath("../../..")
 
-[node name="DebugInfo" type="Label" parent="PlayerHUD" node_paths=PackedStringArray("_player")]
+[node name="DebugInfo" type="Label" parent="PlayerHUD" unique_id=2032863362 node_paths=PackedStringArray("_player")]
 process_mode = 4
 visible = false
 layout_mode = 0
