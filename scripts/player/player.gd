@@ -234,7 +234,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_cancel_delay: float = 0.2
 
 ## How much the player is slowed when they slide cancel.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_cancel_force: float = 5.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_cancel_impulse: float = 5.0
 
 
 @export_subgroup("Slide-Jumping", "slide_jump_")
@@ -243,10 +243,10 @@ func get_stance_as_text() -> String:
 @export var slide_jump_enabled: bool = true
 
 ## How high the player jumps while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_force: float = 18.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_impulse: float = 18.0
 
 ## How far the player jumps in the direction they're moving while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_horizontal_force: float = -7.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_horizontal_impulse: float = -7.0
 
 ## How long the player must wait after starting a slide until they can slide jump.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_jump_delay: float = 0.25
@@ -768,8 +768,8 @@ func slide() -> void:
 func slide_jump() -> void:
 	attempt_uncrouch()
 
-	velocity += up_direction * slide_jump_force
-	velocity += velocity.normalized() * slide_jump_horizontal_force
+	velocity += up_direction * slide_jump_impulse
+	velocity += velocity.normalized() * slide_jump_horizontal_impulse
 
 
 func add_wallrun_movement(run_direction: Vector3) -> void:
