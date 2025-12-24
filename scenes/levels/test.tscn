@@ -326,11 +326,11 @@ skeleton = NodePath("../CSG")
 mesh = SubResource("ArrayMesh_kw13u")
 
 [node name="CSG" type="Node3D" parent="." unique_id=707197959]
+process_mode = 4
 visible = false
 
 [node name="Room" type="CSGCombiner3D" parent="CSG" unique_id=1435216885]
 visible = false
-use_collision = true
 collision_mask = 0
 
 [node name="1" type="CSGBox3D" parent="CSG/Room" unique_id=1149546433]
