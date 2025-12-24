@@ -237,6 +237,9 @@ func mantle_checks() -> bool:
 	if _player.get_forward_direction().dot(-normal) < -0.1:
 		return false
 
+	if _player.wish_direction.angle_to(-normal) > deg_to_rad(45.0):
+		return false
+
 	_player.mantle_foot_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
 	_player.mantle_foot_raycast.force_raycast_update()
 
