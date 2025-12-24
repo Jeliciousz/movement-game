@@ -550,7 +550,6 @@ func stair_step_down() -> bool:
 
 	position.y += collision.get_travel().y
 	apply_floor_snap()
-	state_machine.change_state_to(&"Grounded")
 	return true
 
 

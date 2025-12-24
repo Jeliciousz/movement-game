@@ -10,6 +10,7 @@ var player_velocity_before_move: Vector3 = Vector3.ZERO
 
 func _state_enter(last_state_name: StringName) -> void:
 	if last_state_name == &"Grounded" and _player.stair_step_down():
+		state_machine.change_state_to(&"Grounded")
 		return
 
 	_player.coyote_engine_timestamp = Time.get_ticks_msec()
