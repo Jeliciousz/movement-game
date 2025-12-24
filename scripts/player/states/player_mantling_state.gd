@@ -20,5 +20,6 @@ func _state_physics_process(delta: float) -> void:
 
 	if _player.position.is_equal_approx(mantle_position):
 		_player.velocity.y = 0.0
+		_player.apply_floor_snap()
 		state_machine.change_state_to(&"Grounded")
 		return
