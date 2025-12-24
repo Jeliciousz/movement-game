@@ -593,7 +593,7 @@ func stair_step_up(motion: Vector3) -> void:
 		step_up_travel = step_up
 
 	# Move ahead a small amount to properly catch the step
-	collision = move_and_collide(Vector3(motion.x, 0.0, motion.y).normalized() * 0.05)
+	collision = move_and_collide(motion * 0.05)
 
 	# Project remaining along wall normal (if any)
 	# So you can walk into wall and up a step
