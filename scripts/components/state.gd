@@ -9,7 +9,7 @@ var state_machine: StateMachine
 
 
 ## Called when the [StateMachine] changes to this state.
-func _state_enter() -> void:
+func _state_enter(_last_state_name: StringName) -> void:
 	pass
 
 

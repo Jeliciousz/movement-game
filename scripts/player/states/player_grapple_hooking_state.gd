@@ -8,7 +8,7 @@ extends State
 var player_velocity_before_move: Vector3 = Vector3.ZERO
 
 
-func _state_enter() -> void:
+func _state_enter(_last_state_name: StringName) -> void:
 	_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false

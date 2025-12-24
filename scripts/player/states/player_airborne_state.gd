@@ -8,7 +8,7 @@ extends State
 var player_velocity_before_move: Vector3 = Vector3.ZERO
 
 
-func _state_enter() -> void:
+func _state_enter(last_state_name: StringName) -> void:
 	_player.coyote_engine_timestamp = Time.get_ticks_msec()
 	_player.airborne_timestamp = Global.time
 	player_velocity_before_move = Vector3.ZERO

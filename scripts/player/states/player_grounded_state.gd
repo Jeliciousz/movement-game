@@ -6,7 +6,7 @@ extends State
 @export var _player: Player
 
 
-func _state_enter() -> void:
+func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_jump_ready = true
 	_player.coyote_slide_ready = true
 	_player.coyote_wall_jump_ready = false

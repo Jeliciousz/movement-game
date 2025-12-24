@@ -8,7 +8,7 @@ extends State
 var mantle_position: Vector3 = Vector3.ZERO
 
 
-func _state_enter() -> void:
+func _state_enter(_last_state_name: StringName) -> void:
 	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 	_player.mantle_ledge_raycast.position = Vector3(0.0, 2.5, 0.0) + _player.basis.inverse() * -normal * 0.65
 	_player.mantle_ledge_raycast.force_raycast_update()

@@ -17,7 +17,7 @@ func _ready() -> void:
 		return
 
 	_state.state_machine = self
-	_state._state_enter()
+	_state._state_enter("")
 
 
 func _process(delta: float) -> void:
@@ -71,6 +71,6 @@ func change_state_to(state: StringName) -> void:
 
 	_state = get_node(NodePath(state))
 	_state.state_machine = self
-	_state._state_enter()
+	_state._state_enter(last_state_name)
 
 	state_changed.emit(last_state_name, _state.name)

@@ -8,7 +8,7 @@ extends State
 var player_velocity_before_move: Vector3 = Vector3.ZERO
 
 
-func _state_enter() -> void:
+func _state_enter(_last_state_name: StringName) -> void:
 	_player.wall_run_timestamp = Global.time
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false
