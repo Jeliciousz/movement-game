@@ -584,7 +584,13 @@ func stair_step_up(motion: Vector3) -> void:
 
 	# Then move up a step (or into a ceiling)
 	var step_up: Vector3 = step_up_max * Vector3.UP
-	move_and_collide(step_up)
+	collision = move_and_collide(step_up)
+
+	var step_up_travel: Vector3
+	if collision:
+		step_up_travel = collision.get_travel()
+	else:
+		step_up_travel = step_up
 
 	# Move ahead a small amount to properly catch the step
 	collision = move_and_collide(motion.normalized() * 0.05)
@@ -601,7 +607,7 @@ func stair_step_up(motion: Vector3) -> void:
 		move_and_collide(projected_vector)
 
 	# Move down onto step
-	collision = move_and_collide(step_up_max * Vector3.DOWN)
+	collision = move_and_collide(-step_up_travel)
 
 	if collision:
 		# Check floor normal for un-walkable slope
