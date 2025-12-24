@@ -131,10 +131,10 @@ func wallrun_checks() -> bool:
 		if _player.wall_run_direction.dot(Vector3(_player.velocity.x, 0.0, _player.velocity.z).normalized()) < 0.0:
 			_player.wall_run_direction *= -1.0
 
-		var horizontal_colliding_speed: float = Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
+		var horizontal_speed_before_move: float = Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
 
-		_player.velocity.x = _player.wall_run_direction.x * horizontal_colliding_speed
+		_player.velocity.x = _player.wall_run_direction.x * horizontal_speed_before_move
 		_player.velocity.y = player_velocity_before_move.y
-		_player.velocity.z = _player.wall_run_direction.z * horizontal_colliding_speed
+		_player.velocity.z = _player.wall_run_direction.z * horizontal_speed_before_move
 
 	return true

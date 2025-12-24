@@ -196,12 +196,12 @@ func wallrun_checks() -> bool:
 
 	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
-	var horizontal_velocity: Vector3 = Vector3(player_velocity_before_move.x, 0.0, player_velocity_before_move.z)
+	var horizontal_velocity_before_move: Vector3 = Vector3(player_velocity_before_move.x, 0.0, player_velocity_before_move.z)
 
 	if run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
 		run_direction *= -1.0
 
-	if horizontal_velocity.length() < _player.wall_run_start_speed:
+	if horizontal_velocity_before_move.length() < _player.wall_run_start_speed:
 		return false
 
 	_player.wallrun_floor_raycast.force_raycast_update()
