@@ -616,6 +616,8 @@ func stair_step_up(motion: Vector3) -> void:
 	# This is necessary so the player doesn't get teleported back down during move_and_slide()
 	floor_snap_length = 0.0
 
+	velocity.y = 0.0
+
 	# Recurse to step up many steps at once
 	stair_step_up(remainder)
 
