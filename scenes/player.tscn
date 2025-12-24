@@ -188,7 +188,7 @@ stream_0/stream = ExtResource("21_31cv2")
 top_level = true
 collision_layer = 2
 collision_mask = 5
-wall_min_slide_angle = 0.0174533
+wall_min_slide_angle = 0.017453292
 floor_stop_on_slope = false
 floor_constant_speed = true
 floor_block_on_wall = false
@@ -208,6 +208,7 @@ mesh = SubResource("CapsuleMesh_y4r1p")
 skeleton = NodePath("../..")
 
 [node name="MantleFootRaycast" type="RayCast3D" parent="." unique_id=1203838202]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 target_position = Vector3(0, 0, -0.65)
 
 [node name="MantleHandRaycast" type="RayCast3D" parent="." unique_id=808908967]
