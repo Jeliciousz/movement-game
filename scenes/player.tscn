@@ -206,7 +206,7 @@ mesh = SubResource("CapsuleMesh_y4r1p")
 skeleton = NodePath("../..")
 
 [node name="MantleFootRaycast" type="RayCast3D" parent="." unique_id=1203838202]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 target_position = Vector3(0, 0, -0.65)
 
 [node name="MantleHandRaycast" type="RayCast3D" parent="." unique_id=808908967]
