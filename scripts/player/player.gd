@@ -884,6 +884,38 @@ func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
 	velocity += wall_normal * wall_jump_normal_impulse
 
 
+func mantle_checks() -> bool:
+	if not is_on_wall():
+		return false
+
+	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+
+	if get_forward_direction().dot(-normal) < -0.1:
+		return false
+
+	if wish_direction.angle_to(-normal) > deg_to_rad(45.0):
+		return false
+
+	mantle_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	mantle_foot_raycast.force_raycast_update()
+
+	if not mantle_foot_raycast.is_colliding():
+		return false
+
+	mantle_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	mantle_hand_raycast.force_raycast_update()
+
+	if mantle_hand_raycast.is_colliding():
+		return false
+
+	mantle_head_raycast.force_raycast_update()
+
+	if mantle_head_raycast.is_colliding():
+		return false
+
+	return true
+
+
 func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	var grapple_hook_points: Array[GrappleHookPoint] = []
 

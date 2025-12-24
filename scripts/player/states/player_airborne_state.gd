@@ -87,7 +87,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.mantle_enabled and mantle_checks():
+	if _player.mantle_enabled and _player.mantle_checks():
 		state_machine.change_state_to(&"Mantling")
 		return
 
@@ -223,38 +223,6 @@ func wallrun_checks() -> bool:
 	_player.wallrun_hand_raycast.force_raycast_update()
 
 	if not _player.wallrun_hand_raycast.is_colliding():
-		return false
-
-	return true
-
-
-func mantle_checks() -> bool:
-	if not _player.is_on_wall():
-		return false
-
-	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-
-	if _player.get_forward_direction().dot(-normal) < -0.1:
-		return false
-
-	if _player.wish_direction.angle_to(-normal) > deg_to_rad(45.0):
-		return false
-
-	_player.mantle_foot_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
-	_player.mantle_foot_raycast.force_raycast_update()
-
-	if not _player.mantle_foot_raycast.is_colliding():
-		return false
-
-	_player.mantle_hand_raycast.target_position = _player.basis.inverse() * -normal * _player.collision_shape.shape.radius * 3
-	_player.mantle_hand_raycast.force_raycast_update()
-
-	if _player.mantle_hand_raycast.is_colliding():
-		return false
-
-	_player.mantle_head_raycast.force_raycast_update()
-
-	if _player.mantle_head_raycast.is_colliding():
 		return false
 
 	return true

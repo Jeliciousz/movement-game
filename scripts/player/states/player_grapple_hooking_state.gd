@@ -52,7 +52,7 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.mantle_enabled and mantle_checks():
+	if _player.mantle_enabled and _player.mantle_checks():
 		state_machine.change_state_to(&"Mantling")
 		return
 
@@ -150,28 +150,6 @@ func wallrun_checks() -> bool:
 	_player.wallrun_hand_raycast.force_raycast_update()
 
 	if not (_player.wallrun_foot_raycast.is_colliding() and _player.wallrun_hand_raycast.is_colliding()):
-		return false
-
-	return true
-
-
-func mantle_checks() -> bool:
-	if not _player.is_on_wall():
-		return false
-
-	_player.mantle_foot_raycast.force_raycast_update()
-
-	if not _player.mantle_foot_raycast.is_colliding():
-		return false
-
-	_player.mantle_hand_raycast.force_raycast_update()
-
-	if _player.mantle_hand_raycast.is_colliding():
-		return false
-
-	_player.mantle_head_raycast.force_raycast_update()
-
-	if _player.mantle_head_raycast.is_colliding():
 		return false
 
 	return true
