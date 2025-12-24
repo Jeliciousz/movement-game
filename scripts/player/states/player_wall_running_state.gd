@@ -52,9 +52,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	var horizontal_velocity: Vector3 = Vector3(_player.velocity.x, 0.0, _player.velocity.z)
-
-	if horizontal_velocity.length() < _player.wall_run_stop_speed or horizontal_velocity.dot(_player.wall_run_direction) <= 0.0 or not wallrun_checks():
+	if _player.get_horizontal_velocity().length() < _player.wall_run_stop_speed or _player.get_horizontal_velocity().dot(_player.wall_run_direction) <= 0.0 or not wallrun_checks():
 		_player.velocity += _player.wall_run_normal * _player.wall_run_cancel_impulse
 		state_machine.change_state_to(&"Airborne")
 		return
@@ -128,7 +126,7 @@ func wallrun_checks() -> bool:
 
 		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
-		if _player.wall_run_direction.dot(Vector3(_player.velocity.x, 0.0, _player.velocity.z).normalized()) < 0.0:
+		if _player.wall_run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
 			_player.wall_run_direction *= -1.0
 
 		var horizontal_speed_before_move: float = Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
