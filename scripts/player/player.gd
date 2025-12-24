@@ -581,8 +581,8 @@ func stair_step_up(motion: Vector3) -> void:
 	var step_up: Vector3 = step_up_max * Vector3.UP
 	move_and_collide(step_up)
 
-	# Move forward only a little to not miss a step
-	collision = move_and_collide(remainder.normalized() * 0.1)
+	# Move ahead a small amount to properly catch the step
+	collision = move_and_collide(motion.normalized() * 0.05)
 
 	# Project remaining along wall normal (if any)
 	# So you can walk into wall and up a step
@@ -609,22 +609,15 @@ func stair_step_up(motion: Vector3) -> void:
 		global_transform = transform_before_test
 		return
 
-	print(global_transform.origin.y - transform_before_test.origin.y)
-
-	# Move remainder, stepping up again if necessary
-	collision = move_and_collide(remainder - remainder.normalized() * 0.1)
-
-	if collision:
-		remainder = collision.get_remainder()
-
-		stair_step_up(remainder)
-
 	# Step up
 	global_transform.origin.x = transform_before_test.origin.x
 	global_transform.origin.z = transform_before_test.origin.z
 
 	# This is necessary so the player doesn't get teleported back down during move_and_slide()
 	floor_snap_length = 0.0
+
+	# Recurse to step up many steps at once
+	stair_step_up(remainder)
 
 
 ## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
