@@ -43,7 +43,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 func _state_physics_process(delta: float) -> void:
 	update_stance()
 	update_physics()
-	_player.stair_step_up(_player.get_horizontal_velocity() * delta)
+	_player.stair_step_up(_player.velocity * delta)
 	_player.move()
 
 	if not _player.is_on_floor():
