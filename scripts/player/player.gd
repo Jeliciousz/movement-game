@@ -902,7 +902,7 @@ func mantle_checks() -> bool:
 	if wish_direction.is_zero_approx():
 		return false
 
-	if wish_direction.angle_to(-normal) > deg_to_rad(45.0):
+	if wish_direction.angle_to(-normal) > deg_to_rad(60.0):
 		return false
 
 	mantle_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
