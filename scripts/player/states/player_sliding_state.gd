@@ -51,7 +51,6 @@ func _state_physics_process(delta: float) -> void:
 
 	if not _player.is_on_floor():
 		_player.coyote_jump_ready = false
-
 		state_machine.change_state_to(&"Airborne")
 		return
 
