@@ -68,6 +68,15 @@ func get_stance_as_text() -> String:
 @export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 100
 
 
+@export_group("Stepping", "step_")
+
+## Maximum height the player can step up.
+@export_range(0.0, 1.0, 0.05, "suffix:m") var step_up_max: float = 0.5
+
+## Maximum height the player can step down.
+@export_range(0.0, 1.0, 0.05, "suffix:m") var step_down_max: float = -0.5
+
+
 @export_group("Movement", "move_")
 
 ## How fast the player can move.
@@ -528,6 +537,68 @@ func move() -> void:
 	floor_block_on_wall = is_on_floor()
 
 	move_and_slide()
+
+
+func stair_step_down() -> bool:
+	if velocity.y > 0.1:
+		return false
+
+	var collision: KinematicCollision3D = move_and_collide(Vector3(0.0, step_down_max, 0.0), true)
+
+	if not collision:
+		return false
+
+	position.y += collision.get_travel().y
+	apply_floor_snap()
+	state_machine.change_state_to(&"Grounded")
+	return true
+
+
+func stair_step_up(motion: Vector3) -> void:
+	if motion.is_zero_approx():
+		return
+
+	var transform_before_test: Transform3D = global_transform
+	var collision: KinematicCollision3D = move_and_collide(motion)
+
+	if not collision:
+		global_transform = transform_before_test
+		return
+
+	var remainder: Vector3 = collision.get_remainder()
+
+	# Then move up a step (or into a ceiling)
+	var step_up: Vector3 = step_up_max * Vector3.UP
+	move_and_collide(step_up)
+
+	# Move forward to check for wall
+	collision = move_and_collide(remainder.normalized() * 0.1)
+
+	if collision:
+		global_transform = transform_before_test
+		return
+
+	# Move down onto step
+	collision = move_and_collide(step_up_max * Vector3.DOWN)
+
+	if collision:
+		# Check floor normal for un-walkable slope
+		var surface_normal: Vector3 = collision.get_normal()
+		if (snappedf(surface_normal.angle_to(Vector3.UP), 0.001) > floor_max_angle):
+			global_transform = transform_before_test
+			return
+
+	# Move remainder, stepping up again if necessary
+	collision = move_and_collide(remainder - remainder.normalized() * 0.1)
+
+	if collision:
+		remainder = collision.get_remainder()
+
+		stair_step_up(remainder)
+
+	# Step up
+	transform_before_test.origin.y = global_transform.origin.y
+	global_transform = transform_before_test
 
 
 ## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
