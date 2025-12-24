@@ -574,6 +574,12 @@ func stair_step_up(motion: Vector3) -> void:
 		global_transform = transform_before_test
 		return
 
+	# Return if colliding into slope, not wall
+	var surface_normal: Vector3 = collision.get_normal()
+	if (snappedf(surface_normal.angle_to(Vector3.UP), 0.001) <= floor_max_angle):
+		global_transform = transform_before_test
+		return
+
 	var remainder: Vector3 = collision.get_remainder()
 
 	# Then move up a step (or into a ceiling)
@@ -599,7 +605,7 @@ func stair_step_up(motion: Vector3) -> void:
 
 	if collision:
 		# Check floor normal for un-walkable slope
-		var surface_normal: Vector3 = collision.get_normal()
+		surface_normal = collision.get_normal()
 		if (snappedf(surface_normal.angle_to(Vector3.UP), 0.001) > floor_max_angle):
 			global_transform = transform_before_test
 			return
