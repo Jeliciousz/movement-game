@@ -338,9 +338,6 @@ func get_stance_as_text() -> String:
 ## How quickly the player mantles over a ledge.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var mantle_speed: float = 18.0
 
-## How high the player is sent upwards when mantling.
-@export_range(0, 100, 0.05, "suffix:m/s") var mantle_power: float = 2.0
-
 ## How much of the player's speed is lost when they mantle.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var mantle_speed_penalty: float = 0.1
 
@@ -396,7 +393,6 @@ var wall_jumps: int = 0
 
 var wall_run_normal: Vector3 = Vector3.ZERO
 var wall_run_direction: Vector3 = Vector3.ZERO
-var mantle_velocity: Vector3 = Vector3.ZERO
 
 var active_grapple_hook_point: GrappleHookPoint = null
 

@@ -19,13 +19,6 @@ func _state_physics_process(delta: float) -> void:
 	_player.position = _player.position.move_toward(mantle_position, delta * _player.mantle_speed)
 
 	if _player.position.is_equal_approx(mantle_position):
-		_player.position.y += _player.safe_margin
-		_player.velocity = _player.mantle_velocity * (1.0 - _player.mantle_speed_penalty)
-
-		if _player.velocity.y < 0.0:
-			_player.velocity.y = 0.0
-
-		_player.velocity.y += _player.mantle_power
-
-		state_machine.change_state_to(&"Airborne")
+		_player.velocity.y = 0.0
+		state_machine.change_state_to(&"Grounded")
 		return

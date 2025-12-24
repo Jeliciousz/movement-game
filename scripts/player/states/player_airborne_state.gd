@@ -83,7 +83,6 @@ func _state_physics_process(_delta: float) -> void:
 		return
 
 	if _player.mantle_enabled and mantle_checks():
-		_player.mantle_velocity = player_velocity_before_move
 		state_machine.change_state_to(&"Mantling")
 		return
 
