@@ -216,7 +216,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_start_speed: float = 6.5
 
 ## How fast the player must be to stay sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 7.5
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_stop_speed: float = 7.4
 
 ## How long the player must wait after sliding until they can slide again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_cooldown: float = 0.25
@@ -327,7 +327,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_forward_impulse: float = -4.5
 
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 10.0
 
 
 @export_group("Mantling", "mantle_")
@@ -528,9 +528,6 @@ func move() -> void:
 	floor_block_on_wall = is_on_floor()
 
 	move_and_slide()
-
-	if not is_on_floor():
-		velocity = get_real_velocity()
 
 
 ## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
