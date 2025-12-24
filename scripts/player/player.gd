@@ -714,14 +714,14 @@ func jump() -> void:
 		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
 		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
 
-	velocity += up_direction * effective_impulse
+	velocity.y += effective_impulse
 	velocity += wish_direction * effective_horizontal_impulse
 
 
 func ledge_jump() -> void:
 	attempt_uncrouch()
 
-	velocity += up_direction * ledge_jump_impulse
+	velocity.y += ledge_jump_impulse
 	velocity += wish_direction * ledge_jump_horizontal_impulse
 
 
@@ -732,7 +732,7 @@ func air_jump() -> void:
 
 	var effective_impulse: float = lerpf(air_jump_standing_impulse, air_jump_impulse, wish_direction.length())
 
-	velocity += up_direction * effective_impulse
+	velocity.y += effective_impulse
 	velocity += wish_direction * air_jump_horizontal_impulse
 
 
@@ -749,7 +749,7 @@ func slide() -> void:
 func slide_jump() -> void:
 	attempt_uncrouch()
 
-	velocity += up_direction * slide_jump_impulse
+	velocity.y += slide_jump_impulse
 	velocity += velocity.normalized() * slide_jump_horizontal_impulse
 
 
@@ -789,7 +789,7 @@ func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
 	else:
 		effective_impulse = wall_jump_impulse
 
-	velocity += -(up_direction * velocity.dot(up_direction)) + up_direction * effective_impulse
+	velocity.y = effective_impulse
 	velocity += run_direction * wall_jump_forward_impulse
 	velocity += wall_normal * wall_jump_normal_impulse
 

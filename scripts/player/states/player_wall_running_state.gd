@@ -84,10 +84,10 @@ func update_physics(delta: float) -> void:
 	else:
 		_player.add_air_resistence(_player.physics_air_resistence * _player.wall_run_air_resistence_multiplier)
 
-		if _player.velocity.dot(_player.up_direction) < 0:
-			_player.velocity = _player.velocity.move_toward(_player.velocity - _player.up_direction * _player.velocity.dot(_player.up_direction), _player.wall_run_downwards_friction * delta)
+		if _player.velocity.y < 0:
+			_player.velocity = _player.velocity.move_toward(_player.get_horizontal_velocity(), _player.wall_run_downwards_friction * delta)
 		else:
-			_player.velocity = _player.velocity.move_toward(_player.velocity - _player.up_direction * _player.velocity.dot(_player.up_direction), _player.wall_run_upwards_friction * delta)
+			_player.velocity = _player.velocity.move_toward(_player.get_horizontal_velocity(), _player.wall_run_upwards_friction * delta)
 
 		_player.add_wallrun_movement(_player.wall_run_direction)
 

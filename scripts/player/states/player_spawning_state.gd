@@ -35,7 +35,7 @@ func spawn_random() -> void:
 	InputBuffer.clear_buffered_action("slide")
 	InputBuffer.clear_buffered_action("grapple_hook")
 
-	if _player.check_surface(-_player.up_direction):
+	if _player.check_surface(Vector3.DOWN):
 		state_machine.change_state_to(&"Grounded")
 	else:
 		state_machine.change_state_to(&"Airborne")
