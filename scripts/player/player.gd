@@ -537,10 +537,9 @@ func get_center_of_mass() -> Vector3:
 
 
 func move() -> void:
-	floor_block_on_wall = is_on_floor()
-
 	move_and_slide()
 
+	# Is set to 0.0 when stepping up, so resetting after moving is necessary
 	floor_snap_length = 0.5
 
 
