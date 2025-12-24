@@ -297,7 +297,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wall_run_upwards_friction: float = 20.0
 
 ## The acceleration opposing downwards movement while wall-running.
-@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wall_run_downwards_friction: float = 45.0
+@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wall_run_downwards_friction: float = 90.0
 
 ## How hard the player is pushed from a wall when they cancel a wall-run.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_run_cancel_impulse: float = 2.0
