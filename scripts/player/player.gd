@@ -70,6 +70,9 @@ func get_stance_as_text() -> String:
 
 @export_group("Stepping", "step_")
 
+## Can the player step up and down stairs?
+@export var step_enabled: bool = true
+
 ## Maximum height the player can step up.
 @export_range(0.0, 1.0, 0.05, "suffix:m") var step_up_max: float = 0.5
 
@@ -538,8 +541,13 @@ func move() -> void:
 
 	move_and_slide()
 
+	floor_snap_length = 0.5
+
 
 func stair_step_down() -> bool:
+	if not step_enabled:
+		return false
+
 	if velocity.y > 0.1:
 		return false
 
@@ -554,6 +562,9 @@ func stair_step_down() -> bool:
 
 
 func stair_step_up(motion: Vector3) -> void:
+	if not step_enabled:
+		return
+
 	if motion.is_zero_approx():
 		return
 
@@ -570,12 +581,19 @@ func stair_step_up(motion: Vector3) -> void:
 	var step_up: Vector3 = step_up_max * Vector3.UP
 	move_and_collide(step_up)
 
-	# Move forward to check for wall
+	# Move forward only a little to not miss a step
 	collision = move_and_collide(remainder.normalized() * 0.1)
 
+	# Project remaining along wall normal (if any)
+	# So you can walk into wall and up a step
 	if collision:
-		global_transform = transform_before_test
-		return
+		var slide_remainder: Vector3 = collision.get_remainder()
+
+		var wall_normal: Vector3 = collision.get_normal()
+		var dot: float = slide_remainder.normalized().dot(-wall_normal)
+		var projected_vector: Vector3 = slide_remainder + wall_normal * dot * slide_remainder.length()
+
+		move_and_collide(projected_vector)
 
 	# Move down onto step
 	collision = move_and_collide(step_up_max * Vector3.DOWN)
@@ -587,6 +605,12 @@ func stair_step_up(motion: Vector3) -> void:
 			global_transform = transform_before_test
 			return
 
+	if is_equal_approx(global_transform.origin.y, transform_before_test.origin.y):
+		global_transform = transform_before_test
+		return
+
+	print(global_transform.origin.y - transform_before_test.origin.y)
+
 	# Move remainder, stepping up again if necessary
 	collision = move_and_collide(remainder - remainder.normalized() * 0.1)
 
@@ -596,8 +620,11 @@ func stair_step_up(motion: Vector3) -> void:
 		stair_step_up(remainder)
 
 	# Step up
-	transform_before_test.origin.y = global_transform.origin.y
-	global_transform = transform_before_test
+	global_transform.origin.x = transform_before_test.origin.x
+	global_transform.origin.z = transform_before_test.origin.z
+
+	# This is necessary so the player doesn't get teleported back down during move_and_slide()
+	floor_snap_length = 0.0
 
 
 ## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
