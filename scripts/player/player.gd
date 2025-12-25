@@ -1041,7 +1041,7 @@ func can_continue_wallrun() -> bool:
 
 		wall_normal = Vector3(wallrun_foot_raycast.get_collision_normal().x, 0.0, wallrun_foot_raycast.get_collision_normal().z).normalized()
 
-		if wall_normal.angle_to(wall_run_normal) > wall_run_max_external_angle + deg_to_rad(1):
+		if wall_normal.angle_to(wall_run_normal) > wall_run_max_external_angle:
 			return false
 
 		move_and_collide(-wall_run_normal * floor_snap_length, false, safe_margin)
@@ -1050,7 +1050,7 @@ func can_continue_wallrun() -> bool:
 	else:
 		wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-		if wall_normal.angle_to(wall_run_normal) > wall_run_max_internal_angle + deg_to_rad(1):
+		if wall_normal.angle_to(wall_run_normal) > wall_run_max_internal_angle:
 			return false
 
 	if wall_normal != wall_run_normal:
