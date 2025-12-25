@@ -44,8 +44,8 @@ func _state_physics_preprocess(_delta: float) -> void:
 		return
 
 
-func _state_physics_process(delta: float) -> void:
-	update_physics(delta)
+func _state_physics_process(_delta: float) -> void:
+	update_physics()
 	_player.move()
 
 	if not _player.is_on_floor():
@@ -58,10 +58,8 @@ func _state_physics_process(delta: float) -> void:
 		return
 
 
-func update_physics(delta: float) -> void:
-	var weight: float = _player.get_floor_normal().dot(_player.get_direction_of_velocity())
-
-	_player.velocity += _player.get_direction_of_velocity() * weight * 15.0 * delta
+func update_physics() -> void:
+	_player.slide_down_slopes()
 	_player.add_air_resistence()
 	_player.add_friction(_player.physics_friction * _player.slide_friction_multiplier, 0)
 	_player.add_movement(0, _player.slide_acceleration)

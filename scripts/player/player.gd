@@ -816,6 +816,12 @@ func add_gravity(gravity_multiplier: float) -> void:
 	velocity += gravity_vector * gravity * gravity_multiplier * get_physics_process_delta_time()
 
 
+func slide_down_slopes() -> void:
+	var slide_direction: Vector3 = get_floor_normal() - gravity_vector * get_floor_normal().dot(gravity_vector)
+
+	velocity += slide_direction * gravity * get_physics_process_delta_time()
+
+
 func add_movement(top_speed: float, acceleration: float) -> void:
 	#	This seemingly overcomplicated movement code is the result of trying to achieve movement that doesn't feel clunky or finnicky, and has good control,
 	#	while still limiting the horizontal speed that the player can reach on their own
