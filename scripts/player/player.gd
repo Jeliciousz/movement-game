@@ -1000,13 +1000,8 @@ func can_start_wallrun() -> bool:
 
 	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-	if get_forward_direction().dot(-normal) >= 0.8:
+	if get_forward_direction().angle_to(-normal) < deg_to_rad(5.0):
 		return false
-
-	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
-
-	if run_direction.dot(get_direction_of_horizontal_velocity()) < 0.0:
-		run_direction *= -1.0
 
 	if get_horizontal_speed_before_move() < wall_run_start_speed:
 		return false
