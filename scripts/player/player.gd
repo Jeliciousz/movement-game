@@ -1007,6 +1007,11 @@ func coyote_wall_jump(direction: Vector3) -> void:
 	velocity += wall_run_normal * wall_jump_normal_impulse
 
 
+func can_crouch_jump() -> bool:
+	return crouch_jump_enabled \
+	and (crouch_jump_window == 0.0 or Global.time - crouch_timestamp <= crouch_jump_window)
+
+
 func can_air_jump() -> bool:
 	return air_jump_enabled \
 	and air_jumps < air_jump_limit
