@@ -615,13 +615,18 @@ func stair_step_down() -> bool:
 	return true
 
 
-func stair_step_up(motion: Vector3) -> void:
+func stair_step_up() -> void:
 	if not step_enabled:
 		return
 
+	var motion: Vector3 = get_horizontal_velocity() * get_physics_process_delta_time()
 	if motion.is_zero_approx():
 		return
 
+	_check_step_up(motion)
+
+
+func _check_step_up(motion: Vector3) -> void:
 	var transform_before_test: Transform3D = global_transform
 	var collision: KinematicCollision3D = move_and_collide(motion)
 
@@ -685,7 +690,7 @@ func stair_step_up(motion: Vector3) -> void:
 	velocity.y = 0.0
 
 	# Recurse to step up many steps at once
-	stair_step_up(remainder)
+	_check_step_up(remainder)
 
 
 ## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
