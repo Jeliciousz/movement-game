@@ -99,8 +99,8 @@ func update_stance() -> void:
 				return
 
 			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
-				_player.crouch()
 				_player.air_crouches += 1
+				_player.crouch()
 
 		Player.Stances.CROUCHING:
 			if not Input.is_action_pressed(&"crouch") or not _player.crouch_enabled:
@@ -113,8 +113,8 @@ func update_stance() -> void:
 				return
 
 			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
-				_player.crouch()
 				_player.air_crouches += 1
+				_player.crouch()
 
 
 func update_physics() -> void:
