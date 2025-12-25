@@ -49,7 +49,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and _player.coyote_slide_jump_ready and _player.in_coyote_time():
+		if _player.can_coyote_slide_jump():
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.coyote_slide_jump_ready = false
 			_player.slide_jump()

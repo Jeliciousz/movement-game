@@ -1041,6 +1041,12 @@ func can_coyote_slide() -> bool:
 	and get_speed() >= slide_start_speed
 
 
+func can_coyote_slide_jump() -> bool:
+	return coyote_slide_jump_enabled \
+	and coyote_slide_jump_ready \
+	and in_coyote_time()
+
+
 func can_coyote_wall_jump() -> bool:
 	return coyote_wall_jump_enabled and coyote_wall_jump_ready and in_coyote_time()
 

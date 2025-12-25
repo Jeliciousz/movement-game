@@ -12,11 +12,9 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_slide_ready = false
 
 	if _player.ledge_jump_enabled:
-		_player.coyote_slide_jump_ready = false
 		_player.ledge_jump_ready = true
-	else:
+	elif _player.slide_jump_enabled:
 		_player.coyote_slide_jump_ready = true
-		_player.ledge_jump_ready = false
 
 	_player.slide_audio.play()
 
