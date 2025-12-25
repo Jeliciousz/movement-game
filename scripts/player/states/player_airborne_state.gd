@@ -21,7 +21,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"slide") and _player.coyote_slide_enabled and _player.coyote_slide_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration and _player.can_slide():
+	if InputBuffer.is_action_buffered(&"slide") and _player.can_coyote_slide():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
 		_player.attempt_uncrouch()
@@ -33,7 +33,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		return
 
 	if InputBuffer.is_action_buffered(&"jump"):
-		if _player.wall_run_enabled and _player.coyote_walljump_enabled and _player.coyote_wall_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
+		if _player.can_coyote_wall_jump():
 			InputBuffer.clear_buffered_action(&"jump")
 
 			_player.velocity -= _player.wall_run_normal * _player.wall_run_cancel_impulse
@@ -50,14 +50,14 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and _player.coyote_slide_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
+		if _player.slide_jump_enabled and _player.coyote_slide_jump_enabled and _player.coyote_slide_jump_ready and _player.in_coyote_time():
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.coyote_slide_jump_ready = false
 			_player.slide_jump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.jump_enabled and _player.coyote_jump_enabled and _player.coyote_jump_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration:
+		if _player.jump_enabled and _player.coyote_jump_enabled and _player.coyote_jump_ready and _player.in_coyote_time():
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.velocity.y = 0.0
 			_player.jump()

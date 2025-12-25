@@ -62,7 +62,7 @@ func get_stance_as_text() -> String:
 @export var coyote_slide_jump_enabled: bool = true
 
 ## Is there coyote time for walljumps?
-@export var coyote_walljump_enabled: bool = true
+@export var coyote_wall_jump_enabled: bool = true
 
 ## How many realtime milliseconds coyote time lasts.
 @export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 100
@@ -276,7 +276,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.25
 
 
-@export_group("Wall-Running", "wall_run")
+@export_group("Wall-Running", "wall_run_")
 
 ## Can the player wall-run?
 @export var wall_run_enabled: bool = true
@@ -1041,8 +1041,44 @@ func can_slide() -> bool:
 	return true
 
 
+func can_coyote_slide() -> bool:
+	if not slide_enabled:
+		return false
+
+	if not coyote_slide_enabled:
+		return false
+
+	if not coyote_slide_ready:
+		return false
+
+	if not in_coyote_time():
+		return false
+
+	if Global.time - slide_timestamp < slide_cooldown:
+		return false
+
+	if wish_direction.is_zero_approx():
+		return false
+
+	if not is_zero_approx(get_amount_moving_backwards()):
+		return false
+
+	if get_speed() < slide_start_speed:
+		return false
+
+	return true
+
+
+func can_coyote_wall_jump() -> bool:
+	return coyote_wall_jump_enabled and coyote_wall_jump_ready and in_coyote_time()
+
+
 func can_grapple_hook() -> bool:
 	return active_grapple_hook_point != null and is_grapple_hook_point_in_range
+
+
+func in_coyote_time() -> bool:
+	return Time.get_ticks_msec() - coyote_engine_timestamp <= coyote_duration
 
 
 func try_stick_to_wallrun() -> bool:
