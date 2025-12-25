@@ -805,6 +805,13 @@ func add_friction(friction: float, top_speed: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, friction * friction_product * get_physics_process_delta_time())
 
 
+func add_wallrun_friction() -> void:
+	if velocity.y < 0:
+		velocity = velocity.move_toward(get_horizontal_velocity(), wall_run_downwards_friction * get_physics_process_delta_time())
+	else:
+		velocity = velocity.move_toward(get_horizontal_velocity(), wall_run_upwards_friction * get_physics_process_delta_time())
+
+
 func add_gravity(gravity_multiplier: float) -> void:
 	velocity += gravity_vector * gravity * gravity_multiplier * get_physics_process_delta_time()
 

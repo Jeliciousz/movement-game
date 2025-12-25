@@ -40,9 +40,9 @@ func _state_physics_preprocess(_delta: float) -> void:
 		state_machine.change_state_to(&"Airborne")
 
 
-func _state_physics_process(delta: float) -> void:
+func _state_physics_process(_delta: float) -> void:
 	update_stance()
-	update_physics(delta)
+	update_physics()
 	_player.stair_step_up()
 	_player.move()
 
@@ -66,17 +66,12 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 
 
-func update_physics(delta: float) -> void:
+func update_physics() -> void:
 	if Global.time - _player.wall_run_timestamp > _player.wall_run_duration:
 		_player.add_air_resistence(_player.physics_air_resistence)
 		_player.add_friction(_player.physics_friction * _player.wall_run_friction_multiplier, _player.wall_run_speed)
 		_player.add_gravity(_player.physics_gravity_multiplier * _player.wall_run_gravity_multiplier)
 	else:
 		_player.add_air_resistence(_player.physics_air_resistence * _player.wall_run_air_resistence_multiplier)
-
-		if _player.velocity.y < 0:
-			_player.velocity = _player.velocity.move_toward(_player.get_horizontal_velocity(), _player.wall_run_downwards_friction * delta)
-		else:
-			_player.velocity = _player.velocity.move_toward(_player.get_horizontal_velocity(), _player.wall_run_upwards_friction * delta)
-
+		_player.add_wallrun_friction()
 		_player.add_wallrun_movement(_player.wall_run_direction)
