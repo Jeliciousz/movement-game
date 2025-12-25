@@ -899,6 +899,19 @@ func slide_jump() -> void:
 	velocity += get_direction_of_velocity() * slide_jump_horizontal_impulse
 
 
+func start_wallrun() -> void:
+	wall_run_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+	wall_run_direction = (get_horizontal_velocity() - wall_run_normal * get_horizontal_velocity().dot(wall_run_normal)).normalized()
+
+	var new_velocity: Vector3 = wall_run_direction * get_horizontal_speed_before_move()
+	velocity.x = new_velocity.x
+	velocity.z = new_velocity.z
+
+
+func stop_wallrun() -> void:
+	velocity += wall_run_normal * wall_run_cancel_impulse
+
+
 func add_wallrun_movement(run_direction: Vector3) -> void:
 	var direction: Vector3 = run_direction * wish_direction.dot(run_direction)
 

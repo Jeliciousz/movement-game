@@ -88,15 +88,7 @@ func _state_physics_process(delta: float) -> void:
 		return
 
 	if _player.wall_run_enabled and _player.can_start_wallrun():
-		_player.wall_run_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
-
-		if _player.wall_run_direction.dot(_player.get_direction_of_horizontal_velocity()) < 0.0:
-			_player.wall_run_direction *= -1.0
-
-		var new_velocity: Vector3 = _player.wall_run_direction * _player.get_horizontal_speed_before_move()
-		_player.velocity.x = new_velocity.x
-		_player.velocity.z = new_velocity.z
+		_player.start_wallrun()
 		state_machine.change_state_to(&"WallRunning")
 		return
 
