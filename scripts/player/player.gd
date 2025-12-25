@@ -940,7 +940,7 @@ func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
 	velocity += wall_normal * wall_jump_normal_impulse
 
 
-func mantle_checks() -> bool:
+func can_start_mantle() -> bool:
 	if not is_on_wall():
 		return false
 
@@ -975,7 +975,7 @@ func mantle_checks() -> bool:
 	return true
 
 
-func wallrun_checks() -> bool:
+func can_start_wallrun() -> bool:
 	if Global.time - wall_run_timestamp < wall_run_cooldown:
 		return false
 

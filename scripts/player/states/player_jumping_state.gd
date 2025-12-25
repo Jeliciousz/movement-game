@@ -41,11 +41,11 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.mantle_enabled and _player.mantle_checks():
+	if _player.mantle_enabled and _player.can_start_mantle():
 		state_machine.change_state_to(&"Mantling")
 		return
 
-	if _player.wall_run_enabled and _player.wallrun_checks():
+	if _player.wall_run_enabled and _player.can_start_wallrun():
 		_player.wall_run_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
 		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
