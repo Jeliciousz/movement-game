@@ -50,7 +50,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"WallRunning")
 		return
 
-	if not _player.jump_enabled or _player.velocity.y < 0.0 or Global.time - _player.jump_timestamp >= _player.jump_duration:
+	if _player.should_end_jump():
 		state_machine.change_state_to(&"Airborne")
 		return
 

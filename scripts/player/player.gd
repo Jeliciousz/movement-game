@@ -1125,6 +1125,12 @@ func can_coyote_wall_jump() -> bool:
 	return coyote_wall_jump_enabled and coyote_wall_jump_ready and in_coyote_time()
 
 
+func should_end_jump() -> bool:
+	return not jump_enabled \
+	or velocity.y < 0.0 \
+	or Global.time - jump_timestamp > jump_duration
+
+
 func try_stick_to_wallrun() -> bool:
 	wallrun_floor_raycast.force_raycast_update()
 
