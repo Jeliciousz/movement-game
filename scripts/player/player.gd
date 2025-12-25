@@ -1049,6 +1049,10 @@ func can_grapple_hook() -> bool:
 	return active_grapple_hook_point != null and is_grapple_hook_point_in_range
 
 
+func can_ledge_jump() -> bool:
+	return ledge_jump_enabled and ledge_jump_ready and slide_timestamp == airborne_timestamp and Global.time - airborne_timestamp <= ledge_jump_window
+
+
 func in_coyote_time() -> bool:
 	return Time.get_ticks_msec() - coyote_engine_timestamp <= coyote_duration
 
