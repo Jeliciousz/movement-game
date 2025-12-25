@@ -892,6 +892,7 @@ func slide() -> void:
 
 
 func coyote_slide() -> void:
+	coyote_slide_ready = false
 	velocity.y = 0.0
 
 	if get_speed() < slide_speed:
