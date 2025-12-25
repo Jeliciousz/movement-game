@@ -1055,11 +1055,7 @@ func can_continue_wallrun() -> bool:
 
 	if wall_normal != wall_run_normal:
 		wall_run_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
-
-		wall_run_direction = wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
-
-		if wall_run_direction.dot(get_direction_of_horizontal_velocity()) < 0.0:
-			wall_run_direction *= -1.0
+		wall_run_direction = (get_horizontal_velocity() - wall_run_normal * get_horizontal_velocity().dot(wall_run_normal)).normalized()
 
 		velocity.x = wall_run_direction.x * get_horizontal_speed_before_move()
 		velocity.y = velocity_before_move.y
