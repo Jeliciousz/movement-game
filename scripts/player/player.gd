@@ -1023,50 +1023,22 @@ func can_start_wallrun() -> bool:
 
 
 func can_slide() -> bool:
-	if not slide_enabled:
-		return false
-
-	if Global.time - slide_timestamp < slide_cooldown:
-		return false
-
-	if wish_direction.is_zero_approx():
-		return false
-
-	if not is_zero_approx(get_amount_moving_backwards()):
-		return false
-
-	if get_speed() < slide_start_speed:
-		return false
-
-	return true
+	return slide_enabled \
+	and Global.time - slide_timestamp >= slide_cooldown \
+	and not wish_direction.is_zero_approx() \
+	and is_zero_approx(get_amount_moving_backwards()) \
+	and get_speed() >= slide_start_speed
 
 
 func can_coyote_slide() -> bool:
-	if not slide_enabled:
-		return false
-
-	if not coyote_slide_enabled:
-		return false
-
-	if not coyote_slide_ready:
-		return false
-
-	if not in_coyote_time():
-		return false
-
-	if Global.time - slide_timestamp < slide_cooldown:
-		return false
-
-	if wish_direction.is_zero_approx():
-		return false
-
-	if not is_zero_approx(get_amount_moving_backwards()):
-		return false
-
-	if get_speed() < slide_start_speed:
-		return false
-
-	return true
+	return slide_enabled \
+	and coyote_slide_enabled \
+	and coyote_slide_ready \
+	and in_coyote_time() \
+	and Global.time - slide_timestamp >= slide_cooldown \
+	and not wish_direction.is_zero_approx() \
+	and is_zero_approx(get_amount_moving_backwards()) \
+	and get_speed() >= slide_start_speed
 
 
 func can_coyote_wall_jump() -> bool:
