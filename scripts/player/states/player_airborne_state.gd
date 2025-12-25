@@ -16,7 +16,7 @@ func _state_enter(last_state_name: StringName) -> void:
 
 
 func _state_physics_preprocess(_delta: float) -> void:
-	handle_grapple_hooking()
+	_player.update_active_grapple_hook_point()
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
@@ -121,29 +121,6 @@ func update_stance() -> void:
 			if Input.is_action_just_pressed(&"crouch") and _player.air_crouch_enabled and _player.air_crouches < _player.air_crouch_limit:
 				_player.crouch()
 				_player.air_crouches += 1
-
-
-func handle_grapple_hooking() -> void:
-	if not _player.grapple_hook_enabled:
-		_player.clear_grapple_hook_point()
-		return
-
-	var target_grapple_hook_point: GrappleHookPoint = _player.get_targeted_grapple_hook_point()
-
-	if target_grapple_hook_point == null:
-		_player.clear_grapple_hook_point()
-		return
-	elif _player.active_grapple_hook_point != target_grapple_hook_point:
-		_player.clear_grapple_hook_point()
-		_player.active_grapple_hook_point = target_grapple_hook_point
-
-	_player.grapple_hook_point_in_range = _player.active_grapple_hook_point.position.distance_to(_player.head.global_position) <= _player.grapple_hook_max_distance
-
-	if not _player.grapple_hook_point_in_range:
-		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.INVALID_TARGET
-	elif _player.active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
-		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
-		_player.grapple_hook_indicator_audio.play()
 
 
 func update_physics() -> void:

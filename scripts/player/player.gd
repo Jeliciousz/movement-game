@@ -1083,6 +1083,29 @@ func try_stick_to_wallrun() -> bool:
 	return true
 
 
+func update_active_grapple_hook_point() -> void:
+	if not grapple_hook_enabled:
+		clear_grapple_hook_point()
+		return
+
+	var target_grapple_hook_point: GrappleHookPoint = get_targeted_grapple_hook_point()
+
+	if target_grapple_hook_point == null:
+		clear_grapple_hook_point()
+		return
+	elif active_grapple_hook_point != target_grapple_hook_point:
+		clear_grapple_hook_point()
+		active_grapple_hook_point = target_grapple_hook_point
+
+	grapple_hook_point_in_range = active_grapple_hook_point.position.distance_to(head.global_position) <= grapple_hook_max_distance
+
+	if not grapple_hook_point_in_range:
+		active_grapple_hook_point.targeted = GrappleHookPoint.Target.INVALID_TARGET
+	elif active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
+		active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
+		grapple_hook_indicator_audio.play()
+
+
 func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	var grapple_hook_points: Array[GrappleHookPoint] = []
 
