@@ -1022,7 +1022,7 @@ func can_start_wallrun() -> bool:
 	return true
 
 
-func can_continue_wallrun() -> bool:
+func try_stick_to_wallrun() -> bool:
 	wallrun_floor_raycast.force_raycast_update()
 
 	if wallrun_floor_raycast.is_colliding():
