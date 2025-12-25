@@ -864,11 +864,20 @@ func jump() -> void:
 	velocity += wish_direction * effective_horizontal_impulse
 
 
-func ledge_jump() -> void:
+func coyote_jump() -> void:
 	attempt_uncrouch()
 
-	velocity.y = ledge_jump_impulse
-	velocity += wish_direction * ledge_jump_horizontal_impulse
+	var effective_impulse: float = lerpf(jump_standing_impulse, jump_impulse, wish_direction.length())
+	var effective_horizontal_impulse: float = jump_horizontal_impulse
+
+	if proportional_jump_enabled:
+		var proportional_jump_weight: float = clampf((get_horizontal_speed() - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
+
+		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
+		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
+
+	velocity.y = effective_impulse
+	velocity += wish_direction * effective_horizontal_impulse
 
 
 func air_jump() -> void:
@@ -891,19 +900,26 @@ func slide() -> void:
 		velocity = wish_direction * slide_speed
 
 
+func slide_jump() -> void:
+	attempt_uncrouch()
+
+	velocity.y += slide_jump_impulse
+	velocity += get_direction_of_velocity() * slide_jump_horizontal_impulse
+
+
+func ledge_jump() -> void:
+	attempt_uncrouch()
+
+	velocity.y = ledge_jump_impulse
+	velocity += wish_direction * ledge_jump_horizontal_impulse
+
+
 func coyote_slide() -> void:
 	coyote_slide_ready = false
 	velocity.y = 0.0
 
 	if get_speed() < slide_speed:
 		velocity = wish_direction * slide_speed
-
-
-func slide_jump() -> void:
-	attempt_uncrouch()
-
-	velocity.y += slide_jump_impulse
-	velocity += get_direction_of_velocity() * slide_jump_horizontal_impulse
 
 
 func start_wallrun() -> void:
@@ -1037,6 +1053,13 @@ func can_slide() -> bool:
 	and get_speed() >= slide_start_speed
 
 
+func can_coyote_jump() -> bool:
+	return jump_enabled \
+	and coyote_jump_enabled \
+	and coyote_jump_ready \
+	and in_coyote_time()
+
+
 func can_coyote_slide() -> bool:
 	return slide_enabled \
 	and coyote_slide_enabled \
@@ -1049,7 +1072,8 @@ func can_coyote_slide() -> bool:
 
 
 func can_coyote_slide_jump() -> bool:
-	return coyote_slide_jump_enabled \
+	return not ledge_jump_enabled \
+	and coyote_slide_jump_enabled \
 	and coyote_slide_jump_ready \
 	and in_coyote_time()
 
