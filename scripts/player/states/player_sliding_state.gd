@@ -29,7 +29,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"jump") and _player.slide_jump_enabled and Global.time - _player.slide_timestamp >= _player.slide_jump_delay:
+	if InputBuffer.is_action_buffered(&"jump") and _player.can_slide_jump():
 		InputBuffer.clear_buffered_action(&"jump")
 		_player.coyote_slide_jump_ready = false
 		_player.ledge_jump_ready = false

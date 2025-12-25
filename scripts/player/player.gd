@@ -1040,6 +1040,11 @@ func can_slide_cancel() -> bool:
 	and Global.time - slide_timestamp >= slide_cancel_delay
 
 
+func can_slide_jump() -> bool:
+	return slide_jump_enabled \
+	and Global.time - slide_timestamp >= slide_jump_delay
+
+
 func can_continue_sliding() -> bool:
 	return slide_enabled \
 	and velocity.length() > slide_stop_speed
