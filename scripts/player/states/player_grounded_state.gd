@@ -14,6 +14,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.air_crouches = 0
 	_player.wall_jumps = 0
 	_player.clear_grapple_hook_point()
+	_player.velocity.y = 0.0
 
 
 func _state_physics_preprocess(_delta: float) -> void:
