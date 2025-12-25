@@ -10,6 +10,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.floor_constant_speed = false
 	_player.slide_timestamp = Global.time
 	_player.coyote_slide_ready = false
+	_player.coyote_jump_ready = false
 
 	if _player.ledge_jump_enabled:
 		_player.ledge_jump_ready = true
@@ -48,7 +49,6 @@ func _state_physics_process(delta: float) -> void:
 	_player.move()
 
 	if not _player.is_on_floor():
-		_player.coyote_jump_ready = false
 		state_machine.change_state_to(&"Airborne")
 		return
 
