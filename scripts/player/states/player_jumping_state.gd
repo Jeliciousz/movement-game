@@ -86,6 +86,6 @@ func update_stance() -> void:
 
 
 func update_physics() -> void:
-	_player.add_air_resistence(_player.physics_air_resistence)
+	_player.add_air_resistence()
 	_player.add_gravity(_player.physics_gravity_multiplier * _player.jump_gravity_multiplier)
 	_player.add_movement(_player.air_speed, _player.air_acceleration)

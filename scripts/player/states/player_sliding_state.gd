@@ -62,6 +62,6 @@ func update_physics(delta: float) -> void:
 	var weight: float = _player.get_floor_normal().dot(_player.get_direction_of_velocity())
 
 	_player.velocity += _player.get_direction_of_velocity() * weight * 15.0 * delta
-	_player.add_air_resistence(_player.physics_air_resistence)
+	_player.add_air_resistence()
 	_player.add_friction(_player.physics_friction * _player.slide_friction_multiplier, 0)
 	_player.add_movement(0, _player.slide_acceleration)

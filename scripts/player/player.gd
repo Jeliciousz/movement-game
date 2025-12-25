@@ -782,8 +782,8 @@ func _uncrouch() -> void:
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 
-func add_air_resistence(air_resistence: float) -> void:
-	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * get_speed() * get_physics_process_delta_time())
+func add_air_resistence() -> void:
+	velocity = velocity.move_toward(Vector3.ZERO, physics_air_resistence * get_speed() * get_physics_process_delta_time())
 
 
 func add_friction(friction: float, top_speed: float) -> void:

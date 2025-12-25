@@ -94,6 +94,6 @@ func update_physics() -> void:
 			top_speed = _player.sprint_speed
 			acceleration = _player.sprint_acceleration
 
-	_player.add_air_resistence(_player.physics_air_resistence)
+	_player.add_air_resistence()
 	_player.add_friction(_player.physics_friction, top_speed)
 	_player.add_movement(top_speed, acceleration)
