@@ -1014,6 +1014,52 @@ func can_start_wallrun() -> bool:
 	return true
 
 
+func can_continue_wallrun() -> bool:
+	wallrun_floor_raycast.force_raycast_update()
+
+	if wallrun_floor_raycast.is_colliding():
+		return false
+
+	var wall_normal: Vector3
+
+	if not is_on_wall():
+		wallrun_foot_raycast.target_position = basis.inverse() * -wall_run_normal * collision_shape.shape.radius * 3
+		wallrun_hand_raycast.target_position = basis.inverse() * -wall_run_normal * collision_shape.shape.radius * 3
+		wallrun_foot_raycast.force_raycast_update()
+		wallrun_hand_raycast.force_raycast_update()
+
+		if not (wallrun_foot_raycast.is_colliding() and wallrun_hand_raycast.is_colliding()):
+			return false
+
+		wall_normal = Vector3(wallrun_foot_raycast.get_collision_normal().x, 0.0, wallrun_foot_raycast.get_collision_normal().z).normalized()
+
+		if wall_normal.angle_to(wall_run_normal) > wall_run_max_external_angle + deg_to_rad(1):
+			return false
+
+		move_and_collide(-wall_run_normal * floor_snap_length, false, safe_margin)
+
+		check_surface(-wall_run_normal)
+	else:
+		wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+
+		if wall_normal.angle_to(wall_run_normal) > wall_run_max_internal_angle + deg_to_rad(1):
+			return false
+
+	if wall_normal != wall_run_normal:
+		wall_run_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
+
+		wall_run_direction = wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
+
+		if wall_run_direction.dot(get_direction_of_horizontal_velocity()) < 0.0:
+			wall_run_direction *= -1.0
+
+		velocity.x = wall_run_direction.x * get_horizontal_speed_before_move()
+		velocity.y = velocity_before_move.y
+		velocity.z = wall_run_direction.z * get_horizontal_speed_before_move()
+
+	return true
+
+
 func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	var grapple_hook_points: Array[GrappleHookPoint] = []
 

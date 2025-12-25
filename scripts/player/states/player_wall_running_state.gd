@@ -50,7 +50,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.get_horizontal_speed() < _player.wall_run_stop_speed or _player.get_horizontal_velocity().dot(_player.wall_run_direction) <= 0.0 or not wallrun_checks():
+	if _player.get_horizontal_speed() < _player.wall_run_stop_speed or _player.get_horizontal_velocity().dot(_player.wall_run_direction) <= 0.0 or not _player.can_continue_wallrun():
 		_player.velocity += _player.wall_run_normal * _player.wall_run_cancel_impulse
 		state_machine.change_state_to(&"Airborne")
 		return
@@ -80,49 +80,3 @@ func update_physics(delta: float) -> void:
 			_player.velocity = _player.velocity.move_toward(_player.get_horizontal_velocity(), _player.wall_run_upwards_friction * delta)
 
 		_player.add_wallrun_movement(_player.wall_run_direction)
-
-
-func wallrun_checks() -> bool:
-	_player.wallrun_floor_raycast.force_raycast_update()
-
-	if _player.wallrun_floor_raycast.is_colliding():
-		return false
-
-	var wall_normal: Vector3
-
-	if not _player.is_on_wall():
-		_player.wallrun_foot_raycast.target_position = _player.basis.inverse() * -_player.wall_run_normal * _player.collision_shape.shape.radius * 3
-		_player.wallrun_hand_raycast.target_position = _player.basis.inverse() * -_player.wall_run_normal * _player.collision_shape.shape.radius * 3
-		_player.wallrun_foot_raycast.force_raycast_update()
-		_player.wallrun_hand_raycast.force_raycast_update()
-
-		if not (_player.wallrun_foot_raycast.is_colliding() and _player.wallrun_hand_raycast.is_colliding()):
-			return false
-
-		wall_normal = Vector3(_player.wallrun_foot_raycast.get_collision_normal().x, 0.0, _player.wallrun_foot_raycast.get_collision_normal().z).normalized()
-
-		if wall_normal.angle_to(_player.wall_run_normal) > _player.wall_run_max_external_angle + deg_to_rad(1):
-			return false
-
-		_player.move_and_collide(-_player.wall_run_normal * _player.floor_snap_length, false, _player.safe_margin)
-
-		_player.check_surface(-_player.wall_run_normal)
-	else:
-		wall_normal = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-
-		if wall_normal.angle_to(_player.wall_run_normal) > _player.wall_run_max_internal_angle + deg_to_rad(1):
-			return false
-
-	if wall_normal != _player.wall_run_normal:
-		_player.wall_run_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
-
-		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
-
-		if _player.wall_run_direction.dot(_player.get_direction_of_horizontal_velocity()) < 0.0:
-			_player.wall_run_direction *= -1.0
-
-		_player.velocity.x = _player.wall_run_direction.x * _player.get_horizontal_speed_before_move()
-		_player.velocity.y = _player.velocity_before_move.y
-		_player.velocity.z = _player.wall_run_direction.z * _player.get_horizontal_speed_before_move()
-
-	return true
