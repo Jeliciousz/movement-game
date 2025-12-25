@@ -61,10 +61,9 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.air_jump_enabled and _player.air_jumps < _player.air_jump_limit:
+		if _player.can_air_jump():
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.air_jump()
-			_player.air_jumps += 1
 			state_machine.change_state_to(&"Jumping")
 			return
 
@@ -80,7 +79,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.mantle_enabled and _player.can_start_mantle():
+	if _player.mantle_enabled and _player.can_mantle():
 		state_machine.change_state_to(&"Mantling")
 		return
 

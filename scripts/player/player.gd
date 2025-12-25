@@ -881,6 +881,7 @@ func coyote_jump() -> void:
 
 
 func air_jump() -> void:
+	air_jumps += 1
 	attempt_uncrouch()
 
 	velocity = Vector3.ZERO
@@ -976,39 +977,21 @@ func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
 	velocity += wall_normal * wall_jump_normal_impulse
 
 
-func can_start_mantle() -> bool:
-	if not is_on_wall():
-		return false
+func can_air_jump() -> bool:
+	return air_jump_enabled \
+	and air_jumps < air_jump_limit
 
-	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-	if get_forward_direction().angle_to(-normal) > deg_to_rad(90.0):
-		return false
+func can_slide() -> bool:
+	return slide_enabled \
+	and Global.time - slide_timestamp >= slide_cooldown \
+	and not wish_direction.is_zero_approx() \
+	and is_zero_approx(get_amount_moving_backwards()) \
+	and get_speed() >= slide_start_speed
 
-	if wish_direction.is_zero_approx():
-		return false
 
-	if wish_direction.angle_to(-normal) > deg_to_rad(60.0):
-		return false
-
-	mantle_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
-	mantle_foot_raycast.force_raycast_update()
-
-	if not mantle_foot_raycast.is_colliding():
-		return false
-
-	mantle_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
-	mantle_hand_raycast.force_raycast_update()
-
-	if mantle_hand_raycast.is_colliding():
-		return false
-
-	mantle_head_raycast.force_raycast_update()
-
-	if mantle_head_raycast.is_colliding():
-		return false
-
-	return true
+func can_ledge_jump() -> bool:
+	return ledge_jump_enabled and ledge_jump_ready and slide_timestamp == airborne_timestamp and Global.time - airborne_timestamp <= ledge_jump_window
 
 
 func can_start_wallrun() -> bool:
@@ -1045,12 +1028,48 @@ func can_start_wallrun() -> bool:
 	return true
 
 
-func can_slide() -> bool:
-	return slide_enabled \
-	and Global.time - slide_timestamp >= slide_cooldown \
-	and not wish_direction.is_zero_approx() \
-	and is_zero_approx(get_amount_moving_backwards()) \
-	and get_speed() >= slide_start_speed
+func can_mantle() -> bool:
+	if not is_on_wall():
+		return false
+
+	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+
+	if get_forward_direction().angle_to(-normal) > deg_to_rad(90.0):
+		return false
+
+	if wish_direction.is_zero_approx():
+		return false
+
+	if wish_direction.angle_to(-normal) > deg_to_rad(60.0):
+		return false
+
+	mantle_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	mantle_foot_raycast.force_raycast_update()
+
+	if not mantle_foot_raycast.is_colliding():
+		return false
+
+	mantle_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	mantle_hand_raycast.force_raycast_update()
+
+	if mantle_hand_raycast.is_colliding():
+		return false
+
+	mantle_head_raycast.force_raycast_update()
+
+	if mantle_head_raycast.is_colliding():
+		return false
+
+	return true
+
+
+func can_grapple_hook() -> bool:
+	return active_grapple_hook_point != null \
+	and is_grapple_hook_point_in_range
+
+
+func in_coyote_time() -> bool:
+	return Time.get_ticks_msec() - coyote_engine_timestamp <= coyote_duration
 
 
 func can_coyote_jump() -> bool:
@@ -1080,18 +1099,6 @@ func can_coyote_slide_jump() -> bool:
 
 func can_coyote_wall_jump() -> bool:
 	return coyote_wall_jump_enabled and coyote_wall_jump_ready and in_coyote_time()
-
-
-func can_grapple_hook() -> bool:
-	return active_grapple_hook_point != null and is_grapple_hook_point_in_range
-
-
-func can_ledge_jump() -> bool:
-	return ledge_jump_enabled and ledge_jump_ready and slide_timestamp == airborne_timestamp and Global.time - airborne_timestamp <= ledge_jump_window
-
-
-func in_coyote_time() -> bool:
-	return Time.get_ticks_msec() - coyote_engine_timestamp <= coyote_duration
 
 
 func try_stick_to_wallrun() -> bool:
