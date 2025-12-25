@@ -50,7 +50,7 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.get_horizontal_speed() < _player.wall_run_stop_speed or _player.get_horizontal_velocity().dot(_player.wall_run_direction) <= 0.0 or not _player.try_stick_to_wallrun():
+	if not _player.try_stick_to_wallrun():
 		_player.stop_wallrun()
 		state_machine.change_state_to(&"Airborne")
 		return
@@ -74,4 +74,4 @@ func update_physics() -> void:
 	else:
 		_player.add_air_resistence()
 		_player.add_wallrun_friction()
-		_player.add_wallrun_movement(_player.wall_run_direction)
+		_player.add_wallrun_movement()

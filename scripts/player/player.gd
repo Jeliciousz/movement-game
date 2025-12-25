@@ -948,8 +948,8 @@ func stop_wallrun() -> void:
 	velocity += wall_run_normal * wall_run_cancel_impulse
 
 
-func add_wallrun_movement(run_direction: Vector3) -> void:
-	var direction: Vector3 = run_direction * wish_direction.dot(run_direction)
+func add_wallrun_movement() -> void:
+	var direction: Vector3 = wall_run_direction * wish_direction.dot(wall_run_direction)
 
 	var old_horizontal_speed: float = get_horizontal_speed()
 	velocity += direction * wall_run_acceleration * get_physics_process_delta_time()
@@ -1144,6 +1144,12 @@ func should_end_jump() -> bool:
 
 
 func try_stick_to_wallrun() -> bool:
+	if get_horizontal_speed() < wall_run_stop_speed:
+		return false
+
+	if get_horizontal_velocity().dot(wall_run_direction) <= 0.0:
+		return false
+
 	wallrun_floor_raycast.force_raycast_update()
 
 	if wallrun_floor_raycast.is_colliding():
