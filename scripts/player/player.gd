@@ -883,9 +883,15 @@ func air_jump() -> void:
 
 
 func slide() -> void:
-	stance = Stances.SPRINTING
 	crouch()
 
+	velocity.y = 0.0
+
+	if get_speed() < slide_speed:
+		velocity = wish_direction * slide_speed
+
+
+func coyote_slide() -> void:
 	velocity.y = 0.0
 
 	if get_speed() < slide_speed:

@@ -23,8 +23,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"slide") and _player.can_coyote_slide():
 		InputBuffer.clear_buffered_action(&"slide")
-		_player.slide()
-		_player.attempt_uncrouch()
+		_player.coyote_slide()
 
 	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.can_grapple_hook():
 		InputBuffer.clear_buffered_action(&"grapple_hook")
