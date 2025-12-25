@@ -1044,7 +1044,7 @@ func try_stick_to_wallrun() -> bool:
 		if wall_normal.angle_to(wall_run_normal) > wall_run_max_external_angle:
 			return false
 
-		move_and_collide(-wall_run_normal * floor_snap_length, false, safe_margin)
+		move_and_collide(-wall_run_normal * floor_snap_length)
 
 		check_surface(-wall_run_normal)
 	else:
