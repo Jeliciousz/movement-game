@@ -1022,6 +1022,25 @@ func can_start_wallrun() -> bool:
 	return true
 
 
+func can_slide() -> bool:
+	if not slide_enabled:
+		return false
+
+	if Global.time - slide_timestamp < slide_cooldown:
+		return false
+
+	if wish_direction.is_zero_approx():
+		return false
+
+	if not is_zero_approx(get_amount_moving_backwards()):
+		return false
+
+	if get_speed() < slide_start_speed:
+		return false
+
+	return true
+
+
 func try_stick_to_wallrun() -> bool:
 	wallrun_floor_raycast.force_raycast_update()
 

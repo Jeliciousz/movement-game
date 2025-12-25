@@ -21,7 +21,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and _player.coyote_slide_enabled and _player.coyote_slide_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration and slide_checks():
+	if InputBuffer.is_action_buffered(&"slide") and _player.coyote_slide_enabled and _player.coyote_slide_ready and Time.get_ticks_msec() - _player.coyote_engine_timestamp <= _player.coyote_duration and _player.can_slide():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
 		_player.attempt_uncrouch()
@@ -144,22 +144,6 @@ func handle_grapple_hooking() -> void:
 	elif _player.active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
 		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
 		_player.grapple_hook_indicator_audio.play()
-
-
-func slide_checks() -> bool:
-	if _player.wish_direction.is_zero_approx():
-		return false
-
-	if not is_zero_approx(_player.get_amount_moving_backwards()):
-		return false
-
-	if _player.get_speed() < _player.slide_start_speed:
-		return false
-
-	if Global.time - _player.slide_timestamp < _player.slide_cooldown:
-		return false
-
-	return true
 
 
 func update_physics() -> void:

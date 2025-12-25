@@ -20,7 +20,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"slide") and _player.slide_enabled and slide_checks():
+	if InputBuffer.is_action_buffered(&"slide") and _player.can_slide():
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.slide()
 		state_machine.change_state_to(&"Sliding")
@@ -77,22 +77,6 @@ func update_stance() -> void:
 
 			if Input.is_action_just_pressed(&"crouch") and _player.crouch_enabled:
 				_player.crouch()
-
-
-func slide_checks() -> bool:
-	if _player.wish_direction.is_zero_approx():
-		return false
-
-	if not is_zero_approx(_player.get_amount_moving_backwards()):
-		return false
-
-	if _player.get_speed() < _player.slide_start_speed:
-		return false
-
-	if Global.time - _player.slide_timestamp < _player.slide_cooldown:
-		return false
-
-	return true
 
 
 func update_physics() -> void:
