@@ -5,8 +5,6 @@ extends State
 ## The [Player].
 @export var _player: Player
 
-var player_velocity_before_move: Vector3 = Vector3.ZERO
-
 
 func _state_enter(_last_state_name: StringName) -> void:
 	_player.wall_run_timestamp = Global.time
@@ -45,7 +43,6 @@ func _state_physics_preprocess(_delta: float) -> void:
 func _state_physics_process(delta: float) -> void:
 	update_stance()
 	update_physics(delta)
-	player_velocity_before_move = _player.velocity
 	_player.stair_step_up(_player.get_horizontal_velocity() * delta)
 	_player.move()
 
@@ -53,7 +50,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.get_horizontal_velocity().length() < _player.wall_run_stop_speed or _player.get_horizontal_velocity().dot(_player.wall_run_direction) <= 0.0 or not wallrun_checks():
+	if _player.get_horizontal_speed() < _player.wall_run_stop_speed or _player.get_horizontal_velocity().dot(_player.wall_run_direction) <= 0.0 or not wallrun_checks():
 		_player.velocity += _player.wall_run_normal * _player.wall_run_cancel_impulse
 		state_machine.change_state_to(&"Airborne")
 		return
@@ -121,13 +118,11 @@ func wallrun_checks() -> bool:
 
 		_player.wall_run_direction = _player.wall_run_normal.rotated(Vector3.UP, deg_to_rad(90.0))
 
-		if _player.wall_run_direction.dot(_player.get_horizontal_velocity().normalized()) < 0.0:
+		if _player.wall_run_direction.dot(_player.get_direction_of_horizontal_velocity()) < 0.0:
 			_player.wall_run_direction *= -1.0
 
-		var horizontal_speed_before_move: float = Vector2(player_velocity_before_move.x, player_velocity_before_move.z).length()
-
-		_player.velocity.x = _player.wall_run_direction.x * horizontal_speed_before_move
-		_player.velocity.y = player_velocity_before_move.y
-		_player.velocity.z = _player.wall_run_direction.z * horizontal_speed_before_move
+		_player.velocity.x = _player.wall_run_direction.x * _player.get_horizontal_speed_before_move()
+		_player.velocity.y = _player.velocity_before_move.y
+		_player.velocity.z = _player.wall_run_direction.z * _player.get_horizontal_speed_before_move()
 
 	return true

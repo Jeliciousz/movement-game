@@ -86,7 +86,7 @@ func slide_checks() -> bool:
 	if not is_zero_approx(_player.get_amount_moving_backwards()):
 		return false
 
-	if _player.velocity.length() < _player.slide_start_speed:
+	if _player.get_speed() < _player.slide_start_speed:
 		return false
 
 	if Global.time - _player.slide_timestamp < _player.slide_cooldown:

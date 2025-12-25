@@ -406,6 +406,8 @@ var wall_jumps: int = 0
 var wall_run_normal: Vector3 = Vector3.ZERO
 var wall_run_direction: Vector3 = Vector3.ZERO
 
+var velocity_before_move: Vector3 = Vector3.ZERO
+
 var active_grapple_hook_point: GrappleHookPoint = null
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -526,6 +528,57 @@ func get_horizontal_velocity() -> Vector3:
 	return Vector3(velocity.x, 0.0, velocity.z)
 
 
+## Returns the speed of the player.
+func get_speed() -> float:
+	return velocity.length()
+
+
+## Returns the horizontal speed of the player.
+func get_horizontal_speed() -> float:
+	return Vector2(velocity.x, velocity.z).length()
+
+
+## Returns the direction of the velocity of the player.
+func get_direction_of_velocity() -> Vector3:
+	return velocity.normalized()
+
+
+## Returns the direction of the horizontal velocity of the player.
+func get_direction_of_horizontal_velocity() -> Vector3:
+	return get_horizontal_velocity().normalized()
+
+
+## Returns what the vertical velocity of the player was before moving.
+func get_vertical_velocity_before_move() -> Vector3:
+	return Vector3(0.0, velocity_before_move.y, 0.0)
+
+
+## Returns what the horizontal velocity of the player was before moving.
+func get_horizontal_velocity_before_move() -> Vector3:
+	return Vector3(velocity_before_move.x, 0.0, velocity_before_move.z)
+
+
+
+## Returns what the speed of the player was before moving.
+func get_speed_before_move() -> float:
+	return velocity_before_move.length()
+
+
+## Returns what the horizontal speed of the player was before moving.
+func get_horizontal_speed_before_move() -> float:
+	return Vector2(velocity_before_move.x, velocity_before_move.z).length()
+
+
+## Returns what the direction of the velocity of the player was before moving.
+func get_direction_of_velocity_before_move() -> Vector3:
+	return velocity_before_move.normalized()
+
+
+## Returns what the direction of the horizontal velocity of the player was before moving.
+func get_direction_of_horizontal_velocity_before_move() -> Vector3:
+	return get_horizontal_velocity_before_move().normalized()
+
+
 ## Returns the player's center of mass.
 func get_center_of_mass() -> Vector3:
 	return collision_shape.global_position
@@ -537,6 +590,8 @@ func get_center_of_mass() -> Vector3:
 
 
 func move() -> void:
+	velocity_before_move = velocity
+
 	move_and_slide()
 
 	# Is set to 0.0 when stepping up, so resetting after moving is necessary
@@ -723,22 +778,18 @@ func _uncrouch() -> void:
 
 
 func add_air_resistence(air_resistence: float) -> void:
-	var current_speed: float = velocity.length()
-
-	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * current_speed * get_physics_process_delta_time())
+	velocity = velocity.move_toward(Vector3.ZERO, air_resistence * get_speed() * get_physics_process_delta_time())
 
 
 func add_friction(friction: float, top_speed: float) -> void:
-	var friction_direction: Vector3 = -velocity.normalized()
+	var friction_direction: Vector3 = -get_direction_of_velocity()
 
 	# When friction direction and movement direction oppose each other, dot product = -1, +1 = 0
 	# Clamp between 0 and 1 to not apply more friction when friction direction aligns with movement direction
 	var friction_product: float = minf(friction_direction.dot(wish_direction) + 1.0, 1.0)
 
 	# If player is faster than the top speed they can move at, it will always apply friction. A reduced amount if going against the movement direction
-	var current_speed: float = velocity.length()
-
-	if current_speed > top_speed:
+	if get_speed() > top_speed:
 		var scaled_friction_product: float = lerpf(move_friction_multiplier, 1, friction_product)
 
 		velocity = velocity.move_toward(velocity.limit_length(top_speed), friction * get_physics_process_delta_time() * scaled_friction_product)
@@ -776,9 +827,9 @@ func add_movement(top_speed: float, acceleration: float) -> void:
 
 	var backwards_multiplier: float = lerpf(1.0, move_backwards_multiplier, get_amount_moving_backwards())
 
-	var old_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+	var old_horizontal_speed: float = get_horizontal_speed()
 	velocity += wish_direction * acceleration * backwards_multiplier * get_physics_process_delta_time()
-	var new_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+	var new_horizontal_speed: float = get_horizontal_speed()
 
 	if new_horizontal_speed <= old_horizontal_speed:
 		return
@@ -789,9 +840,9 @@ func add_movement(top_speed: float, acceleration: float) -> void:
 	var limited_velocity: Vector3
 
 	if old_horizontal_speed <= top_speed * backwards_multiplier:
-		limited_velocity = Vector3(velocity.x, 0.0, velocity.z).limit_length(top_speed * backwards_multiplier)
+		limited_velocity = get_horizontal_velocity().limit_length(top_speed * backwards_multiplier)
 	else:
-		limited_velocity = Vector3(velocity.x, 0.0, velocity.z).limit_length(old_horizontal_speed)
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
 
 	velocity.x = limited_velocity.x
 	velocity.z = limited_velocity.z
@@ -804,8 +855,7 @@ func jump() -> void:
 	var effective_horizontal_impulse: float = jump_horizontal_impulse
 
 	if proportional_jump_enabled:
-		var horizontal_speed: float = get_horizontal_velocity().length()
-		var proportional_jump_weight: float = clampf((horizontal_speed - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
+		var proportional_jump_weight: float = clampf((get_horizontal_speed() - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
 
 		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
 		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
@@ -838,7 +888,7 @@ func slide() -> void:
 
 	velocity.y = 0.0
 
-	if velocity.length() < slide_speed:
+	if get_speed() < slide_speed:
 		velocity = wish_direction * slide_speed
 
 
@@ -846,15 +896,15 @@ func slide_jump() -> void:
 	attempt_uncrouch()
 
 	velocity.y += slide_jump_impulse
-	velocity += velocity.normalized() * slide_jump_horizontal_impulse
+	velocity += get_direction_of_velocity() * slide_jump_horizontal_impulse
 
 
 func add_wallrun_movement(run_direction: Vector3) -> void:
 	var direction: Vector3 = run_direction * wish_direction.dot(run_direction)
 
-	var old_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+	var old_horizontal_speed: float = get_horizontal_speed()
 	velocity += direction * wall_run_acceleration * get_physics_process_delta_time()
-	var new_horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+	var new_horizontal_speed: float = get_horizontal_speed()
 
 	if new_horizontal_speed <= old_horizontal_speed:
 		return
@@ -862,15 +912,15 @@ func add_wallrun_movement(run_direction: Vector3) -> void:
 	if new_horizontal_speed <= wall_run_speed:
 		return
 
-	var limited_velocity: Vector2
+	var limited_velocity: Vector3
 
 	if old_horizontal_speed <= wall_run_speed:
-		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(wall_run_speed)
+		limited_velocity = get_horizontal_velocity().limit_length(wall_run_speed)
 	else:
-		limited_velocity = Vector2(velocity.x, velocity.z).limit_length(old_horizontal_speed)
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
 
 	velocity.x = limited_velocity.x
-	velocity.z = limited_velocity.y
+	velocity.z = limited_velocity.z
 
 
 func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
@@ -920,6 +970,45 @@ func mantle_checks() -> bool:
 	mantle_head_raycast.force_raycast_update()
 
 	if mantle_head_raycast.is_colliding():
+		return false
+
+	return true
+
+
+func wallrun_checks() -> bool:
+	if Global.time - wall_run_timestamp < wall_run_cooldown:
+		return false
+
+	if not is_on_wall():
+		return false
+
+	if get_wall_normal().y < -safe_margin:
+		return false
+
+	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+
+	if get_forward_direction().dot(-normal) >= 0.8:
+		return false
+
+	var run_direction: Vector3 = normal.rotated(Vector3.UP, deg_to_rad(90.0))
+
+	if run_direction.dot(get_direction_of_horizontal_velocity()) < 0.0:
+		run_direction *= -1.0
+
+	if get_horizontal_speed_before_move() < wall_run_start_speed:
+		return false
+
+	wallrun_floor_raycast.force_raycast_update()
+
+	if wallrun_floor_raycast.is_colliding():
+		return false
+
+	wallrun_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	wallrun_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	wallrun_foot_raycast.force_raycast_update()
+	wallrun_hand_raycast.force_raycast_update()
+
+	if not (wallrun_foot_raycast.is_colliding() and wallrun_hand_raycast.is_colliding()):
 		return false
 
 	return true
