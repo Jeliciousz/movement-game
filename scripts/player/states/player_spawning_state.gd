@@ -28,7 +28,7 @@ func spawn_random() -> void:
 	_player.reset_physics_interpolation()
 
 	if _player.active_grapple_hook_point:
-		clear_grapple_hook_point()
+		_player.clear_grapple_hook_point()
 
 	InputBuffer.clear_buffered_action("jump")
 	InputBuffer.clear_buffered_action("sprint")
@@ -39,9 +39,3 @@ func spawn_random() -> void:
 		state_machine.change_state_to(&"Grounded")
 	else:
 		state_machine.change_state_to(&"Airborne")
-
-
-func clear_grapple_hook_point() -> void:
-	if _player.active_grapple_hook_point:
-		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
-		_player.active_grapple_hook_point = null

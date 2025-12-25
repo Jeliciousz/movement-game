@@ -13,7 +13,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.air_jumps = 0
 	_player.air_crouches = 0
 	_player.wall_jumps = 0
-	clear_grapple_hook_point()
+	_player.clear_grapple_hook_point()
 
 
 func _state_physics_preprocess(_delta: float) -> void:
@@ -49,12 +49,6 @@ func _state_physics_process(delta: float) -> void:
 	if not _player.is_on_floor():
 		state_machine.change_state_to(&"Airborne")
 		return
-
-
-func clear_grapple_hook_point() -> void:
-	if _player.active_grapple_hook_point != null:
-		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
-		_player.active_grapple_hook_point = null
 
 
 func update_stance() -> void:

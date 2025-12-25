@@ -15,7 +15,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_wall_jump_ready = true
 	_player.air_jumps = 0
 	_player.air_crouches = 0
-	clear_grapple_hook_point()
+	_player.clear_grapple_hook_point()
 	_player.footstep_audio.play()
 
 
@@ -57,12 +57,6 @@ func _state_physics_process(delta: float) -> void:
 		_player.velocity += _player.wall_run_normal * _player.wall_run_cancel_impulse
 		state_machine.change_state_to(&"Airborne")
 		return
-
-
-func clear_grapple_hook_point() -> void:
-	if _player.active_grapple_hook_point != null:
-		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
-		_player.active_grapple_hook_point = null
 
 
 func update_stance() -> void:

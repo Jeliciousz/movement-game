@@ -98,16 +98,16 @@ func update_stance() -> void:
 
 func handle_grapple_hooking() -> void:
 	if not _player.grapple_hook_enabled:
-		clear_grapple_hook_point()
+		_player.clear_grapple_hook_point()
 		return
 
 	var target_grapple_hook_point: GrappleHookPoint = _player.get_targeted_grapple_hook_point()
 
 	if target_grapple_hook_point == null:
-		clear_grapple_hook_point()
+		_player.clear_grapple_hook_point()
 		return
 	elif _player.active_grapple_hook_point != target_grapple_hook_point:
-		clear_grapple_hook_point()
+		_player.clear_grapple_hook_point()
 		_player.active_grapple_hook_point = target_grapple_hook_point
 
 	_player.grapple_hook_point_in_range = _player.active_grapple_hook_point.position.distance_to(_player.head.global_position) <= _player.grapple_hook_max_distance
@@ -117,12 +117,6 @@ func handle_grapple_hooking() -> void:
 	elif _player.active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
 		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
 		_player.grapple_hook_indicator_audio.play()
-
-
-func clear_grapple_hook_point() -> void:
-	if _player.active_grapple_hook_point != null:
-		_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
-		_player.active_grapple_hook_point = null
 
 
 func update_physics() -> void:

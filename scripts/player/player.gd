@@ -955,6 +955,12 @@ func get_targeted_grapple_hook_point() -> GrappleHookPoint:
 	return grapple_hook_points[0]
 
 
+func clear_grapple_hook_point() -> void:
+	if active_grapple_hook_point != null:
+		active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
+		active_grapple_hook_point = null
+
+
 func _compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bool:
 	var proximity_to_crosshair_a: float = head.global_position.direction_to(a.position).dot(get_looking_direction())
 	var proximity_to_crosshair_b: float = head.global_position.direction_to(b.position).dot(get_looking_direction())
