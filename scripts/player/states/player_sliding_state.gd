@@ -37,9 +37,9 @@ func _state_physics_preprocess(_delta: float) -> void:
 		state_machine.change_state_to(&"Jumping")
 		return
 
-	if InputBuffer.is_action_buffered(&"slide") and _player.slide_cancel_enabled and Global.time - _player.slide_timestamp >= _player.slide_cancel_delay:
+	if InputBuffer.is_action_buffered(&"slide") and _player.can_slide_cancel():
 		InputBuffer.clear_buffered_action(&"slide")
-		_player.velocity -= _player.get_direction_of_velocity() * _player.slide_cancel_impulse
+		_player.slide_cancel()
 		state_machine.change_state_to(&"Grounded")
 		return
 

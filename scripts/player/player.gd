@@ -913,6 +913,10 @@ func slide() -> void:
 		velocity = wish_direction * slide_speed
 
 
+func slide_cancel() -> void:
+	velocity -= get_direction_of_velocity() * slide_cancel_impulse
+
+
 func slide_jump() -> void:
 	attempt_uncrouch()
 
@@ -1031,12 +1035,21 @@ func can_slide() -> bool:
 	and get_speed() >= slide_start_speed
 
 
+func can_slide_cancel() -> bool:
+	return slide_cancel_enabled \
+	and Global.time - slide_timestamp >= slide_cancel_delay
+
+
 func can_continue_sliding() -> bool:
-	return slide_enabled and velocity.length() > slide_stop_speed
+	return slide_enabled \
+	and velocity.length() > slide_stop_speed
 
 
 func can_ledge_jump() -> bool:
-	return ledge_jump_enabled and ledge_jump_ready and slide_timestamp == airborne_timestamp and Global.time - airborne_timestamp <= ledge_jump_window
+	return ledge_jump_enabled \
+	and ledge_jump_ready \
+	and slide_timestamp == airborne_timestamp \
+	and Global.time - airborne_timestamp <= ledge_jump_window
 
 
 func can_start_wallrun() -> bool:
@@ -1149,7 +1162,9 @@ func can_coyote_slide_jump() -> bool:
 
 
 func can_coyote_wall_jump() -> bool:
-	return coyote_wall_jump_enabled and coyote_wall_jump_ready and in_coyote_time()
+	return coyote_wall_jump_enabled \
+	and coyote_wall_jump_ready \
+	and in_coyote_time()
 
 
 func try_stick_to_wallrun() -> bool:
