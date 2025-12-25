@@ -1081,7 +1081,7 @@ func can_start_wallrun() -> bool:
 
 	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-	if get_direction_of_horizontal_velocity().angle_to(-normal) < deg_to_rad(wall_run_min_start_angle):
+	if get_direction_of_horizontal_velocity_before_move().angle_to(-normal) < wall_run_min_start_angle:
 		return false
 
 	if get_horizontal_speed_before_move() < wall_run_start_speed:
