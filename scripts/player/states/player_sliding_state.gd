@@ -52,7 +52,7 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Airborne")
 		return
 
-	if not _player.slide_enabled or _player.velocity.length() < _player.slide_stop_speed:
+	if not _player.can_continue_sliding():
 		_player.attempt_uncrouch()
 		state_machine.change_state_to(&"Grounded")
 		return

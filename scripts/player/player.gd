@@ -1007,6 +1007,12 @@ func coyote_wall_jump(direction: Vector3) -> void:
 	velocity += wall_run_normal * wall_jump_normal_impulse
 
 
+func can_continue_jumping() -> bool:
+	return jump_enabled \
+	and velocity.y > 0.0 \
+	and Global.time - jump_timestamp <= jump_duration
+
+
 func can_crouch_jump() -> bool:
 	return crouch_jump_enabled \
 	and (crouch_jump_window == 0.0 or Global.time - crouch_timestamp <= crouch_jump_window)
@@ -1023,6 +1029,10 @@ func can_slide() -> bool:
 	and not wish_direction.is_zero_approx() \
 	and is_zero_approx(get_amount_moving_backwards()) \
 	and get_speed() >= slide_start_speed
+
+
+func can_continue_sliding() -> bool:
+	return slide_enabled and velocity.length() > slide_stop_speed
 
 
 func can_ledge_jump() -> bool:
@@ -1140,12 +1150,6 @@ func can_coyote_slide_jump() -> bool:
 
 func can_coyote_wall_jump() -> bool:
 	return coyote_wall_jump_enabled and coyote_wall_jump_ready and in_coyote_time()
-
-
-func should_end_jump() -> bool:
-	return not jump_enabled \
-	or velocity.y < 0.0 \
-	or Global.time - jump_timestamp > jump_duration
 
 
 func try_stick_to_wallrun() -> bool:
