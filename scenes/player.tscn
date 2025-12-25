@@ -423,8 +423,6 @@ script = ExtResource("8_smehm")
 _player = NodePath("../../..")
 
 [node name="DebugInfo" type="Label" parent="PlayerHUD" unique_id=2032863362 node_paths=PackedStringArray("_player")]
-process_mode = 4
-visible = false
 layout_mode = 0
 offset_left = 6.0
 offset_top = 5.0
