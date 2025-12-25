@@ -1013,6 +1013,9 @@ func can_ledge_jump() -> bool:
 
 
 func can_start_wallrun() -> bool:
+	if not wall_run_enabled:
+		return false
+
 	if Global.time - wall_run_timestamp < wall_run_cooldown:
 		return false
 
@@ -1047,6 +1050,9 @@ func can_start_wallrun() -> bool:
 
 
 func can_mantle() -> bool:
+	if not mantle_enabled:
+		return false
+
 	if not is_on_wall():
 		return false
 

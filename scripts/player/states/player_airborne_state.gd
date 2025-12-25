@@ -35,7 +35,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		if _player.can_coyote_wall_jump():
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.coyote_wall_jump_ready = false
-			_player.coyote_wall_jump(_player.wall_run_normal, _player.wall_run_direction)
+			_player.coyote_wall_jump(_player.wall_run_direction)
 			state_machine.change_state_to(&"Jumping")
 			return
 
@@ -77,11 +77,11 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.mantle_enabled and _player.can_mantle():
+	if _player.can_mantle():
 		state_machine.change_state_to(&"Mantling")
 		return
 
-	if _player.wall_run_enabled and _player.can_start_wallrun():
+	if _player.can_start_wallrun():
 		_player.start_wallrun()
 		state_machine.change_state_to(&"WallRunning")
 		return

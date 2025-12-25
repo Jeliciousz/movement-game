@@ -41,11 +41,11 @@ func _state_physics_process(delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
-	if _player.mantle_enabled and _player.can_mantle():
+	if _player.can_mantle():
 		state_machine.change_state_to(&"Mantling")
 		return
 
-	if _player.wall_run_enabled and _player.can_start_wallrun():
+	if _player.can_start_wallrun():
 		_player.start_wallrun()
 		state_machine.change_state_to(&"WallRunning")
 		return
