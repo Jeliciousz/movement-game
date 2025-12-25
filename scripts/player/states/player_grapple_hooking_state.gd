@@ -16,8 +16,8 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.grapple_hook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
 	_player.grapple_hook_line.points[1] = _player.active_grapple_hook_point.position - _player.grapple_hook_line.position
 
-	var direction_from_grapple: Vector3 = _player.active_grapple_hook_point.position.direction_to(_player.get_center_of_mass())
-	_player.velocity += -direction_from_grapple * _player.grapple_hook_speed
+	var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapple_hook_point.position)
+	_player.velocity += direction_to_grapple * _player.grapple_hook_speed
 
 
 func _state_exit() -> void:
