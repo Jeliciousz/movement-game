@@ -960,7 +960,7 @@ func add_wallrun_movement(run_direction: Vector3) -> void:
 	velocity.z = limited_velocity.z
 
 
-func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
+func wall_jump(direction: Vector3) -> void:
 	wall_jumps += 1
 
 	var effective_impulse: float
@@ -973,8 +973,26 @@ func wall_jump(wall_normal: Vector3, run_direction: Vector3) -> void:
 		effective_impulse = wall_jump_impulse
 
 	velocity.y = effective_impulse
-	velocity += run_direction * wall_jump_forward_impulse
-	velocity += wall_normal * wall_jump_normal_impulse
+	velocity += direction * wall_jump_forward_impulse
+	velocity += wall_run_normal * wall_jump_normal_impulse
+
+
+func coyote_wall_jump(direction: Vector3) -> void:
+	velocity -= wall_run_normal * wall_run_cancel_impulse
+	wall_jumps += 1
+
+	var effective_impulse: float
+
+	if wall_jumps == wall_jump_max_limit:
+		effective_impulse = 0.0
+	elif wall_jumps > wall_jump_min_limit:
+		effective_impulse = lerpf(wall_jump_impulse, 0.0, float(wall_jumps - wall_jump_min_limit) / float(wall_jump_max_limit - wall_jump_min_limit))
+	else:
+		effective_impulse = wall_jump_impulse
+
+	velocity.y = effective_impulse
+	velocity += direction * wall_jump_forward_impulse
+	velocity += wall_run_normal * wall_jump_normal_impulse
 
 
 func can_air_jump() -> bool:
