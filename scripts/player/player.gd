@@ -314,14 +314,17 @@ func get_stance_as_text() -> String:
 ## How hard the player is pushed from a wall when they cancel a wall-run.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_run_cancel_impulse: float = 2.0
 
-## How long the player must wait after a wallrun until they can wallrun again.
+## How long the player must wait after a wallrun until they can wall-run again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wall_run_cooldown: float = 0.25
 
+## At what angle into a wall must a player be moving in to start wall-running.
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_min_start_angle: float = deg_to_rad(15.0)
+
 ## The largest external angle a wall can have for the player to stay running on it.
-@export_range(0.0, 89.0, 1.0, "radians_as_degrees") var wall_run_max_external_angle: float = deg_to_rad(15.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_max_external_angle: float = deg_to_rad(15.0)
 
 ## The largest internal angle a wall can have for the player to stay running on it.
-@export_range(0.0, 89.0, 1.0, "radians_as_degrees") var wall_run_max_internal_angle: float = deg_to_rad(45.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_max_internal_angle: float = deg_to_rad(45.0)
 
 
 @export_subgroup("Wall-Jumping", "wall_jump_")
@@ -1078,7 +1081,7 @@ func can_start_wallrun() -> bool:
 
 	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-	if get_forward_direction().angle_to(-normal) < deg_to_rad(5.0):
+	if get_direction_of_horizontal_velocity().angle_to(-normal) < deg_to_rad(wall_run_min_start_angle):
 		return false
 
 	if get_horizontal_speed_before_move() < wall_run_start_speed:
