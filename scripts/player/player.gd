@@ -867,7 +867,7 @@ func jump() -> void:
 func ledge_jump() -> void:
 	attempt_uncrouch()
 
-	velocity.y += ledge_jump_impulse
+	velocity.y = ledge_jump_impulse
 	velocity += wish_direction * ledge_jump_horizontal_impulse
 
 
