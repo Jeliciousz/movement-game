@@ -26,7 +26,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		_player.slide()
 		_player.attempt_uncrouch()
 
-	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.active_grapple_hook_point != null and _player.grapple_hook_point_in_range:
+	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.can_grapple_hook():
 		InputBuffer.clear_buffered_action(&"grapple_hook")
 		_player.grapple_hook_fire_audio.play()
 		state_machine.change_state_to(&"GrappleHooking")

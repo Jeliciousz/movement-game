@@ -397,7 +397,7 @@ var coyote_slide_ready: bool = false
 var coyote_slide_jump_ready: bool = false
 var coyote_wall_jump_ready: bool = false
 var ledge_jump_ready: bool = false
-var grapple_hook_point_in_range: bool = false
+var is_grapple_hook_point_in_range: bool = false
 
 var air_jumps: int = Global.MAX_INT
 var air_crouches: int = Global.MAX_INT
@@ -1041,6 +1041,10 @@ func can_slide() -> bool:
 	return true
 
 
+func can_grapple_hook() -> bool:
+	return active_grapple_hook_point != null and is_grapple_hook_point_in_range
+
+
 func try_stick_to_wallrun() -> bool:
 	wallrun_floor_raycast.force_raycast_update()
 
@@ -1097,9 +1101,9 @@ func update_active_grapple_hook_point() -> void:
 		clear_grapple_hook_point()
 		active_grapple_hook_point = target_grapple_hook_point
 
-	grapple_hook_point_in_range = active_grapple_hook_point.position.distance_to(head.global_position) <= grapple_hook_max_distance
+	is_grapple_hook_point_in_range = active_grapple_hook_point.position.distance_to(head.global_position) <= grapple_hook_max_distance
 
-	if not grapple_hook_point_in_range:
+	if not is_grapple_hook_point_in_range:
 		active_grapple_hook_point.targeted = GrappleHookPoint.Target.INVALID_TARGET
 	elif active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
 		active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
