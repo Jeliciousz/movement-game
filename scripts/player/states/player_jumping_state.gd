@@ -50,6 +50,11 @@ func _state_physics_process(_delta: float) -> void:
 		state_machine.change_state_to(&"WallRunning")
 		return
 
+	if _player.can_start_wallgrab():
+		_player.start_wallgrab()
+		state_machine.change_state_to(&"WallGrabbing")
+		return
+
 	if not _player.can_continue_jumping():
 		state_machine.change_state_to(&"Airborne")
 		return

@@ -276,6 +276,24 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.25
 
 
+@export_group("Wall-Grabbing", "wallgrab_")
+
+## Can the player wall-grab?
+@export var wallgrab_enabled: bool = true
+
+## How long the player can wall-grab until they fall.
+@export_range(0.0, 1.0, 0.005, "suffix:s") var wallgrab_duration: float = 2.5
+
+## How much friction is applied while wall-grabbing.
+@export_range(0.0, 1.0, 0.05, "suffix:×") var wallgrab_friction_multiplier: float = 0.95
+
+## How hard the player is pushed from a wall when they cancel a wall-grab.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallgrab_cancel_impulse: float = 4.0
+
+## How long the player must wait after a wall-grab until they can wall-grab again.
+@export_range(0.0, 1.0, 0.005, "suffix:s") var wallgrab_cooldown: float = 0.25
+
+
 @export_subgroup("Wall-Jumping", "walljump_")
 
 ## Can the player wall-jump?
@@ -293,7 +311,7 @@ func get_stance_as_text() -> String:
 ## How much the player's forward speed is penalized when they jump from a wall-run.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_penalty_impulse: float = -4.5
 
-## How far the player jumps away from the wall when wall-running.
+## How far the player jumps away from the wall when wall-grabbing or wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_normal_impulse: float = 10.0
 
 
@@ -395,6 +413,7 @@ var crouch_timestamp: float = 0.0
 var airborne_timestamp: float = 0.0
 var jump_timestamp: float = 0.0
 var slide_timestamp: float = 0.0
+var wallgrab_timestamp: float = 0.0
 var wallrun_timestamp: float = 0.0
 
 var air_crouching: bool = false
@@ -1022,6 +1041,15 @@ func coyote_walljump() -> void:
 		velocity.z = new_horizontal_vel.z
 
 
+func start_wallgrab() -> void:
+	wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+	velocity.y = 0.0
+
+
+func stop_wallgrab() -> void:
+	velocity += wall_normal * wallgrab_cancel_impulse
+
+
 func start_wallrun() -> void:
 	wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 	wallrun_direction = (get_horizontal_velocity_before_move() - wall_normal * get_horizontal_velocity_before_move().dot(wall_normal)).normalized()
@@ -1112,6 +1140,9 @@ func can_start_wallrun() -> bool:
 	if Global.time - wallrun_timestamp < wallrun_cooldown:
 		return false
 
+	if Global.time - wallgrab_timestamp < wallrun_cooldown:
+		return false
+
 	if not is_on_wall():
 		return false
 
@@ -1129,6 +1160,40 @@ func can_start_wallrun() -> bool:
 
 	if get_horizontal_velocity_before_move().dot(direction) < wallrun_start_speed:
 		return false
+
+	wallgrab_floor_raycast.force_raycast_update()
+
+	if wallgrab_floor_raycast.is_colliding():
+		return false
+
+	wallgrab_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	wallgrab_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	wallgrab_foot_raycast.force_raycast_update()
+	wallgrab_hand_raycast.force_raycast_update()
+
+	if not (wallgrab_foot_raycast.is_colliding() and wallgrab_hand_raycast.is_colliding()):
+		return false
+
+	return true
+
+
+func can_start_wallgrab() -> bool:
+	if not wallgrab_enabled:
+		return false
+
+	if Global.time - wallgrab_timestamp < wallgrab_cooldown:
+		return false
+
+	if Global.time - wallrun_timestamp < wallgrab_cooldown:
+		return false
+
+	if not is_on_wall():
+		return false
+
+	if get_wall_normal().y < -safe_margin:
+		return false
+
+	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
 	wallgrab_floor_raycast.force_raycast_update()
 
@@ -1231,6 +1296,29 @@ func can_coyote_walljump() -> bool:
 	and coyote_walljump_enabled \
 	and coyote_walljump_ready \
 	and in_coyote_time()
+
+
+func can_continue_wallgrabbing() -> bool:
+	if not wallgrab_enabled:
+		return false
+
+	if Global.time - wallgrab_timestamp > wallgrab_duration:
+		return false
+
+	wallgrab_floor_raycast.force_raycast_update()
+
+	if wallgrab_floor_raycast.is_colliding():
+		return false
+
+	wallgrab_foot_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 2.0
+	wallgrab_hand_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 2.0
+	wallgrab_foot_raycast.force_raycast_update()
+	wallgrab_hand_raycast.force_raycast_update()
+
+	if not (wallgrab_foot_raycast.is_colliding() and wallgrab_hand_raycast.is_colliding()):
+		return false
+
+	return true
 
 
 func try_stick_to_wallrun() -> bool:
