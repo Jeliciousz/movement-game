@@ -1193,6 +1193,9 @@ func can_start_wallgrab() -> bool:
 	if get_wall_normal().y < -safe_margin:
 		return false
 
+	if velocity.y > 0.0:
+		return false
+
 	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
 	wallgrab_floor_raycast.force_raycast_update()
