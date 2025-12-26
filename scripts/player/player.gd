@@ -335,9 +335,6 @@ func get_stance_as_text() -> String:
 ## How long the player must wait after a wall-run until they can wall-run again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wallrun_cooldown: float = 0.25
 
-## The smallest angle away from a wall the player must be moving at to start wall-running.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_velocity_angle: float = deg_to_rad(10.0)
-
 ## The smallest angle away from a wall the player must be facing to start wall-running.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_forward_angle: float = deg_to_rad(30.0)
 
@@ -1125,9 +1122,6 @@ func can_start_wallrun() -> bool:
 	var direction: Vector3 = (get_horizontal_velocity_before_move() - normal * get_horizontal_velocity_before_move().dot(normal)).normalized()
 
 	if get_forward_direction().dot(direction) <= 0.0:
-		return false
-
-	if get_direction_of_horizontal_velocity_before_move().angle_to(-normal) < wallrun_min_velocity_angle:
 		return false
 
 	if get_forward_direction().angle_to(-normal) < wallrun_min_forward_angle:
