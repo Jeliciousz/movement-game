@@ -317,7 +317,7 @@ func get_stance_as_text() -> String:
 ## How long the player must wait after a wallrun until they can wall-run again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wall_run_cooldown: float = 0.25
 
-## At what angle into a wall must a player be moving in to start wall-running.
+## The angle into a wall the player must be moving at to start wall-running.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_min_start_angle: float = deg_to_rad(15.0)
 
 ## The largest external angle a wall can have for the player to stay running on it.
@@ -355,6 +355,9 @@ func get_stance_as_text() -> String:
 
 ## How much of the player's speed is lost when they mantle.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var mantle_speed_penalty: float = 0.1
+
+## The angle into a ledge the player must be wishing to move at to mantle.
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var mantle_max_wish_angle: float = deg_to_rad(60.0)
 
 
 
@@ -1118,7 +1121,7 @@ func can_mantle() -> bool:
 	if wish_direction.is_zero_approx():
 		return false
 
-	if wish_direction.angle_to(-normal) > deg_to_rad(60.0):
+	if wish_direction.angle_to(-normal) > mantle_max_wish_angle:
 		return false
 
 	mantle_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
