@@ -823,9 +823,10 @@ func add_gravity(gravity_multiplier: float) -> void:
 
 
 func slide_down_slopes() -> void:
-	var slide_direction: Vector3 = get_floor_normal() - gravity_vector * get_floor_normal().dot(gravity_vector)
+	var dot: float = gravity_vector.dot(-get_floor_normal())
+	var slope_acceleration: Vector3 = gravity_vector * gravity + get_floor_normal() * dot * gravity
 
-	velocity += slide_direction * gravity * get_physics_process_delta_time()
+	velocity += slope_acceleration * get_physics_process_delta_time()
 
 
 func add_movement(top_speed: float, acceleration: float) -> void:
