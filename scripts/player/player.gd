@@ -65,7 +65,7 @@ func get_stance_as_text() -> String:
 @export var coyote_walljump_enabled: bool = true
 
 ## How many realtime milliseconds coyote time lasts.
-@export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 100
+@export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 250
 
 
 @export_group("Stepping", "step_")
