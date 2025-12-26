@@ -276,6 +276,27 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.25
 
 
+@export_subgroup("Wall-Jumping", "walljump_")
+
+## Can the player wall-jump?
+@export var walljump_enabled: bool = true
+
+## How many times the player can wall-jump with full power.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_min_limit: int = 4
+
+## How many wall-jumps until the player has no wall-jump power.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_max_limit: int = 8
+
+## How high the player jumps while wall-running.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
+
+## How far the player jumps forwards while wall-running.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_impulse: float = -4.5
+
+## How far the player jumps away from the wall while wall-running.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_normal_impulse: float = 10.0
+
+
 @export_group("Wall-Running", "wallrun_")
 
 ## Can the player wall-run?
@@ -325,27 +346,6 @@ func get_stance_as_text() -> String:
 
 ## The largest internal angle a wall can have for the player to stay running on it.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_max_internal_angle: float = deg_to_rad(45.0)
-
-
-@export_subgroup("Wall-Jumping", "walljump_")
-
-## Can the player wall-jump?
-@export var walljump_enabled: bool = true
-
-## How many times the player can wall-jump with full power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_min_limit: int = 4
-
-## How many wall-jumps until the player has no wall-jump power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_max_limit: int = 8
-
-## How high the player jumps while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
-
-## How far the player jumps forwards while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_impulse: float = -4.5
-
-## How far the player jumps away from the wall while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_normal_impulse: float = 10.0
 
 
 @export_group("Mantling", "mantle_")
@@ -955,6 +955,41 @@ func coyote_slide() -> void:
 		velocity = wish_direction * slide_speed
 
 
+func walljump(direction: Vector3) -> void:
+	walljumps += 1
+
+	var effective_impulse: float
+
+	if walljumps == walljump_max_limit:
+		effective_impulse = 0.0
+	elif walljumps > walljump_min_limit:
+		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
+	else:
+		effective_impulse = walljump_impulse
+
+	velocity.y = effective_impulse
+	velocity += direction * walljump_forward_impulse
+	velocity += wallrun_normal * walljump_normal_impulse
+
+
+func coyote_walljump(direction: Vector3) -> void:
+	velocity -= wallrun_normal * wallrun_cancel_impulse
+	walljumps += 1
+
+	var effective_impulse: float
+
+	if walljumps == walljump_max_limit:
+		effective_impulse = 0.0
+	elif walljumps > walljump_min_limit:
+		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
+	else:
+		effective_impulse = walljump_impulse
+
+	velocity.y = effective_impulse
+	velocity += direction * walljump_forward_impulse
+	velocity += wallrun_normal * walljump_normal_impulse
+
+
 func start_wallrun() -> void:
 	wallrun_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 	wallrun_direction = (get_horizontal_velocity() - wallrun_normal * get_horizontal_velocity().dot(wallrun_normal)).normalized()
@@ -990,41 +1025,6 @@ func add_wallrun_movement() -> void:
 
 	velocity.x = limited_velocity.x
 	velocity.z = limited_velocity.z
-
-
-func walljump(direction: Vector3) -> void:
-	walljumps += 1
-
-	var effective_impulse: float
-
-	if walljumps == walljump_max_limit:
-		effective_impulse = 0.0
-	elif walljumps > walljump_min_limit:
-		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
-	else:
-		effective_impulse = walljump_impulse
-
-	velocity.y = effective_impulse
-	velocity += direction * walljump_forward_impulse
-	velocity += wallrun_normal * walljump_normal_impulse
-
-
-func coyote_walljump(direction: Vector3) -> void:
-	velocity -= wallrun_normal * wallrun_cancel_impulse
-	walljumps += 1
-
-	var effective_impulse: float
-
-	if walljumps == walljump_max_limit:
-		effective_impulse = 0.0
-	elif walljumps > walljump_min_limit:
-		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
-	else:
-		effective_impulse = walljump_impulse
-
-	velocity.y = effective_impulse
-	velocity += direction * walljump_forward_impulse
-	velocity += wallrun_normal * walljump_normal_impulse
 
 
 func can_continue_jumping() -> bool:
