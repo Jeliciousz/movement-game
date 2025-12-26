@@ -317,9 +317,6 @@ func get_stance_as_text() -> String:
 ## How fast the player must be until they stop wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_stop_speed: float = 2.0
 
-## How much air resistence is applied while wall-running.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
-
 ## How much gravity is applied while sliding on a wall.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_gravity_multiplier: float = 0.5
 
