@@ -36,7 +36,7 @@ func _state_physics_process(_delta: float) -> void:
 	_player.stair_step_up()
 	_player.move()
 
-	if _player.is_on_floor():
+	if _player.is_on_floor() and _player.velocity.y <= 0.0:
 		_player.footstep_audio.play()
 		state_machine.change_state_to(&"Grounded")
 		return
