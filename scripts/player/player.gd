@@ -290,10 +290,10 @@ func get_stance_as_text() -> String:
 ## How high the player jumps while wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
 
-## How far the player jumps forwards while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_impulse: float = -4.5
+## How much the player's forward speed is penalized when they jump from a wall-run.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_penalty_impulse: float = -4.5
 
-## How far the player jumps away from the wall while wall-running.
+## How far the player jumps away from the wall when wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_normal_impulse: float = 10.0
 
 
@@ -320,7 +320,7 @@ func get_stance_as_text() -> String:
 ## How much gravity is applied while sliding on a wall.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_gravity_multiplier: float = 0.5
 
-## How much friction is applied horizontally while sliding on a wall.
+## How much friction is applied while sliding on a wall.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_friction_multiplier: float = 0.3
 
 ## The acceleration opposing upwards movement while wall-running.
@@ -330,13 +330,16 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wallrun_downwards_friction: float = 90.0
 
 ## How hard the player is pushed from a wall when they cancel a wall-run.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_cancel_impulse: float = 2.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_cancel_impulse: float = 4.0
 
-## How long the player must wait after a wallrun until they can wall-run again.
+## How long the player must wait after a wall-run until they can wall-run again.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wallrun_cooldown: float = 0.25
 
-## The angle into a wall the player must be moving at to start wall-running.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_start_angle: float = deg_to_rad(5.0)
+## The smallest angle away from a wall the player must be moving at to start wall-running.
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_velocity_angle: float = deg_to_rad(5.0)
+
+## The smallest angle away from a wall the player must be facing to start wall-running.
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_forward_angle: float = deg_to_rad(30.0)
 
 ## The largest external angle a wall can have for the player to stay running on it.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_max_external_angle: float = deg_to_rad(15.0)
@@ -952,7 +955,7 @@ func coyote_slide() -> void:
 		velocity = wish_direction * slide_speed
 
 
-func walljump(direction: Vector3) -> void:
+func wallrun_jump() -> void:
 	walljumps += 1
 
 	var effective_impulse: float
@@ -967,7 +970,7 @@ func walljump(direction: Vector3) -> void:
 	var min_speed: float = get_horizontal_speed()
 
 	velocity.y = effective_impulse
-	velocity += direction * walljump_forward_impulse + wall_normal * walljump_normal_impulse
+	velocity += wallrun_direction * walljump_forward_penalty_impulse + wall_normal * walljump_normal_impulse
 
 	if get_horizontal_speed() < min_speed:
 		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
@@ -975,7 +978,30 @@ func walljump(direction: Vector3) -> void:
 		velocity.z = new_horizontal_vel.z
 
 
-func coyote_walljump(direction: Vector3) -> void:
+func walljump() -> void:
+	walljumps += 1
+
+	var effective_impulse: float
+
+	if walljumps == walljump_max_limit:
+		effective_impulse = 0.0
+	elif walljumps > walljump_min_limit:
+		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
+	else:
+		effective_impulse = walljump_impulse
+
+	var min_speed: float = get_horizontal_speed()
+
+	velocity.y = effective_impulse
+	velocity += wall_normal * walljump_normal_impulse
+
+	if get_horizontal_speed() < min_speed:
+		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
+		velocity.x = new_horizontal_vel.x
+		velocity.z = new_horizontal_vel.z
+
+
+func coyote_walljump() -> void:
 	velocity -= wall_normal * wallrun_cancel_impulse
 	walljumps += 1
 
@@ -988,14 +1014,20 @@ func coyote_walljump(direction: Vector3) -> void:
 	else:
 		effective_impulse = walljump_impulse
 
+	var min_speed: float = get_horizontal_speed()
+
 	velocity.y = effective_impulse
-	velocity += direction * walljump_forward_impulse
-	velocity += wall_normal * walljump_normal_impulse
+	velocity += wish_direction * walljump_forward_penalty_impulse + wall_normal * walljump_normal_impulse
+
+	if get_horizontal_speed() < min_speed:
+		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
+		velocity.x = new_horizontal_vel.x
+		velocity.z = new_horizontal_vel.z
 
 
 func start_wallrun() -> void:
 	wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
-	wallrun_direction = (get_horizontal_velocity() - wall_normal * get_horizontal_velocity().dot(wall_normal)).normalized()
+	wallrun_direction = (get_horizontal_velocity_before_move() - wall_normal * get_horizontal_velocity_before_move().dot(wall_normal)).normalized()
 
 	var new_velocity: Vector3 = wallrun_direction * get_horizontal_speed_before_move()
 	velocity.x = new_velocity.x
@@ -1089,12 +1121,16 @@ func can_start_wallrun() -> bool:
 	if get_wall_normal().y < -safe_margin:
 		return false
 
-	if get_forward_direction().dot(get_direction_of_horizontal_velocity_before_move()) <= 0.0:
+	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+	var direction: Vector3 = (get_horizontal_velocity_before_move() - normal * get_horizontal_velocity_before_move().dot(normal)).normalized()
+
+	if get_forward_direction().dot(direction) <= 0.0:
 		return false
 
-	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+	if get_direction_of_horizontal_velocity_before_move().angle_to(-normal) < wallrun_min_velocity_angle:
+		return false
 
-	if get_direction_of_horizontal_velocity_before_move().angle_to(-normal) < wallrun_min_start_angle:
+	if get_forward_direction().angle_to(-normal) < wallrun_min_forward_angle:
 		return false
 
 	if get_horizontal_speed_before_move() < wallrun_start_speed:
@@ -1247,7 +1283,7 @@ func try_stick_to_wallrun() -> bool:
 
 	if normal != wall_normal:
 		wall_normal = normal
-		wallrun_direction = (get_horizontal_velocity() - wall_normal * get_horizontal_velocity().dot(wall_normal)).normalized()
+		wallrun_direction = (get_horizontal_velocity_before_move() - wall_normal * get_horizontal_velocity_before_move().dot(wall_normal)).normalized()
 
 		velocity.x = wallrun_direction.x * get_horizontal_speed_before_move()
 		velocity.y = velocity_before_move.y
