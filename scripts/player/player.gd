@@ -1240,7 +1240,7 @@ func try_stick_to_wallrun() -> bool:
 			return false
 
 	if normal != wall_normal:
-		wall_normal = Vector3(normal.x, 0.0, normal.z).normalized()
+		wall_normal = normal
 		wallrun_direction = (get_horizontal_velocity() - wall_normal * get_horizontal_velocity().dot(wall_normal)).normalized()
 
 		velocity.x = wallrun_direction.x * get_horizontal_speed_before_move()
