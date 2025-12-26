@@ -281,9 +281,6 @@ func get_stance_as_text() -> String:
 ## Can the player wall-grab?
 @export var wallgrab_enabled: bool = true
 
-## How long the player can wall-grab until they fall.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var wallgrab_duration: float = 2.5
-
 ## How much friction is applied while wall-grabbing.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var wallgrab_friction_multiplier: float = 0.95
 
@@ -1303,9 +1300,6 @@ func can_coyote_walljump() -> bool:
 
 func can_continue_wallgrabbing() -> bool:
 	if not wallgrab_enabled:
-		return false
-
-	if Global.time - wallgrab_timestamp > wallgrab_duration:
 		return false
 
 	wallgrab_floor_raycast.force_raycast_update()
