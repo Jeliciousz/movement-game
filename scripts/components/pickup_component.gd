@@ -8,7 +8,7 @@ var _is_picked_up: bool = false
 
 
 func pickup() -> bool:
-	if !enabled:
+	if not enabled:
 		return false
 
 	if _is_picked_up:
@@ -19,17 +19,17 @@ func pickup() -> bool:
 
 
 func drop() -> void:
-	if !enabled:
+	if not enabled:
 		return
 
-	if !_is_picked_up:
+	if not _is_picked_up:
 		return
 
 	_is_picked_up = false
 
 
 func is_pickup_pickable() -> bool:
-	if !enabled:
+	if not enabled:
 		return false
 
 	if _is_picked_up:
