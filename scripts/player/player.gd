@@ -682,7 +682,7 @@ func _check_step_up(motion: Vector3) -> void:
 			global_transform = transform_before_test
 			return
 
-	if is_equal_approx(global_transform.origin.y, transform_before_test.origin.y):
+	if absf(global_transform.origin.y - transform_before_test.origin.y) < 0.01:
 		global_transform = transform_before_test
 		return
 
