@@ -1215,8 +1215,8 @@ func try_stick_to_wallrun() -> bool:
 	var normal: Vector3
 
 	if not is_on_wall():
-		wallgrab_foot_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 3
-		wallgrab_hand_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 3
+		wallgrab_foot_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 2.0
+		wallgrab_hand_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 2.0
 		wallgrab_foot_raycast.force_raycast_update()
 		wallgrab_hand_raycast.force_raycast_update()
 
