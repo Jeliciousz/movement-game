@@ -56,12 +56,8 @@ func _state_physics_process(_delta: float) -> void:
 
 func update_stance() -> void:
 	match _player.stance:
-		Player.Stances.STANDING:
-			_player.stance = Player.Stances.SPRINTING
-
 		Player.Stances.CROUCHING:
-			if _player.attempt_uncrouch():
-				_player.stance = Player.Stances.SPRINTING
+			_player.attempt_uncrouch()
 
 
 func update_physics() -> void:
