@@ -318,7 +318,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wall_run_cooldown: float = 0.25
 
 ## The angle into a wall the player must be moving at to start wall-running.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_min_start_angle: float = deg_to_rad(15.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_min_start_angle: float = deg_to_rad(5.0)
 
 ## The largest external angle a wall can have for the player to stay running on it.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_max_external_angle: float = deg_to_rad(15.0)
