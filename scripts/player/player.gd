@@ -964,9 +964,15 @@ func walljump(direction: Vector3) -> void:
 	else:
 		effective_impulse = walljump_impulse
 
+	var min_speed: float = get_horizontal_speed()
+
 	velocity.y = effective_impulse
-	velocity += direction * walljump_forward_impulse
-	velocity += wall_normal * walljump_normal_impulse
+	velocity += direction * walljump_forward_impulse + wall_normal * walljump_normal_impulse
+
+	if get_horizontal_speed() < min_speed:
+		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
+		velocity.x = new_horizontal_vel.x
+		velocity.z = new_horizontal_vel.z
 
 
 func coyote_walljump(direction: Vector3) -> void:
