@@ -409,7 +409,7 @@ var air_jumps: int = Global.MAX_INT
 var air_crouches: int = Global.MAX_INT
 var walljumps: int = 0
 
-var wallrun_normal: Vector3 = Vector3.ZERO
+var wall_normal: Vector3 = Vector3.ZERO
 var wallrun_direction: Vector3 = Vector3.ZERO
 
 var velocity_before_move: Vector3 = Vector3.ZERO
@@ -431,9 +431,9 @@ var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gr
 @onready var health_component: HealthComponent = $HealthComponent
 @onready var grapplehook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
 @onready var grapplehook_line: Line3D = $Head/Camera/GrappleHookRaycast/GrappleHookLine
-@onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
-@onready var wallrun_hand_raycast: RayCast3D = $WallrunHandRaycast
-@onready var wallrun_floor_raycast: RayCast3D = $WallrunFloorRaycast
+@onready var wallgrab_foot_raycast: RayCast3D = $WallgrabFootRaycast
+@onready var wallgrab_hand_raycast: RayCast3D = $WallgrabHandRaycast
+@onready var wallgrab_floor_raycast: RayCast3D = $WallgrabFloorRaycast
 @onready var mantle_foot_raycast: RayCast3D = $MantleFootRaycast
 @onready var mantle_hand_raycast: RayCast3D = $MantleHandRaycast
 @onready var mantle_head_raycast: RayCast3D = $MantleHeadRaycast
@@ -666,9 +666,9 @@ func _check_step_up(motion: Vector3) -> void:
 	if collision:
 		var slide_remainder: Vector3 = collision.get_remainder()
 
-		var wall_normal: Vector3 = collision.get_normal()
-		var dot: float = slide_remainder.normalized().dot(-wall_normal)
-		var projected_vector: Vector3 = slide_remainder + wall_normal * dot * slide_remainder.length()
+		var normal: Vector3 = collision.get_normal()
+		var dot: float = slide_remainder.normalized().dot(-normal)
+		var projected_vector: Vector3 = slide_remainder + normal * dot * slide_remainder.length()
 
 		move_and_collide(projected_vector)
 
@@ -753,7 +753,7 @@ func crouch() -> void:
 	collision_shape.shape.height = standing_height * crouch_height_multiplier
 	collision_shape.position.y = (standing_height * crouch_height_multiplier) / 2.0
 
-	wallrun_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
+	wallgrab_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
 	mantle_hand_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
 	mantle_head_raycast.position.y -= standing_height * (1.0 - crouch_height_multiplier)
 	mantle_head_raycast.target_position.y = mantle_hand_raycast.position.y
@@ -780,7 +780,7 @@ func _uncrouch() -> void:
 	collision_shape.shape.height = standing_height
 	collision_shape.position.y = standing_height / 2.0
 
-	wallrun_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
+	wallgrab_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
 	mantle_hand_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
 	mantle_head_raycast.position.y += standing_height * (1.0 - crouch_height_multiplier)
 	mantle_head_raycast.target_position.y = mantle_hand_raycast.position.y
@@ -811,7 +811,7 @@ func add_friction(friction: float, top_speed: float) -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, friction * friction_product * get_physics_process_delta_time())
 
 
-func add_wallrun_friction() -> void:
+func add_vertical_wallrun_friction() -> void:
 	if velocity.y < 0:
 		velocity = velocity.move_toward(get_horizontal_velocity(), wallrun_downwards_friction * get_physics_process_delta_time())
 	else:
@@ -966,11 +966,11 @@ func walljump(direction: Vector3) -> void:
 
 	velocity.y = effective_impulse
 	velocity += direction * walljump_forward_impulse
-	velocity += wallrun_normal * walljump_normal_impulse
+	velocity += wall_normal * walljump_normal_impulse
 
 
 func coyote_walljump(direction: Vector3) -> void:
-	velocity -= wallrun_normal * wallrun_cancel_impulse
+	velocity -= wall_normal * wallrun_cancel_impulse
 	walljumps += 1
 
 	var effective_impulse: float
@@ -984,12 +984,12 @@ func coyote_walljump(direction: Vector3) -> void:
 
 	velocity.y = effective_impulse
 	velocity += direction * walljump_forward_impulse
-	velocity += wallrun_normal * walljump_normal_impulse
+	velocity += wall_normal * walljump_normal_impulse
 
 
 func start_wallrun() -> void:
-	wallrun_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
-	wallrun_direction = (get_horizontal_velocity() - wallrun_normal * get_horizontal_velocity().dot(wallrun_normal)).normalized()
+	wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+	wallrun_direction = (get_horizontal_velocity() - wall_normal * get_horizontal_velocity().dot(wall_normal)).normalized()
 
 	var new_velocity: Vector3 = wallrun_direction * get_horizontal_speed_before_move()
 	velocity.x = new_velocity.x
@@ -997,7 +997,7 @@ func start_wallrun() -> void:
 
 
 func stop_wallrun() -> void:
-	velocity += wallrun_normal * wallrun_cancel_impulse
+	velocity += wall_normal * wallrun_cancel_impulse
 
 
 func add_wallrun_movement() -> void:
@@ -1094,17 +1094,17 @@ func can_start_wallrun() -> bool:
 	if get_horizontal_speed_before_move() < wallrun_start_speed:
 		return false
 
-	wallrun_floor_raycast.force_raycast_update()
+	wallgrab_floor_raycast.force_raycast_update()
 
-	if wallrun_floor_raycast.is_colliding():
+	if wallgrab_floor_raycast.is_colliding():
 		return false
 
-	wallrun_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
-	wallrun_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
-	wallrun_foot_raycast.force_raycast_update()
-	wallrun_hand_raycast.force_raycast_update()
+	wallgrab_foot_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	wallgrab_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
+	wallgrab_foot_raycast.force_raycast_update()
+	wallgrab_hand_raycast.force_raycast_update()
 
-	if not (wallrun_foot_raycast.is_colliding() and wallrun_hand_raycast.is_colliding()):
+	if not (wallgrab_foot_raycast.is_colliding() and wallgrab_hand_raycast.is_colliding()):
 		return false
 
 	return true
@@ -1198,45 +1198,48 @@ func can_coyote_walljump() -> bool:
 
 
 func try_stick_to_wallrun() -> bool:
+	if not wallrun_enabled:
+		return false
+
 	if get_horizontal_speed() < wallrun_stop_speed:
 		return false
 
 	if get_horizontal_velocity().dot(wallrun_direction) <= 0.0:
 		return false
 
-	wallrun_floor_raycast.force_raycast_update()
+	wallgrab_floor_raycast.force_raycast_update()
 
-	if wallrun_floor_raycast.is_colliding():
+	if wallgrab_floor_raycast.is_colliding():
 		return false
 
-	var wall_normal: Vector3
+	var normal: Vector3
 
 	if not is_on_wall():
-		wallrun_foot_raycast.target_position = basis.inverse() * -wallrun_normal * collision_shape.shape.radius * 3
-		wallrun_hand_raycast.target_position = basis.inverse() * -wallrun_normal * collision_shape.shape.radius * 3
-		wallrun_foot_raycast.force_raycast_update()
-		wallrun_hand_raycast.force_raycast_update()
+		wallgrab_foot_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 3
+		wallgrab_hand_raycast.target_position = basis.inverse() * -wall_normal * collision_shape.shape.radius * 3
+		wallgrab_foot_raycast.force_raycast_update()
+		wallgrab_hand_raycast.force_raycast_update()
 
-		if not (wallrun_foot_raycast.is_colliding() and wallrun_hand_raycast.is_colliding()):
+		if not (wallgrab_foot_raycast.is_colliding() and wallgrab_hand_raycast.is_colliding()):
 			return false
 
-		wall_normal = Vector3(wallrun_foot_raycast.get_collision_normal().x, 0.0, wallrun_foot_raycast.get_collision_normal().z).normalized()
+		normal = Vector3(wallgrab_foot_raycast.get_collision_normal().x, 0.0, wallgrab_foot_raycast.get_collision_normal().z).normalized()
 
-		if wall_normal.angle_to(wallrun_normal) > wallrun_max_external_angle:
+		if normal.angle_to(wall_normal) > wallrun_max_external_angle:
 			return false
 
-		move_and_collide(-wallrun_normal * floor_snap_length)
+		move_and_collide(-wall_normal * floor_snap_length)
 
-		check_surface(-wallrun_normal)
+		check_surface(-wall_normal)
 	else:
 		wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-		if wall_normal.angle_to(wallrun_normal) > wallrun_max_internal_angle:
+		if normal.angle_to(wall_normal) > wallrun_max_internal_angle:
 			return false
 
-	if wall_normal != wallrun_normal:
-		wallrun_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
-		wallrun_direction = (get_horizontal_velocity() - wallrun_normal * get_horizontal_velocity().dot(wallrun_normal)).normalized()
+	if normal != wall_normal:
+		wall_normal = Vector3(normal.x, 0.0, normal.z).normalized()
+		wallrun_direction = (get_horizontal_velocity() - wall_normal * get_horizontal_velocity().dot(wall_normal)).normalized()
 
 		velocity.x = wallrun_direction.x * get_horizontal_speed_before_move()
 		velocity.y = velocity_before_move.y

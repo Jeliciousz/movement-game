@@ -72,5 +72,5 @@ func update_physics() -> void:
 		_player.add_gravity(_player.physics_gravity_multiplier * _player.wallrun_gravity_multiplier)
 	else:
 		_player.add_air_resistence()
-		_player.add_wallrun_friction()
+		_player.add_vertical_wallrun_friction()
 		_player.add_wallrun_movement()

@@ -222,14 +222,14 @@ target_position = Vector3(0, -2.5, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 target_position = Vector3(0, 2.5, 0)
 
-[node name="WallrunFloorRaycast" type="RayCast3D" parent="." unique_id=1175856795]
+[node name="WallgrabFloorRaycast" type="RayCast3D" parent="." unique_id=1175856795]
 target_position = Vector3(0, -0.4, 0)
 
-[node name="WallrunFootRaycast" type="RayCast3D" parent="." unique_id=991719123]
+[node name="WallgrabFootRaycast" type="RayCast3D" parent="." unique_id=991719123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 target_position = Vector3(0.65, 0, 0)
 
-[node name="WallrunHandRaycast" type="RayCast3D" parent="." unique_id=1331587608]
+[node name="WallgrabHandRaycast" type="RayCast3D" parent="." unique_id=1331587608]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 target_position = Vector3(0.65, 0, 0)
 
