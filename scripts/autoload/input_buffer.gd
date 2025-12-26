@@ -2,7 +2,7 @@ extends Node
 ## Buffers just pressed inputs for a window of time.
 
 ## How long actions will be buffered for in realtime milliseconds.
-const BUFFER_WINDOW: int = 100
+const BUFFER_WINDOW: int = 250
 
 var enabled: bool = true:
 	set(value):
