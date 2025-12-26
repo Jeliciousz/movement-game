@@ -91,14 +91,13 @@ func update_stance() -> void:
 
 
 func update_physics() -> void:
-	var direction_from_grapple: Vector3 = _player.active_grapplehook_point.position.direction_to(_player.get_center_of_mass())
-	var distance_from_grapple: float = _player.active_grapplehook_point.position.distance_to(_player.get_center_of_mass())
-	var weight: float = clampf((distance_from_grapple - _player.grapplehook_min_distance) / (_player.grapplehook_max_distance - _player.standing_height), 0, 1)
-	var power: float = lerpf(0, _player.grapplehook_speed, weight)
-
-	_player.velocity += -direction_from_grapple * maxf(0, _player.velocity.dot(direction_from_grapple))
-	_player.velocity += -direction_from_grapple * maxf(0, (power - _player.velocity.dot(-direction_from_grapple)))
-
 	_player.add_air_resistence()
 	_player.add_gravity(_player.physics_gravity_multiplier)
 	_player.add_movement(_player.air_speed, _player.air_acceleration)
+
+	var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapplehook_point.position)
+	var distance_to_grapple: float = _player.get_center_of_mass().distance_to(_player.active_grapplehook_point.position)
+	var weight: float = clampf((distance_to_grapple - _player.grapplehook_min_distance) / (_player.grapplehook_max_distance - _player.standing_height), 0.0, 1.0)
+	var power: float = lerpf(0, _player.grapplehook_speed, weight)
+
+	_player.velocity += direction_to_grapple * (maxf(0.0, _player.velocity.dot(-direction_to_grapple)) + maxf(0.0, (power - _player.velocity.dot(direction_to_grapple))))
