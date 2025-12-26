@@ -8,9 +8,9 @@ extends State
 
 func _state_enter(_last_state_name: StringName) -> void:
 	_player.wallrun_timestamp = Global.time
+	_player.coyote_walljump_ready = true
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false
-	_player.coyote_walljump_ready = true
 	_player.air_jumps = 0
 	_player.air_crouches = 0
 	_player.clear_grapplehook_point()
@@ -25,7 +25,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"jump"):
+	if InputBuffer.is_action_buffered(&"jump") and _player.walljump_enabled:
 		InputBuffer.clear_buffered_action(&"jump")
 		_player.coyote_walljump_ready = false
 		_player.walljump(_player.wallrun_direction)

@@ -329,6 +329,9 @@ func get_stance_as_text() -> String:
 
 @export_subgroup("Wall-Jumping", "walljump_")
 
+## Can the player wall-jump?
+@export var walljump_enabled: bool = true
+
 ## How many times the player can wall-jump with full power.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_min_limit: int = 4
 
@@ -1191,7 +1194,8 @@ func can_coyote_slide_jump() -> bool:
 
 
 func can_coyote_walljump() -> bool:
-	return coyote_walljump_enabled \
+	return walljump_enabled \
+	and coyote_walljump_enabled \
 	and coyote_walljump_ready \
 	and in_coyote_time()
 
