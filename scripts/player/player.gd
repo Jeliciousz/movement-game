@@ -330,7 +330,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wallrun_duration: float = 0.1
 
 ## How fast the player must be to start wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_start_speed: float = 5.5
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_start_speed: float = 4.5
 
 ## How fast the player must be until they stop wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_stop_speed: float = 2.0
