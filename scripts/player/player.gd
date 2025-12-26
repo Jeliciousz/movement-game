@@ -1133,7 +1133,7 @@ func can_start_wallrun() -> bool:
 	if get_forward_direction().angle_to(-normal) < wallrun_min_forward_angle:
 		return false
 
-	if get_horizontal_speed_before_move() < wallrun_start_speed:
+	if get_horizontal_velocity_before_move().dot(direction) < wallrun_start_speed:
 		return false
 
 	wallgrab_floor_raycast.force_raycast_update()
