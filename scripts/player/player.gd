@@ -273,7 +273,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.5
 
 ## How long after sliding off a ledge can the player ledge jump.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.25
+@export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.5
 
 
 @export_group("Wall-Grabbing", "wallgrab_")
