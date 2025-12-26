@@ -16,8 +16,8 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.grapplehook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
 	_player.grapplehook_line.points[1] = _player.active_grapplehook_point.position - _player.grapplehook_line.position
 
-	var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapplehook_point.position)
-	_player.velocity += direction_to_grapple * _player.grapplehook_speed
+	# var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapplehook_point.position)
+	# _player.velocity += direction_to_grapple * _player.grapplehook_speed
 
 
 func _state_exit() -> void:
@@ -91,13 +91,15 @@ func update_stance() -> void:
 
 
 func update_physics() -> void:
-	_player.add_air_resistence()
-	_player.add_gravity(_player.physics_gravity_multiplier)
-	_player.add_movement(_player.air_speed, _player.air_acceleration)
-
 	var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapplehook_point.position)
 	var distance_to_grapple: float = _player.get_center_of_mass().distance_to(_player.active_grapplehook_point.position)
 	var weight: float = clampf((distance_to_grapple - _player.grapplehook_min_distance) / (_player.grapplehook_max_distance - _player.standing_height), 0.0, 1.0)
 	var power: float = lerpf(0, _player.grapplehook_speed, weight)
 
-	_player.velocity += direction_to_grapple * (maxf(0.0, _player.velocity.dot(-direction_to_grapple)) + maxf(0.0, (power - _player.velocity.dot(direction_to_grapple))))
+	_player.velocity += direction_to_grapple * maxf(0.0, (power - _player.velocity.dot(direction_to_grapple)))
+	_player.add_air_resistence()
+	_player.add_gravity(_player.physics_gravity_multiplier)
+	_player.add_movement(_player.air_speed, _player.air_acceleration)
+
+	# Stop velocity from ever pointing away from the grapple hook point, making it so the grapple line only retracts, not extends; it's not a spring, it's a rope.
+	_player.velocity += direction_to_grapple * maxf(0.0, _player.velocity.dot(-direction_to_grapple))
