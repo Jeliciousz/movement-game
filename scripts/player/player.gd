@@ -1112,7 +1112,7 @@ func can_mantle() -> bool:
 
 	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-	if get_forward_direction().angle_to(-normal) > deg_to_rad(90.0):
+	if get_forward_direction().dot(normal) <= 0.0:
 		return false
 
 	if wish_direction.is_zero_approx():
