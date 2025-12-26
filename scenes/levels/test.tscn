@@ -46,11 +46,11 @@ _surfaces = [{
 }]
 
 [sub_resource type="PrismMesh" id="PrismMesh_kw13u"]
-lightmap_size_hint = Vector2i(49, 86)
+lightmap_size_hint = Vector2i(59, 86)
 material = ExtResource("6_5tpx0")
 add_uv2 = true
 left_to_right = 1.0
-size = Vector3(3, 5, 6)
+size = Vector3(5, 5, 6)
 
 [node name="World" type="Node3D" unique_id=1681030941]
 
