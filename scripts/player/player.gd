@@ -1212,6 +1212,8 @@ func try_stick_to_wallrun() -> bool:
 	if wallgrab_floor_raycast.is_colliding():
 		return false
 
+	check_surface(-wall_normal)
+
 	var normal: Vector3
 
 	if not is_on_wall():
@@ -1232,7 +1234,7 @@ func try_stick_to_wallrun() -> bool:
 
 		check_surface(-wall_normal)
 	else:
-		wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+		normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
 		if normal.angle_to(wall_normal) > wallrun_max_internal_angle:
 			return false
