@@ -336,7 +336,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var wallrun_cooldown: float = 0.25
 
 ## The smallest angle away from a wall the player must be moving at to start wall-running.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_velocity_angle: float = deg_to_rad(5.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_velocity_angle: float = deg_to_rad(10.0)
 
 ## The smallest angle away from a wall the player must be facing to start wall-running.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_forward_angle: float = deg_to_rad(30.0)
