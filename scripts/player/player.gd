@@ -65,7 +65,7 @@ func get_stance_as_text() -> String:
 @export var coyote_walljump_enabled: bool = true
 
 ## How many realtime milliseconds coyote time lasts.
-@export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 250
+@export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 150
 
 
 @export_group("Stepping", "step_")
@@ -273,7 +273,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.5
 
 ## How long after sliding off a ledge can the player ledge jump.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.5
+@export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.3
 
 
 @export_group("Wall-Grabbing", "wallgrab_")
