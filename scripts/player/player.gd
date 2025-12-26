@@ -1134,6 +1134,14 @@ func can_mantle() -> bool:
 	if not mantle_foot_raycast.is_colliding():
 		return false
 
+	mantle_ledge_raycast.position = Vector3(0.0, 2.5, 0.0) + basis.inverse() * -normal * 0.65
+	mantle_ledge_raycast.force_raycast_update()
+
+	var floor_normal: Vector3 = mantle_ledge_raycast.get_collision_normal()
+
+	if floor_normal.angle_to(Vector3.UP) > floor_max_angle:
+		return false
+
 	mantle_hand_raycast.target_position = basis.inverse() * -normal * collision_shape.shape.radius * 3
 	mantle_hand_raycast.force_raycast_update()
 

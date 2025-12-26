@@ -14,9 +14,6 @@ func _state_enter(_last_state_name: StringName) -> void:
 	start_position = _player.position
 	mantle_t = 0.0
 
-	var normal: Vector3 = Vector3(_player.get_wall_normal().x, 0.0, _player.get_wall_normal().z).normalized()
-	_player.mantle_ledge_raycast.position = Vector3(0.0, 2.5, 0.0) + _player.basis.inverse() * -normal * 0.65
-	_player.mantle_ledge_raycast.force_raycast_update()
 	mantle_position = _player.mantle_ledge_raycast.get_collision_point()
 
 
