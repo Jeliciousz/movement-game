@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 
 	match _player.state_machine.get_state_name():
 		&"WallRunning":
-			target_rotation_offset.z -= deg_to_rad(rotation_offset_wallrun_influence) * _player.wall_run_normal.dot(_player.basis.x)
+			target_rotation_offset.z -= deg_to_rad(rotation_offset_wallrun_influence) * _player.wallrun_normal.dot(_player.basis.x)
 		&"Sliding":
 			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_slide_pitch_influence) * (_head_velocity.dot(-_player.basis.z) - _player.slide_stop_speed), 0.0, deg_to_rad(rotation_offset_slide_roll_influence) * _head_velocity.dot(_player.basis.x))
 		&"LedgeGrabbing":

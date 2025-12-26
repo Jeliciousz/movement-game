@@ -7,34 +7,34 @@ extends State
 
 
 func _state_enter(_last_state_name: StringName) -> void:
-	_player.active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
+	_player.active_grapplehook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false
-	_player.coyote_wall_jump_ready = false
+	_player.coyote_walljump_ready = false
 
-	_player.grapple_hook_line.show()
-	_player.grapple_hook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
-	_player.grapple_hook_line.points[1] = _player.active_grapple_hook_point.position - _player.grapple_hook_line.position
+	_player.grapplehook_line.show()
+	_player.grapplehook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
+	_player.grapplehook_line.points[1] = _player.active_grapplehook_point.position - _player.grapplehook_line.position
 
-	var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapple_hook_point.position)
-	_player.velocity += direction_to_grapple * _player.grapple_hook_speed
+	var direction_to_grapple: Vector3 = _player.get_center_of_mass().direction_to(_player.active_grapplehook_point.position)
+	_player.velocity += direction_to_grapple * _player.grapplehook_speed
 
 
 func _state_exit() -> void:
-	_player.grapple_hook_line.hide()
+	_player.grapplehook_line.hide()
 
 
 func _state_process(_delta: float) -> void:
-	_player.grapple_hook_line.position = _player.head.get_global_transform_interpolated().origin + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
-	_player.grapple_hook_line.points[1] = _player.active_grapple_hook_point.position - _player.grapple_hook_line.position
+	_player.grapplehook_line.position = _player.head.get_global_transform_interpolated().origin + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
+	_player.grapplehook_line.points[1] = _player.active_grapplehook_point.position - _player.grapplehook_line.position
 
 
 func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"grapple_hook"):
-		InputBuffer.clear_buffered_action(&"grapple_hook")
+	if InputBuffer.is_action_buffered(&"grapplehook"):
+		InputBuffer.clear_buffered_action(&"grapplehook")
 		state_machine.change_state_to(&"Airborne")
 		return
 
@@ -91,10 +91,10 @@ func update_stance() -> void:
 
 
 func update_physics() -> void:
-	var direction_from_grapple: Vector3 = _player.active_grapple_hook_point.position.direction_to(_player.get_center_of_mass())
-	var distance_from_grapple: float = _player.active_grapple_hook_point.position.distance_to(_player.get_center_of_mass())
-	var weight: float = clampf((distance_from_grapple - _player.grapple_hook_min_distance) / (_player.grapple_hook_max_distance - _player.standing_height), 0, 1)
-	var power: float = lerpf(0, _player.grapple_hook_speed, weight)
+	var direction_from_grapple: Vector3 = _player.active_grapplehook_point.position.direction_to(_player.get_center_of_mass())
+	var distance_from_grapple: float = _player.active_grapplehook_point.position.distance_to(_player.get_center_of_mass())
+	var weight: float = clampf((distance_from_grapple - _player.grapplehook_min_distance) / (_player.grapplehook_max_distance - _player.standing_height), 0, 1)
+	var power: float = lerpf(0, _player.grapplehook_speed, weight)
 
 	_player.velocity += -direction_from_grapple * maxf(0, _player.velocity.dot(direction_from_grapple))
 	_player.velocity += -direction_from_grapple * maxf(0, (power - _player.velocity.dot(-direction_from_grapple)))

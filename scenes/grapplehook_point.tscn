@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cqkeqglbsx1tw"]
 
-[ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/grapple_hook_point.gd" id="1_v2vg0"]
-[ext_resource type="Texture2D" uid="uid://c7yqxl0eho0vt" path="res://assets/textures/ui/grapple_hook_point_targeted.png" id="2_wc45q"]
-[ext_resource type="Texture2D" uid="uid://ccjhtl5n10o32" path="res://assets/textures/ui/grapple_hook_point_target_invalid.png" id="3_ejye6"]
+[ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/grapplehook_point.gd" id="1_v2vg0"]
+[ext_resource type="Texture2D" uid="uid://c7yqxl0eho0vt" path="res://assets/textures/ui/grapplehook_point_targeted.png" id="2_wc45q"]
+[ext_resource type="Texture2D" uid="uid://ccjhtl5n10o32" path="res://assets/textures/ui/grapplehook_point_target_invalid.png" id="3_ejye6"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_2xim0"]
 radius = 3.0

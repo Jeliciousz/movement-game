@@ -62,7 +62,7 @@ func get_stance_as_text() -> String:
 @export var coyote_slide_jump_enabled: bool = true
 
 ## Is there coyote time for walljumps?
-@export var coyote_wall_jump_enabled: bool = true
+@export var coyote_walljump_enabled: bool = true
 
 ## How many realtime milliseconds coyote time lasts.
 @export_range(0, 1000, 10, "suffix:ms") var coyote_duration: int = 100
@@ -276,73 +276,73 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.25
 
 
-@export_group("Wall-Running", "wall_run_")
+@export_group("Wall-Running", "wallrun_")
 
 ## Can the player wall-run?
-@export var wall_run_enabled: bool = true
+@export var wallrun_enabled: bool = true
 
 ## The fast the player can move while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_run_speed: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_speed: float = 8.0
 
 ## How quickly the player accelerates while wall-running.
-@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wall_run_acceleration: float = 80.0
+@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wallrun_acceleration: float = 80.0
 
 ## How long the player can wall-run until they start sliding.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var wall_run_duration: float = 0.1
+@export_range(0.0, 1.0, 0.005, "suffix:s") var wallrun_duration: float = 0.1
 
 ## How fast the player must be to start wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_run_start_speed: float = 5.5
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_start_speed: float = 5.5
 
 ## How fast the player must be until they stop wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_run_stop_speed: float = 2.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_stop_speed: float = 2.0
 
 ## How much air resistence is applied while wall-running.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var wall_run_air_resistence_multiplier: float = 0.5
+@export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_air_resistence_multiplier: float = 0.5
 
 ## How much gravity is applied while sliding on a wall.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var wall_run_gravity_multiplier: float = 0.5
+@export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_gravity_multiplier: float = 0.5
 
 ## How much friction is applied horizontally while sliding on a wall.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var wall_run_friction_multiplier: float = 0.3
+@export_range(0.0, 1.0, 0.05, "suffix:×") var wallrun_friction_multiplier: float = 0.3
 
 ## The acceleration opposing upwards movement while wall-running.
-@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wall_run_upwards_friction: float = 20.0
+@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wallrun_upwards_friction: float = 20.0
 
 ## The acceleration opposing downwards movement while wall-running.
-@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wall_run_downwards_friction: float = 90.0
+@export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var wallrun_downwards_friction: float = 90.0
 
 ## How hard the player is pushed from a wall when they cancel a wall-run.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_run_cancel_impulse: float = 2.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wallrun_cancel_impulse: float = 2.0
 
 ## How long the player must wait after a wallrun until they can wall-run again.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var wall_run_cooldown: float = 0.25
+@export_range(0.0, 1.0, 0.005, "suffix:s") var wallrun_cooldown: float = 0.25
 
 ## The angle into a wall the player must be moving at to start wall-running.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_min_start_angle: float = deg_to_rad(5.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_min_start_angle: float = deg_to_rad(5.0)
 
 ## The largest external angle a wall can have for the player to stay running on it.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_max_external_angle: float = deg_to_rad(15.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_max_external_angle: float = deg_to_rad(15.0)
 
 ## The largest internal angle a wall can have for the player to stay running on it.
-@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wall_run_max_internal_angle: float = deg_to_rad(45.0)
+@export_range(0.0, 90.0, 1.0, "radians_as_degrees") var wallrun_max_internal_angle: float = deg_to_rad(45.0)
 
 
-@export_subgroup("Wall-Jumping", "wall_jump_")
+@export_subgroup("Wall-Jumping", "walljump_")
 
 ## How many times the player can wall-jump with full power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_min_limit: int = 4
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_min_limit: int = 4
 
 ## How many wall-jumps until the player has no wall-jump power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_max_limit: int = 8
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_max_limit: int = 8
 
 ## How high the player jumps while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_impulse: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
 
 ## How far the player jumps forwards while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_forward_impulse: float = -4.5
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_impulse: float = -4.5
 
 ## How far the player jumps away from the wall while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var wall_jump_normal_impulse: float = 10.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_normal_impulse: float = 10.0
 
 
 @export_group("Mantling", "mantle_")
@@ -361,19 +361,19 @@ func get_stance_as_text() -> String:
 
 
 
-@export_group("Grapple Hooking", "grapple_hook_")
+@export_group("Grapple Hooking", "grapplehook_")
 
 ## Can the player grapple hook?
-@export var grapple_hook_enabled: bool = true
+@export var grapplehook_enabled: bool = true
 
 ## How fast the player is pulled towards the grapple point when grapple hooking.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var grapple_hook_speed: float = 6.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var grapplehook_speed: float = 6.0
 
 ## How far from the grapple point the player must be to grapple to it.
-@export_range(0.0, 50.0, 0.05, "suffix:m") var grapple_hook_min_distance: float = 7.0
+@export_range(0.0, 50.0, 0.05, "suffix:m") var grapplehook_min_distance: float = 7.0
 
 ## How close to the grapple point the player must be to grapple to it.
-@export_range(0.0, 50.0, 0.05, "suffix:m") var grapple_hook_max_distance: float = 14.0
+@export_range(0.0, 50.0, 0.05, "suffix:m") var grapplehook_max_distance: float = 14.0
 
 
 ##################################################
@@ -395,26 +395,26 @@ var crouch_timestamp: float = 0.0
 var airborne_timestamp: float = 0.0
 var jump_timestamp: float = 0.0
 var slide_timestamp: float = 0.0
-var wall_run_timestamp: float = 0.0
+var wallrun_timestamp: float = 0.0
 
 var air_crouching: bool = false
 var coyote_jump_ready: bool = false
 var coyote_slide_ready: bool = false
 var coyote_slide_jump_ready: bool = false
-var coyote_wall_jump_ready: bool = false
+var coyote_walljump_ready: bool = false
 var ledge_jump_ready: bool = false
-var is_grapple_hook_point_in_range: bool = false
+var is_grapplehook_point_in_range: bool = false
 
 var air_jumps: int = Global.MAX_INT
 var air_crouches: int = Global.MAX_INT
-var wall_jumps: int = 0
+var walljumps: int = 0
 
-var wall_run_normal: Vector3 = Vector3.ZERO
-var wall_run_direction: Vector3 = Vector3.ZERO
+var wallrun_normal: Vector3 = Vector3.ZERO
+var wallrun_direction: Vector3 = Vector3.ZERO
 
 var velocity_before_move: Vector3 = Vector3.ZERO
 
-var active_grapple_hook_point: GrappleHookPoint = null
+var active_grapplehook_point: GrappleHookPoint = null
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gravity_vector")
@@ -429,8 +429,8 @@ var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gr
 @onready var state_machine: StateMachine = $StateMachine
 @onready var collision_shape: CollisionShape3D = $CollisionShape
 @onready var health_component: HealthComponent = $HealthComponent
-@onready var grapple_hook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
-@onready var grapple_hook_line: Line3D = $Head/Camera/GrappleHookRaycast/GrappleHookLine
+@onready var grapplehook_raycast: RayCast3D = $Head/Camera/GrappleHookRaycast
+@onready var grapplehook_line: Line3D = $Head/Camera/GrappleHookRaycast/GrappleHookLine
 @onready var wallrun_foot_raycast: RayCast3D = $WallrunFootRaycast
 @onready var wallrun_hand_raycast: RayCast3D = $WallrunHandRaycast
 @onready var wallrun_floor_raycast: RayCast3D = $WallrunFloorRaycast
@@ -444,8 +444,8 @@ var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gr
 @onready var airborne_uncrouch_area: Area3D = $AirborneUncrouchArea
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
 @onready var slide_audio: AudioStreamPlayer3D = $SlideAudio
-@onready var grapple_hook_fire_audio: AudioStreamPlayer3D = $GrappleHookFireAudio
-@onready var grapple_hook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
+@onready var grapplehook_fire_audio: AudioStreamPlayer3D = $GrappleHookFireAudio
+@onready var grapplehook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
 
 
 ##################################################
@@ -813,9 +813,9 @@ func add_friction(friction: float, top_speed: float) -> void:
 
 func add_wallrun_friction() -> void:
 	if velocity.y < 0:
-		velocity = velocity.move_toward(get_horizontal_velocity(), wall_run_downwards_friction * get_physics_process_delta_time())
+		velocity = velocity.move_toward(get_horizontal_velocity(), wallrun_downwards_friction * get_physics_process_delta_time())
 	else:
-		velocity = velocity.move_toward(get_horizontal_velocity(), wall_run_upwards_friction * get_physics_process_delta_time())
+		velocity = velocity.move_toward(get_horizontal_velocity(), wallrun_upwards_friction * get_physics_process_delta_time())
 
 
 func add_gravity(gravity_multiplier: float) -> void:
@@ -953,35 +953,35 @@ func coyote_slide() -> void:
 
 
 func start_wallrun() -> void:
-	wall_run_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
-	wall_run_direction = (get_horizontal_velocity() - wall_run_normal * get_horizontal_velocity().dot(wall_run_normal)).normalized()
+	wallrun_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
+	wallrun_direction = (get_horizontal_velocity() - wallrun_normal * get_horizontal_velocity().dot(wallrun_normal)).normalized()
 
-	var new_velocity: Vector3 = wall_run_direction * get_horizontal_speed_before_move()
+	var new_velocity: Vector3 = wallrun_direction * get_horizontal_speed_before_move()
 	velocity.x = new_velocity.x
 	velocity.z = new_velocity.z
 
 
 func stop_wallrun() -> void:
-	velocity += wall_run_normal * wall_run_cancel_impulse
+	velocity += wallrun_normal * wallrun_cancel_impulse
 
 
 func add_wallrun_movement() -> void:
-	var direction: Vector3 = wall_run_direction * wish_direction.dot(wall_run_direction)
+	var direction: Vector3 = wallrun_direction * wish_direction.dot(wallrun_direction)
 
 	var old_horizontal_speed: float = get_horizontal_speed()
-	velocity += direction * wall_run_acceleration * get_physics_process_delta_time()
+	velocity += direction * wallrun_acceleration * get_physics_process_delta_time()
 	var new_horizontal_speed: float = get_horizontal_speed()
 
 	if new_horizontal_speed <= old_horizontal_speed:
 		return
 
-	if new_horizontal_speed <= wall_run_speed:
+	if new_horizontal_speed <= wallrun_speed:
 		return
 
 	var limited_velocity: Vector3
 
-	if old_horizontal_speed <= wall_run_speed:
-		limited_velocity = get_horizontal_velocity().limit_length(wall_run_speed)
+	if old_horizontal_speed <= wallrun_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(wallrun_speed)
 	else:
 		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
 
@@ -989,39 +989,39 @@ func add_wallrun_movement() -> void:
 	velocity.z = limited_velocity.z
 
 
-func wall_jump(direction: Vector3) -> void:
-	wall_jumps += 1
+func walljump(direction: Vector3) -> void:
+	walljumps += 1
 
 	var effective_impulse: float
 
-	if wall_jumps == wall_jump_max_limit:
+	if walljumps == walljump_max_limit:
 		effective_impulse = 0.0
-	elif wall_jumps > wall_jump_min_limit:
-		effective_impulse = lerpf(wall_jump_impulse, 0.0, float(wall_jumps - wall_jump_min_limit) / float(wall_jump_max_limit - wall_jump_min_limit))
+	elif walljumps > walljump_min_limit:
+		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
 	else:
-		effective_impulse = wall_jump_impulse
+		effective_impulse = walljump_impulse
 
 	velocity.y = effective_impulse
-	velocity += direction * wall_jump_forward_impulse
-	velocity += wall_run_normal * wall_jump_normal_impulse
+	velocity += direction * walljump_forward_impulse
+	velocity += wallrun_normal * walljump_normal_impulse
 
 
-func coyote_wall_jump(direction: Vector3) -> void:
-	velocity -= wall_run_normal * wall_run_cancel_impulse
-	wall_jumps += 1
+func coyote_walljump(direction: Vector3) -> void:
+	velocity -= wallrun_normal * wallrun_cancel_impulse
+	walljumps += 1
 
 	var effective_impulse: float
 
-	if wall_jumps == wall_jump_max_limit:
+	if walljumps == walljump_max_limit:
 		effective_impulse = 0.0
-	elif wall_jumps > wall_jump_min_limit:
-		effective_impulse = lerpf(wall_jump_impulse, 0.0, float(wall_jumps - wall_jump_min_limit) / float(wall_jump_max_limit - wall_jump_min_limit))
+	elif walljumps > walljump_min_limit:
+		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
 	else:
-		effective_impulse = wall_jump_impulse
+		effective_impulse = walljump_impulse
 
 	velocity.y = effective_impulse
-	velocity += direction * wall_jump_forward_impulse
-	velocity += wall_run_normal * wall_jump_normal_impulse
+	velocity += direction * walljump_forward_impulse
+	velocity += wallrun_normal * walljump_normal_impulse
 
 
 func can_continue_jumping() -> bool:
@@ -1071,10 +1071,10 @@ func can_ledge_jump() -> bool:
 
 
 func can_start_wallrun() -> bool:
-	if not wall_run_enabled:
+	if not wallrun_enabled:
 		return false
 
-	if Global.time - wall_run_timestamp < wall_run_cooldown:
+	if Global.time - wallrun_timestamp < wallrun_cooldown:
 		return false
 
 	if not is_on_wall():
@@ -1088,10 +1088,10 @@ func can_start_wallrun() -> bool:
 
 	var normal: Vector3 = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-	if get_direction_of_horizontal_velocity_before_move().angle_to(-normal) < wall_run_min_start_angle:
+	if get_direction_of_horizontal_velocity_before_move().angle_to(-normal) < wallrun_min_start_angle:
 		return false
 
-	if get_horizontal_speed_before_move() < wall_run_start_speed:
+	if get_horizontal_speed_before_move() < wallrun_start_speed:
 		return false
 
 	wallrun_floor_raycast.force_raycast_update()
@@ -1156,9 +1156,9 @@ func can_mantle() -> bool:
 	return true
 
 
-func can_grapple_hook() -> bool:
-	return active_grapple_hook_point != null \
-	and is_grapple_hook_point_in_range
+func can_grapplehook() -> bool:
+	return active_grapplehook_point != null \
+	and is_grapplehook_point_in_range
 
 
 func in_coyote_time() -> bool:
@@ -1190,17 +1190,17 @@ func can_coyote_slide_jump() -> bool:
 	and in_coyote_time()
 
 
-func can_coyote_wall_jump() -> bool:
-	return coyote_wall_jump_enabled \
-	and coyote_wall_jump_ready \
+func can_coyote_walljump() -> bool:
+	return coyote_walljump_enabled \
+	and coyote_walljump_ready \
 	and in_coyote_time()
 
 
 func try_stick_to_wallrun() -> bool:
-	if get_horizontal_speed() < wall_run_stop_speed:
+	if get_horizontal_speed() < wallrun_stop_speed:
 		return false
 
-	if get_horizontal_velocity().dot(wall_run_direction) <= 0.0:
+	if get_horizontal_velocity().dot(wallrun_direction) <= 0.0:
 		return false
 
 	wallrun_floor_raycast.force_raycast_update()
@@ -1211,8 +1211,8 @@ func try_stick_to_wallrun() -> bool:
 	var wall_normal: Vector3
 
 	if not is_on_wall():
-		wallrun_foot_raycast.target_position = basis.inverse() * -wall_run_normal * collision_shape.shape.radius * 3
-		wallrun_hand_raycast.target_position = basis.inverse() * -wall_run_normal * collision_shape.shape.radius * 3
+		wallrun_foot_raycast.target_position = basis.inverse() * -wallrun_normal * collision_shape.shape.radius * 3
+		wallrun_hand_raycast.target_position = basis.inverse() * -wallrun_normal * collision_shape.shape.radius * 3
 		wallrun_foot_raycast.force_raycast_update()
 		wallrun_hand_raycast.force_raycast_update()
 
@@ -1221,89 +1221,89 @@ func try_stick_to_wallrun() -> bool:
 
 		wall_normal = Vector3(wallrun_foot_raycast.get_collision_normal().x, 0.0, wallrun_foot_raycast.get_collision_normal().z).normalized()
 
-		if wall_normal.angle_to(wall_run_normal) > wall_run_max_external_angle:
+		if wall_normal.angle_to(wallrun_normal) > wallrun_max_external_angle:
 			return false
 
-		move_and_collide(-wall_run_normal * floor_snap_length)
+		move_and_collide(-wallrun_normal * floor_snap_length)
 
-		check_surface(-wall_run_normal)
+		check_surface(-wallrun_normal)
 	else:
 		wall_normal = Vector3(get_wall_normal().x, 0.0, get_wall_normal().z).normalized()
 
-		if wall_normal.angle_to(wall_run_normal) > wall_run_max_internal_angle:
+		if wall_normal.angle_to(wallrun_normal) > wallrun_max_internal_angle:
 			return false
 
-	if wall_normal != wall_run_normal:
-		wall_run_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
-		wall_run_direction = (get_horizontal_velocity() - wall_run_normal * get_horizontal_velocity().dot(wall_run_normal)).normalized()
+	if wall_normal != wallrun_normal:
+		wallrun_normal = Vector3(wall_normal.x, 0.0, wall_normal.z).normalized()
+		wallrun_direction = (get_horizontal_velocity() - wallrun_normal * get_horizontal_velocity().dot(wallrun_normal)).normalized()
 
-		velocity.x = wall_run_direction.x * get_horizontal_speed_before_move()
+		velocity.x = wallrun_direction.x * get_horizontal_speed_before_move()
 		velocity.y = velocity_before_move.y
-		velocity.z = wall_run_direction.z * get_horizontal_speed_before_move()
+		velocity.z = wallrun_direction.z * get_horizontal_speed_before_move()
 
 	return true
 
 
-func update_active_grapple_hook_point() -> void:
-	if not grapple_hook_enabled:
-		clear_grapple_hook_point()
+func update_active_grapplehook_point() -> void:
+	if not grapplehook_enabled:
+		clear_grapplehook_point()
 		return
 
-	var target_grapple_hook_point: GrappleHookPoint = get_targeted_grapple_hook_point()
+	var target_grapplehook_point: GrappleHookPoint = get_targeted_grapplehook_point()
 
-	if target_grapple_hook_point == null:
-		clear_grapple_hook_point()
+	if target_grapplehook_point == null:
+		clear_grapplehook_point()
 		return
-	elif active_grapple_hook_point != target_grapple_hook_point:
-		clear_grapple_hook_point()
-		active_grapple_hook_point = target_grapple_hook_point
+	elif active_grapplehook_point != target_grapplehook_point:
+		clear_grapplehook_point()
+		active_grapplehook_point = target_grapplehook_point
 
-	is_grapple_hook_point_in_range = active_grapple_hook_point.position.distance_to(head.global_position) <= grapple_hook_max_distance
+	is_grapplehook_point_in_range = active_grapplehook_point.position.distance_to(head.global_position) <= grapplehook_max_distance
 
-	if not is_grapple_hook_point_in_range:
-		active_grapple_hook_point.targeted = GrappleHookPoint.Target.INVALID_TARGET
-	elif active_grapple_hook_point.targeted != GrappleHookPoint.Target.TARGETED:
-		active_grapple_hook_point.targeted = GrappleHookPoint.Target.TARGETED
-		grapple_hook_indicator_audio.play()
+	if not is_grapplehook_point_in_range:
+		active_grapplehook_point.targeted = GrappleHookPoint.Target.INVALID_TARGET
+	elif active_grapplehook_point.targeted != GrappleHookPoint.Target.TARGETED:
+		active_grapplehook_point.targeted = GrappleHookPoint.Target.TARGETED
+		grapplehook_indicator_audio.play()
 
 
-func get_targeted_grapple_hook_point() -> GrappleHookPoint:
-	var grapple_hook_points: Array[GrappleHookPoint] = []
+func get_targeted_grapplehook_point() -> GrappleHookPoint:
+	var grapplehook_points: Array[GrappleHookPoint] = []
 
-	grapple_hook_raycast.force_raycast_update()
+	grapplehook_raycast.force_raycast_update()
 
-	while grapple_hook_raycast.is_colliding():
-		var collider: Node3D = grapple_hook_raycast.get_collider()
+	while grapplehook_raycast.is_colliding():
+		var collider: Node3D = grapplehook_raycast.get_collider()
 
-		if collider is GrappleHookPoint and head.global_position.distance_to(collider.position) >= grapple_hook_min_distance:
-			grapple_hook_points.push_back(collider)
+		if collider is GrappleHookPoint and head.global_position.distance_to(collider.position) >= grapplehook_min_distance:
+			grapplehook_points.push_back(collider)
 		elif not collider is Area3D:  # If it's not an Area3D in the collision layers the raycast is colliding with, then it must be a StaticBody3D; a wall.
 			break
 
-		grapple_hook_raycast.add_exception(collider)
-		grapple_hook_raycast.force_raycast_update()
+		grapplehook_raycast.add_exception(collider)
+		grapplehook_raycast.force_raycast_update()
 
-	grapple_hook_raycast.clear_exceptions()
+	grapplehook_raycast.clear_exceptions()
 
-	if grapple_hook_points.is_empty():
+	if grapplehook_points.is_empty():
 		return null
 
-	grapple_hook_points.sort_custom(_compare_grapple_hook_points)
+	grapplehook_points.sort_custom(_compare_grapplehook_points)
 
-	for grapple_hook_point: GrappleHookPoint in grapple_hook_points:
-		if head.global_position.distance_to(grapple_hook_point.position) <= grapple_hook_max_distance:
-			return grapple_hook_point
+	for grapplehook_point: GrappleHookPoint in grapplehook_points:
+		if head.global_position.distance_to(grapplehook_point.position) <= grapplehook_max_distance:
+			return grapplehook_point
 
-	return grapple_hook_points[0]
-
-
-func clear_grapple_hook_point() -> void:
-	if active_grapple_hook_point != null:
-		active_grapple_hook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
-		active_grapple_hook_point = null
+	return grapplehook_points[0]
 
 
-func _compare_grapple_hook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bool:
+func clear_grapplehook_point() -> void:
+	if active_grapplehook_point != null:
+		active_grapplehook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
+		active_grapplehook_point = null
+
+
+func _compare_grapplehook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bool:
 	var proximity_to_crosshair_a: float = head.global_position.direction_to(a.position).dot(get_looking_direction())
 	var proximity_to_crosshair_b: float = head.global_position.direction_to(b.position).dot(get_looking_direction())
 	return proximity_to_crosshair_a > proximity_to_crosshair_b

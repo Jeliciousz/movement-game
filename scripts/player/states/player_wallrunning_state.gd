@@ -10,10 +10,10 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.wall_run_timestamp = Global.time
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false
-	_player.coyote_wall_jump_ready = true
+	_player.coyote_walljump_ready = true
 	_player.air_jumps = 0
 	_player.air_crouches = 0
-	_player.clear_grapple_hook_point()
+	_player.clear_grapplehook_point()
 	_player.footstep_audio.play()
 
 
@@ -27,14 +27,14 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"jump"):
 		InputBuffer.clear_buffered_action(&"jump")
-		_player.coyote_wall_jump_ready = false
-		_player.wall_jump(_player.wall_run_direction)
+		_player.coyote_walljump_ready = false
+		_player.walljump(_player.wall_run_direction)
 		state_machine.change_state_to(&"Jumping")
 		return
 
 	if InputBuffer.is_action_buffered(&"crouch"):
 		InputBuffer.clear_buffered_action(&"crouch")
-		_player.coyote_wall_jump_ready = false
+		_player.coyote_walljump_ready = false
 		_player.stop_wallrun()
 		state_machine.change_state_to(&"Airborne")
 
@@ -66,10 +66,10 @@ func update_stance() -> void:
 
 
 func update_physics() -> void:
-	if Global.time - _player.wall_run_timestamp > _player.wall_run_duration:
+	if Global.time - _player.wall_run_timestamp > _player.wallrun_duration:
 		_player.add_air_resistence()
-		_player.add_friction(_player.physics_friction * _player.wall_run_friction_multiplier, _player.wall_run_speed)
-		_player.add_gravity(_player.physics_gravity_multiplier * _player.wall_run_gravity_multiplier)
+		_player.add_friction(_player.physics_friction * _player.wall_run_friction_multiplier, _player.wallrun_speed)
+		_player.add_gravity(_player.physics_gravity_multiplier * _player.wallrun_gravity_multiplier)
 	else:
 		_player.add_air_resistence()
 		_player.add_wallrun_friction()

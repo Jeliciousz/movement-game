@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://b67ihi2sr2j5a"
-path="res://.godot/imported/grapple_hook_fire.wav-073a7cdd9066d8a361a8192ce2210d94.sample"
+path="res://.godot/imported/grapplehook_fire.wav-0e893c3f7110bd88d12534909e63915d.sample"
 
 [deps]
 
-source_file="res://assets/sounds/player/grapple/grapple_hook_fire.wav"
-dest_files=["res://.godot/imported/grapple_hook_fire.wav-073a7cdd9066d8a361a8192ce2210d94.sample"]
+source_file="res://assets/sounds/player/grapplehook/grapplehook_fire.wav"
+dest_files=["res://.godot/imported/grapplehook_fire.wav-0e893c3f7110bd88d12534909e63915d.sample"]
 
 [params]
 

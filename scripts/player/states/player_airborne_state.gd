@@ -16,7 +16,7 @@ func _state_enter(last_state_name: StringName) -> void:
 
 
 func _state_physics_preprocess(_delta: float) -> void:
-	_player.update_active_grapple_hook_point()
+	_player.update_active_grapplehook_point()
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
@@ -25,17 +25,17 @@ func _state_physics_preprocess(_delta: float) -> void:
 		InputBuffer.clear_buffered_action(&"slide")
 		_player.coyote_slide()
 
-	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.can_grapple_hook():
-		InputBuffer.clear_buffered_action(&"grapple_hook")
-		_player.grapple_hook_fire_audio.play()
+	if InputBuffer.is_action_buffered(&"grapplehook") and _player.can_grapplehook():
+		InputBuffer.clear_buffered_action(&"grapplehook")
+		_player.grapplehook_fire_audio.play()
 		state_machine.change_state_to(&"GrappleHooking")
 		return
 
 	if InputBuffer.is_action_buffered(&"jump"):
-		if _player.can_coyote_wall_jump():
+		if _player.can_coyote_walljump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.coyote_wall_jump_ready = false
-			_player.coyote_wall_jump(_player.wall_run_direction)
+			_player.coyote_walljump_ready = false
+			_player.coyote_walljump(_player.wall_run_direction)
 			state_machine.change_state_to(&"Jumping")
 			return
 

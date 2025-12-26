@@ -27,13 +27,13 @@ func spawn_random() -> void:
 	_player.velocity = Vector3.ZERO
 	_player.reset_physics_interpolation()
 
-	if _player.active_grapple_hook_point:
-		_player.clear_grapple_hook_point()
+	if _player.active_grapplehook_point:
+		_player.clear_grapplehook_point()
 
 	InputBuffer.clear_buffered_action("jump")
 	InputBuffer.clear_buffered_action("sprint")
 	InputBuffer.clear_buffered_action("slide")
-	InputBuffer.clear_buffered_action("grapple_hook")
+	InputBuffer.clear_buffered_action("grapplehook")
 
 	if _player.check_surface(Vector3.DOWN):
 		state_machine.change_state_to(&"Grounded")

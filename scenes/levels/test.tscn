@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/player.tscn" id="1_koekj"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/player_spawn_point.tscn" id="2_kw13u"]
 [ext_resource type="Environment" uid="uid://djf1eie3ckyjs" path="res://assets/other/indoor_environment.tres" id="3_kw13u"]
-[ext_resource type="PackedScene" uid="uid://cqkeqglbsx1tw" path="res://scenes/grapple_hook_point.tscn" id="4_f5esd"]
+[ext_resource type="PackedScene" uid="uid://cqkeqglbsx1tw" path="res://scenes/grapplehook_point.tscn" id="4_f5esd"]
 [ext_resource type="LightmapGIData" uid="uid://bmu126frqdwuk" path="res://assets/other/test.lmbake" id="4_kw13u"]
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="6_5tpx0"]
 [ext_resource type="PackedScene" uid="uid://bw0gfnxekrreo" path="res://scenes/components/hitbox_component.tscn" id="7_im2du"]

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7yqxl0eho0vt"
-path.s3tc="res://.godot/imported/grapple_hook_point_targeted.png-3d51b94b4e31efc4799ff851035d2466.s3tc.ctex"
+uid="uid://ccjhtl5n10o32"
+path.s3tc="res://.godot/imported/grapplehook_point_target_invalid.png-f6a7689aa44b0e1385abbdd2248ca537.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/textures/ui/grapple_hook_point_targeted.png"
-dest_files=["res://.godot/imported/grapple_hook_point_targeted.png-3d51b94b4e31efc4799ff851035d2466.s3tc.ctex"]
+source_file="res://assets/textures/ui/grapplehook_point_target_invalid.png"
+dest_files=["res://.godot/imported/grapplehook_point_target_invalid.png-f6a7689aa44b0e1385abbdd2248ca537.s3tc.ctex"]
 
 [params]
 
