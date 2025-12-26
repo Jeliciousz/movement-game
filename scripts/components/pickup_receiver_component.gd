@@ -15,6 +15,6 @@ func _on_area_entered(area: Area3D) -> void:
 	if not pickup_collect_component.enabled:
 		return
 
-	pickup_collect_component.collect()
+	pickup_collect_component.pickup()
 
 	pickup_received.emit(pickup_collect_component.get_parent_node_3d().duplicate())
