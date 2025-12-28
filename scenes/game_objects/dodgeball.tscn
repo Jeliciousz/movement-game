@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://6ph2i46tp68q"]
 
 [ext_resource type="Material" uid="uid://coce5ywpsi54n" path="res://assets/materials/dodgeball.tres" id="1_6j3e4"]
-[ext_resource type="Script" uid="uid://bn54sq2rvx80e" path="res://scripts/dodgeball.gd" id="1_35qfo"]
+[ext_resource type="Script" uid="uid://bn54sq2rvx80e" path="res://scripts/game_objects/dodgeball.gd" id="1_35qfo"]
 [ext_resource type="PackedScene" uid="uid://dseolbtimb3mt" path="res://scenes/components/pickup_component.tscn" id="2_kirfa"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_tdmlc"]

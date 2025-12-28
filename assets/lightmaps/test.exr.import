@@ -3,7 +3,7 @@
 importer="2d_array_texture"
 type="CompressedTexture2DArray"
 uid="uid://b5d6qpvw2cls"
-path.bptc="res://.godot/imported/test.exr-f05ea0f313c72972d56c5f78b22dc6c8.bptc.ctexarray"
+path.bptc="res://.godot/imported/test.exr-930d97a2e7639e19c8853c41d199ae5d.bptc.ctexarray"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/other/test.exr"
-dest_files=["res://.godot/imported/test.exr-f05ea0f313c72972d56c5f78b22dc6c8.bptc.ctexarray"]
+source_file="res://assets/lightmaps/test.exr"
+dest_files=["res://.godot/imported/test.exr-930d97a2e7639e19c8853c41d199ae5d.bptc.ctexarray"]
 
 [params]
 
