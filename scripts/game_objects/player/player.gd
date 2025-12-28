@@ -256,7 +256,7 @@ func get_stance_as_text() -> String:
 ## How high the player jumps while sliding.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_impulse: float = 18.0
 
-## How far the player jumps in the direction they're moving while sliding.
+## How far the player jumps in the direction they're already moving while sliding.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_horizontal_impulse: float = -7.0
 
 ## How long the player must wait after starting a slide until they can slide jump.
@@ -271,7 +271,7 @@ func get_stance_as_text() -> String:
 ## How high the player ledge jumps.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 10.0
 
-## How far the player ledge jumps in the direction they're moving.
+## How far the player ledge jumps in the direction they're already moving.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.5
 
 ## How long after sliding off a ledge can the player ledge jump.
