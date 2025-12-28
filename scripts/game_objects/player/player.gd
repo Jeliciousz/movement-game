@@ -941,7 +941,7 @@ func slide() -> void:
 	velocity.y = 0.0
 
 	if get_speed() < slide_speed:
-		velocity = get_direction_of_horizontal_velocity() * slide_speed
+		velocity = get_direction_of_velocity() * slide_speed
 
 
 func slide_cancel() -> void:
