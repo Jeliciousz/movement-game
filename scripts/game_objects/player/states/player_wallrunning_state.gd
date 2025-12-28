@@ -28,7 +28,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if InputBuffer.is_action_buffered(&"jump") and _player.walljump_enabled:
 		InputBuffer.clear_buffered_action(&"jump")
 		_player.coyote_walljump_ready = false
-		_player.wallrun_jump()
+		_player.running_walljump()
 		state_machine.change_state_to(&"Jumping")
 		return
 

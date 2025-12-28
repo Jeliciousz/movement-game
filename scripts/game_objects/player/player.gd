@@ -969,7 +969,26 @@ func slidejump() -> void:
 	attempt_uncrouch()
 
 	velocity.y += slidejump_impulse
+
+	var old_horizontal_speed: float = get_horizontal_speed()
 	velocity += get_direction_of_horizontal_velocity() * slidejump_horizontal_impulse
+	var new_horizontal_speed: float = get_horizontal_speed()
+
+	if new_horizontal_speed <= old_horizontal_speed:
+		return
+
+	if new_horizontal_speed <= slidejump_horizontal_speed:
+		return
+
+	var limited_velocity: Vector3
+
+	if old_horizontal_speed <= slidejump_horizontal_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(slidejump_horizontal_speed)
+	else:
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
+
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.z
 
 
 func ledgejump() -> void:
@@ -1006,29 +1025,6 @@ func coyote_slide() -> void:
 		velocity = wish_direction * slide_speed
 
 
-func wallrun_jump() -> void:
-	walljumps += 1
-
-	var effective_impulse: float
-
-	if walljumps == walljump_max_limit:
-		effective_impulse = 0.0
-	elif walljumps > walljump_min_limit:
-		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
-	else:
-		effective_impulse = walljump_impulse
-
-	var min_speed: float = get_horizontal_speed()
-
-	velocity.y = effective_impulse
-	velocity += wallrun_direction * walljump_forward_impulse + wall_normal * walljump_normal_impulse
-
-	if get_horizontal_speed() < min_speed:
-		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
-		velocity.x = new_horizontal_vel.x
-		velocity.z = new_horizontal_vel.z
-
-
 func walljump() -> void:
 	walljumps += 1
 
@@ -1041,15 +1037,70 @@ func walljump() -> void:
 	else:
 		effective_impulse = walljump_impulse
 
-	var min_speed: float = get_horizontal_speed()
+	var old_horizontal_speed: float = get_horizontal_speed()
 
 	velocity.y = effective_impulse
 	velocity += wall_normal * walljump_normal_impulse
 
-	if get_horizontal_speed() < min_speed:
-		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
+	var new_horizontal_speed: float = get_horizontal_speed()
+
+	if new_horizontal_speed < old_horizontal_speed:
+		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * old_horizontal_speed
 		velocity.x = new_horizontal_vel.x
 		velocity.z = new_horizontal_vel.z
+		return
+
+	if new_horizontal_speed <= walljump_horizontal_speed:
+		return
+
+	var limited_velocity: Vector3
+
+	if old_horizontal_speed <= walljump_horizontal_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(walljump_horizontal_speed)
+	else:
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
+
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.z
+
+
+func running_walljump() -> void:
+	walljumps += 1
+
+	var effective_impulse: float
+
+	if walljumps == walljump_max_limit:
+		effective_impulse = 0.0
+	elif walljumps > walljump_min_limit:
+		effective_impulse = lerpf(walljump_impulse, 0.0, float(walljumps - walljump_min_limit) / float(walljump_max_limit - walljump_min_limit))
+	else:
+		effective_impulse = walljump_impulse
+
+	var old_horizontal_speed: float = get_horizontal_speed()
+
+	velocity.y = effective_impulse
+	velocity += wallrun_direction * walljump_forward_impulse + wall_normal * walljump_normal_impulse
+
+	var new_horizontal_speed: float = get_horizontal_speed()
+
+	if new_horizontal_speed < old_horizontal_speed:
+		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * old_horizontal_speed
+		velocity.x = new_horizontal_vel.x
+		velocity.z = new_horizontal_vel.z
+		return
+
+	if new_horizontal_speed <= walljump_horizontal_speed:
+		return
+
+	var limited_velocity: Vector3
+
+	if old_horizontal_speed <= walljump_horizontal_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(walljump_horizontal_speed)
+	else:
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
+
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.z
 
 
 func coyote_walljump() -> void:
