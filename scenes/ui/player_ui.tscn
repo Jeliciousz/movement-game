@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://8nprl1tynttc"]
+
+[ext_resource type="Texture2D" uid="uid://crlxrcr3qgg73" path="res://assets/textures/ui/crosshair.png" id="1_er5qu"]
+[ext_resource type="Script" uid="uid://bf6xs5lgdl456" path="res://scripts/ui/player_ui.gd" id="1_fatqr"]
+[ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/ui/spedometer.gd" id="2_or0tx"]
+[ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/ui/debug_info.gd" id="3_qcjqi"]
+
+[node name="PlayerUI" type="Control" unique_id=1084920434]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_fatqr")
+
+[node name="Crosshair" type="TextureRect" parent="." unique_id=199237795]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("1_er5qu")
+expand_mode = 1
+
+[node name="Spedometer" type="Label" parent="." unique_id=93331040]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 57.0
+offset_top = -22.5
+offset_right = 157.0
+offset_bottom = 22.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 2
+vertical_alignment = 1
+script = ExtResource("2_or0tx")
+
+[node name="DebugInfo" type="Label" parent="." unique_id=1354235376]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 5.0
+offset_right = 70.0
+offset_bottom = 37.0
+script = ExtResource("3_qcjqi")
