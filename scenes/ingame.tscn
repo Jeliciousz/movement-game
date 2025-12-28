@@ -6,5 +6,7 @@
 [node name="Ingame" type="Node3D" unique_id=328872736 node_paths=PackedStringArray("player")]
 script = ExtResource("1_lqpuv")
 player = NodePath("Player")
+menu_scene_path = "uid://c0v4hb2cwyekf"
+first_level_path = "uid://dpgsmifow0gcw"
 
 [node name="Player" parent="." unique_id=1448995669 instance=ExtResource("2_kexic")]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c0v4hb2cwyekf"]
 
-[ext_resource type="Script" uid="uid://cq5lsjlbwd8js" path="res://scripts/ui/play_button.gd" id="1_l6cm7"]
+[ext_resource type="Script" uid="uid://chlv02wlsswjy" path="res://scripts/main_menu.gd" id="1_ekxnf"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vue75"]
 
@@ -11,6 +11,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ekxnf")
+play_scene_path = "uid://3fgvec6qrg6y"
 
 [node name="Background" type="ColorRect" parent="." unique_id=1439331961]
 layout_mode = 1
@@ -57,8 +59,6 @@ alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Play"
-script = ExtResource("1_l6cm7")
-level_scene_path = "uid://3fgvec6qrg6y"
 
 [node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=1236013313]
 layout_mode = 2
@@ -70,4 +70,5 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Quit"
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" to="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" method="_on_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/QuitButton" to="." method="_on_quit_button_pressed"]
