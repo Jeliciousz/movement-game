@@ -18,6 +18,7 @@ func pickup() -> bool:
 		return false
 
 	is_picked_up = true
+	picked_up.emit()
 	return true
 
 
@@ -29,6 +30,7 @@ func drop() -> void:
 		return
 
 	is_picked_up = false
+	dropped.emit()
 
 
 func is_pickup_pickable() -> bool:
