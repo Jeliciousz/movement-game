@@ -940,9 +940,8 @@ func slide() -> void:
 
 	velocity.y = 0.0
 
-	var speed: float = maxf(get_speed(), slide_speed)
-
-	velocity = wish_direction * speed
+	if get_speed() < slide_speed:
+		velocity = get_direction_of_horizontal_velocity() * slide_speed
 
 
 func slide_cancel() -> void:
