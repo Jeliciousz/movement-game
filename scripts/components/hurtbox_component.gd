@@ -25,7 +25,7 @@ func _physics_process(_delta: float) -> void:
 		if health_component.invulnerable and not hitbox.ignore_invulnerability:
 			continue
 
-		var time_delta: float = Global.time - last_hit_timestamps[index]
+		var time_delta: float = GlobalTime.get_timestamp() - last_hit_timestamps[index]
 
 		if time_delta < hitbox.damage_interval:
 			continue
@@ -68,7 +68,7 @@ func _on_area_entered(area: Area3D) -> void:
 			var damage_dealt: int = mini(hitbox.damage, health_component.health)
 			health_component.damage(hitbox.damage, hitbox.ignore_invulnerability)
 			hit.emit(damage_dealt)
-			last_hit_timestamps.push_back(Global.time)
+			last_hit_timestamps.push_back(GlobalTime.get_timestamp())
 		else:
 			last_hit_timestamps.push_back(0.0)
 
