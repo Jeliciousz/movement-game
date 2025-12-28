@@ -2,6 +2,8 @@ class_name Player
 extends CharacterBody3D
 ## The Player controller.
 
+signal died()
+signal spawned()
 
 ## Different states a player can be in.
 enum Stances {
@@ -44,7 +46,7 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 500.0, 1.0, "suffix:m/s/s") var physics_friction: float = 25.0
 
 ## The acceleration applied opposite and proportional to the player's velocity.
-@export_range(0.0, 1.0, 0.001, "suffix:m/s/s") var physics_air_resistence: float = 0.025
+@export_range(0.0, 1.0, 0.001, "suffix:m/s/s") var physics_air_resistence: float = 0.01
 
 ## How much gravity is applied to the player.
 @export_range(0.0, 1.0, 0.05, "suffix:×") var physics_gravity_multiplier: float = 1.0
@@ -1438,5 +1440,6 @@ func _compare_grapplehook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bo
 
 
 func _on_health_component_died(_damage_taken: float) -> void:
-	state_machine.change_state_to(&"Spawning")
+	died.emit()
 	health_component.revive()
+	state_machine.change_state_to(&"Spawning")
