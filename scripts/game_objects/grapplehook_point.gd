@@ -13,20 +13,20 @@ enum Target {
 
 var targeted: Target = Target.NOT_TARGETED
 
-@onready var _targeted_sprite: Sprite3D = $TargetedSprite
-@onready var _invalid_target_sprite: Sprite3D = $InvalidTargetSprite
+@onready var targeted_sprite: Sprite3D = $TargetedSprite
+@onready var invalid_target_sprite: Sprite3D = $InvalidTargetSprite
 
 
 func _process(_delta: float) -> void:
 	match targeted:
 		Target.NOT_TARGETED:
-			_targeted_sprite.hide()
-			_invalid_target_sprite.hide()
+			targeted_sprite.hide()
+			invalid_target_sprite.hide()
 
 		Target.TARGETED:
-			_targeted_sprite.show()
-			_invalid_target_sprite.hide()
+			targeted_sprite.show()
+			invalid_target_sprite.hide()
 
 		Target.INVALID_TARGET:
-			_targeted_sprite.hide()
-			_invalid_target_sprite.show()
+			targeted_sprite.hide()
+			invalid_target_sprite.show()

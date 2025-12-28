@@ -300,7 +300,7 @@ metadata/_custom_type_script = "uid://c11sddh62rt7v"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 script = ExtResource("11_wqfne")
 
-[node name="Camera" type="Camera3D" parent="Head" unique_id=303542951 node_paths=PackedStringArray("_player")]
+[node name="Camera" type="Camera3D" parent="Head" unique_id=303542951 node_paths=PackedStringArray("player")]
 physics_interpolation_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 top_level = true
@@ -309,7 +309,7 @@ current = true
 fov = 120.0
 near = 0.005
 script = ExtResource("2_l71n6")
-_player = NodePath("../..")
+player = NodePath("../..")
 
 [node name="GrappleHookRaycast" type="RayCast3D" parent="Head/Camera" unique_id=130836546]
 target_position = Vector3(0, 0, -200)
@@ -329,10 +329,10 @@ metadata/_custom_type_script = "uid://dn58b3xgqy5be"
 
 [node name="Hand" type="Node3D" parent="Head/Camera" unique_id=601641731]
 
-[node name="MouseAimController" type="Node" parent="." unique_id=1150320394 node_paths=PackedStringArray("_body", "_head")]
+[node name="MouseAimController" type="Node" parent="." unique_id=1150320394 node_paths=PackedStringArray("body", "head")]
 script = ExtResource("2_ke2ow")
-_body = NodePath("..")
-_head = NodePath("../Head")
+body = NodePath("..")
+head = NodePath("../Head")
 
 [node name="HealthComponent" parent="." unique_id=823374211 instance=ExtResource("21_pf23h")]
 

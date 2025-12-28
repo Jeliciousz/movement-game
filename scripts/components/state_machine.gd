@@ -9,68 +9,68 @@ signal state_changed(last_state: StringName, current_state: StringName)
 @export var initial_state: State
 
 ## The currently active state.
-@onready var _state: State = initial_state
+@onready var state: State = initial_state
 
 
 func _ready() -> void:
-	if _state == null:
+	if state == null:
 		return
 
-	_state.state_machine = self
-	_state._state_enter("")
+	state.state_machine = self
+	state._state_enter("")
 
 
 func _process(delta: float) -> void:
-	if _state == null:
+	if state == null:
 		return
 
-	_state._state_preprocess(delta)
+	state._state_preprocess(delta)
 
-	_state._state_process(delta)
+	state._state_process(delta)
 
 
 func _physics_process(delta: float) -> void:
-	if _state == null:
+	if state == null:
 		return
 
-	_state._state_physics_preprocess(delta)
+	state._state_physics_preprocess(delta)
 
-	_state._state_physics_process(delta)
+	state._state_physics_process(delta)
 
 
 func _input(event: InputEvent) -> void:
-	if _state == null:
+	if state == null:
 		return
 
-	_state._state_input(event)
+	state._state_input(event)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _state == null:
+	if state == null:
 		return
 
-	_state._state_unhandled_input(event)
+	state._state_unhandled_input(event)
 
 
 ## Returns the name of the current state.
 func get_state_name() -> StringName:
-	return _state.name
+	return state.name
 
 
 ## Transition to a new state.
-func change_state_to(state: StringName) -> void:
-	if not has_node(NodePath(state)):
-		printerr("The StateMachine does not have a child State with the name: '%s'" % state)
+func change_state_to(new_state: StringName) -> void:
+	if not has_node(NodePath(new_state)):
+		printerr("The StateMachine does not have a child State with the name: '%s'" % new_state)
 		return
 
 	var last_state_name: StringName = ""
 
-	if _state != null:
-		last_state_name = _state.name
-		_state._state_exit()
+	if state != null:
+		last_state_name = state.name
+		state._state_exit()
 
-	_state = get_node(NodePath(state))
-	_state.state_machine = self
-	_state._state_enter(last_state_name)
+	state = get_node(NodePath(new_state))
+	state.state_machine = self
+	state._state_enter(last_state_name)
 
-	state_changed.emit(last_state_name, _state.name)
+	state_changed.emit(last_state_name, new_state)

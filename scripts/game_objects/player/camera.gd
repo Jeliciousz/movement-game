@@ -4,7 +4,7 @@ extends Camera3D
 ## Animates the camera based on the Player's state.
 
 ## The [Player].
-@export var _player: Player
+@export var player: Player
 ## How quickly the camera rotates.
 @export var rotation_offset_speed: float = 10.0
 ## How much the player's velocity influences the camera rotation.
@@ -20,40 +20,40 @@ extends Camera3D
 ## How much the camera is tilted up while ledge grabbing.
 @export var rotation_offset_ledge_grab_influence: float = 15.0
 
-var _rotation_offset: Vector3 = Vector3.ZERO
-var _head_velocity: Vector3 = Vector3.ZERO
-var _last_head_position: Vector3 = Vector3.ZERO
+var rotation_offset: Vector3 = Vector3.ZERO
+var head_velocity: Vector3 = Vector3.ZERO
+var last_head_position: Vector3 = Vector3.ZERO
 
 
 func _process(delta: float) -> void:
-	var target_rotation_offset: Vector3 = -Vector3(deg_to_rad(rotation_offset_velocity_influence) * _head_velocity.dot(_player.basis.y), 0.0, deg_to_rad(rotation_offset_velocity_influence) * _head_velocity.dot(_player.basis.x))
+	var target_rotation_offset: Vector3 = -Vector3(deg_to_rad(rotation_offset_velocity_influence) * head_velocity.dot(player.basis.y), 0.0, deg_to_rad(rotation_offset_velocity_influence) * head_velocity.dot(player.basis.x))
 
-	match _player.state_machine.get_state_name():
+	match player.state_machine.get_state_name():
 		&"WallRunning":
-			target_rotation_offset.z -= deg_to_rad(rotation_offset_wallrun_influence) * _player.wall_normal.dot(_player.basis.x)
+			target_rotation_offset.z -= deg_to_rad(rotation_offset_wallrun_influence) * player.wall_normal.dot(player.basis.x)
 		&"Sliding":
-			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_slide_pitch_influence) * (_head_velocity.dot(-_player.basis.z) - _player.slide_stop_speed), 0.0, deg_to_rad(rotation_offset_slide_roll_influence) * _head_velocity.dot(_player.basis.x))
+			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_slide_pitch_influence) * (head_velocity.dot(-player.basis.z) - player.slide_stop_speed), 0.0, deg_to_rad(rotation_offset_slide_roll_influence) * head_velocity.dot(player.basis.x))
 		&"LedgeGrabbing":
 			target_rotation_offset += Vector3(deg_to_rad(rotation_offset_ledge_grab_influence), 0.0, 0.0)
 
-	_rotation_offset.x += angle_difference(_rotation_offset.x, target_rotation_offset.x) * delta * rotation_offset_speed
-	_rotation_offset.y += angle_difference(_rotation_offset.y, target_rotation_offset.y) * delta * rotation_offset_speed
-	_rotation_offset.z += angle_difference(_rotation_offset.z, target_rotation_offset.z) * delta * rotation_offset_speed
+	rotation_offset.x += angle_difference(rotation_offset.x, target_rotation_offset.x) * delta * rotation_offset_speed
+	rotation_offset.y += angle_difference(rotation_offset.y, target_rotation_offset.y) * delta * rotation_offset_speed
+	rotation_offset.z += angle_difference(rotation_offset.z, target_rotation_offset.z) * delta * rotation_offset_speed
 
-	position = _player.head.get_global_transform_interpolated().origin
-	rotation = _player.head.global_rotation + _rotation_offset
+	position = player.head.get_global_transform_interpolated().origin
+	rotation = player.head.global_rotation + rotation_offset
 
 
 func _physics_process(_delta: float) -> void:
-	_head_velocity = (_player.head.global_position - _last_head_position) / get_physics_process_delta_time()
-	_last_head_position = _player.head.global_position
+	head_velocity = (player.head.global_position - last_head_position) / get_physics_process_delta_time()
+	last_head_position = player.head.global_position
 
 
 func _on_state_machine_state_changed(last_state: StringName, _current_state: StringName) -> void:
 	if last_state == &"Spawning":
-		_last_head_position = _player.head.global_position
-		_head_velocity = Vector3.ZERO
-		position = _player.head.global_position
-		rotation = _player.head.global_rotation
-		_rotation_offset = Vector3.ZERO
+		last_head_position = player.head.global_position
+		head_velocity = Vector3.ZERO
+		position = player.head.global_position
+		rotation = player.head.global_rotation
+		rotation_offset = Vector3.ZERO
 		return

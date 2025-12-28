@@ -32,10 +32,10 @@ const RADIANS_PER_DOT: float = deg_to_rad(0.1)
 @export_group("Nodes")
 
 ## The body.
-@export var _body: Node3D
+@export var body: Node3D
 
 ## The head.
-@export var _head: Node3D
+@export var head: Node3D
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -66,8 +66,8 @@ func add_yaw(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 
-	_body.rotate_object_local(Vector3.DOWN, amount)
-	_body.orthonormalize()
+	body.rotate_object_local(Vector3.DOWN, amount)
+	body.orthonormalize()
 
 
 ## Rotates the head around the local x axis by a given amount (in radians) to achieve pitch.
@@ -75,14 +75,14 @@ func add_pitch(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 
-	_head.rotate_object_local(Vector3.LEFT, amount)
-	_head.orthonormalize()
+	head.rotate_object_local(Vector3.LEFT, amount)
+	head.orthonormalize()
 
 
 ## Clamps the pitch between min_pitch and max_pitch.
 func clamp_pitch() -> void:
-	if _head.rotation.x > min_pitch and _head.rotation.x < max_pitch:
+	if head.rotation.x > min_pitch and head.rotation.x < max_pitch:
 		return
 
-	_head.rotation.x = clamp(_head.rotation.x, min_pitch, max_pitch)
-	_head.orthonormalize()
+	head.rotation.x = clamp(head.rotation.x, min_pitch, max_pitch)
+	head.orthonormalize()
