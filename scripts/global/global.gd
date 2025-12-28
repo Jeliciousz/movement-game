@@ -1,9 +1,6 @@
 extends Node
 ## The Global Autoload.
 
-const MAX_INT: int = 9223372036854775807
-const MIN_INT: int = -9223372036854775808
-
 var time: float = 0.0
 
 
