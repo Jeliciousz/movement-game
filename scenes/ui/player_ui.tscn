@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://8nprl1tynttc"]
 
 [ext_resource type="Texture2D" uid="uid://crlxrcr3qgg73" path="res://assets/textures/ui/crosshair.png" id="1_er5qu"]
-[ext_resource type="Script" uid="uid://bf6xs5lgdl456" path="res://scripts/ui/player_ui.gd" id="1_fatqr"]
-[ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/ui/spedometer.gd" id="2_or0tx"]
-[ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/ui/debug_info.gd" id="3_qcjqi"]
+[ext_resource type="Script" uid="uid://bf6xs5lgdl456" path="res://scripts/ui/player/player_ui.gd" id="1_fatqr"]
+[ext_resource type="Script" uid="uid://c22fkxdhv8nt3" path="res://scripts/ui/player/spedometer.gd" id="2_or0tx"]
+[ext_resource type="Script" uid="uid://1q2u6g32aodf" path="res://scripts/ui/player/debug_info.gd" id="3_qcjqi"]
 
 [node name="PlayerUI" type="Control" unique_id=1084920434]
 z_index = 1
