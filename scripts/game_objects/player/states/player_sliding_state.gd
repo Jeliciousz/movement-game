@@ -13,9 +13,9 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_jump_ready = false
 
 	if _player.ledgejump_enabled:
-		_player.ledge_jump_ready = true
+		_player.ledgejump_ready = true
 	elif _player.slidejump_enabled:
-		_player.coyote_slide_jump_ready = true
+		_player.coyote_slidejump_ready = true
 
 	_player.slide_audio.play()
 
@@ -29,17 +29,17 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"jump") and _player.can_slide_jump():
+	if InputBuffer.is_action_buffered(&"jump") and _player.can_slidejump():
 		InputBuffer.clear_buffered_action(&"jump")
-		_player.coyote_slide_jump_ready = false
-		_player.ledge_jump_ready = false
-		_player.slide_jump()
+		_player.coyote_slidejump_ready = false
+		_player.ledgejump_ready = false
+		_player.slidejump()
 		state_machine.change_state_to(&"Jumping")
 		return
 
-	if InputBuffer.is_action_buffered(&"slide") and _player.can_slide_cancel():
+	if InputBuffer.is_action_buffered(&"slide") and _player.can_slidecancel():
 		InputBuffer.clear_buffered_action(&"slide")
-		_player.slide_cancel()
+		_player.slidecancel()
 		state_machine.change_state_to(&"Grounded")
 		return
 

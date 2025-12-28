@@ -10,8 +10,8 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_jump_ready = true
 	_player.coyote_slide_ready = true
 	_player.coyote_walljump_ready = false
-	_player.air_jumps = 0
-	_player.air_crouches = 0
+	_player.airjumps = 0
+	_player.aircrouches = 0
 	_player.walljumps = 0
 	_player.clear_grapplehook_point()
 
@@ -33,7 +33,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		elif _player.can_crouch_jump():
+		elif _player.can_crouchjump():
 			InputBuffer.clear_buffered_action(&"jump")
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")

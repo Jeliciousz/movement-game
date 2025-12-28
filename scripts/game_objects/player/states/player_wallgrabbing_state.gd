@@ -10,8 +10,8 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_walljump_ready = true
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false
-	_player.air_jumps = 0
-	_player.air_crouches = 0
+	_player.airjumps = 0
+	_player.aircrouches = 0
 	_player.clear_grapplehook_point()
 	_player.footstep_audio.play()
 

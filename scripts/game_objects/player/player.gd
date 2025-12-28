@@ -61,7 +61,7 @@ func get_stance_as_text() -> String:
 @export var coyote_slide_enabled: bool = true
 
 ## Is there coyote time for slide jumps?
-@export var coyote_slide_jump_enabled: bool = true
+@export var coyote_slidejump_enabled: bool = true
 
 ## Is there coyote time for walljumps?
 @export var coyote_walljump_enabled: bool = true
@@ -406,16 +406,16 @@ var slide_timestamp: float = 0.0
 var wallgrab_timestamp: float = 0.0
 var wallrun_timestamp: float = 0.0
 
-var air_crouching: bool = false
+var aircrouching: bool = false
 var coyote_jump_ready: bool = false
 var coyote_slide_ready: bool = false
-var coyote_slide_jump_ready: bool = false
+var coyote_slidejump_ready: bool = false
 var coyote_walljump_ready: bool = false
-var ledge_jump_ready: bool = false
+var ledgejump_ready: bool = false
 var is_grapplehook_point_in_range: bool = false
 
-var air_jumps: int = Global.MAX_INT
-var air_crouches: int = Global.MAX_INT
+var airjumps: int = Global.MAX_INT
+var aircrouches: int = Global.MAX_INT
 var walljumps: int = 0
 
 var wall_normal: Vector3 = Vector3.ZERO
@@ -727,22 +727,22 @@ func attempt_uncrouch() -> bool:
 	if stance != Stances.CROUCHING:
 		return true
 
-	if air_crouching:
+	if aircrouching:
 		airborne_uncrouch_area.position.y = -standing_height * (1.0 - crouch_height_multiplier)
 
 		if not airborne_uncrouch_area.has_overlapping_bodies():
 			_uncrouch()
 
 			position.y -= standing_height * (1.0 - crouch_height_multiplier)
-			air_crouching = false
+			aircrouching = false
 
 			return true
 
 	if not grounded_uncrouch_area.has_overlapping_bodies():
 		_uncrouch()
 
-		if air_crouching:
-			air_crouching = false
+		if aircrouching:
+			aircrouching = false
 
 		return true
 
@@ -770,10 +770,10 @@ func crouch() -> void:
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
 	if is_on_floor():
-		air_crouching = false
+		aircrouching = false
 	else:
 		position.y += standing_height * (1.0 - crouch_height_multiplier)
-		air_crouching = true
+		aircrouching = true
 
 
 func _uncrouch() -> void:
@@ -940,8 +940,8 @@ func coyote_jump() -> void:
 	velocity.z = limited_velocity.z
 
 
-func air_jump() -> void:
-	air_jumps += 1
+func airjump() -> void:
+	airjumps += 1
 	attempt_uncrouch()
 
 	velocity = Vector3.ZERO
@@ -961,18 +961,18 @@ func slide() -> void:
 		velocity = get_direction_of_velocity() * slide_speed
 
 
-func slide_cancel() -> void:
+func slidecancel() -> void:
 	velocity -= get_direction_of_horizontal_velocity() * slidecancel_impulse
 
 
-func slide_jump() -> void:
+func slidejump() -> void:
 	attempt_uncrouch()
 
 	velocity.y += slidejump_impulse
 	velocity += get_direction_of_horizontal_velocity() * slidejump_horizontal_impulse
 
 
-func ledge_jump() -> void:
+func ledgejump() -> void:
 	attempt_uncrouch()
 
 	velocity.y = ledgejump_impulse
@@ -1128,14 +1128,14 @@ func can_continue_jumping() -> bool:
 	and Global.time - jump_timestamp <= jump_duration
 
 
-func can_crouch_jump() -> bool:
+func can_crouchjump() -> bool:
 	return crouch_jump_enabled \
 	and (crouch_jump_window == 0.0 or Global.time - crouch_timestamp <= crouch_jump_window)
 
 
-func can_air_jump() -> bool:
+func can_airjump() -> bool:
 	return airjump_enabled \
-	and air_jumps < airjump_limit
+	and airjumps < airjump_limit
 
 
 func can_slide() -> bool:
@@ -1146,12 +1146,12 @@ func can_slide() -> bool:
 	and get_speed() >= slide_start_speed
 
 
-func can_slide_cancel() -> bool:
+func can_slidecancel() -> bool:
 	return slidecancel_enabled \
 	and Global.time - slide_timestamp >= slidecancel_delay
 
 
-func can_slide_jump() -> bool:
+func can_slidejump() -> bool:
 	return slidejump_enabled \
 	and Global.time - slide_timestamp >= slidejump_delay
 
@@ -1161,9 +1161,9 @@ func can_continue_sliding() -> bool:
 	and velocity.length() > slide_stop_speed
 
 
-func can_ledge_jump() -> bool:
+func can_ledgejump() -> bool:
 	return ledgejump_enabled \
-	and ledge_jump_ready \
+	and ledgejump_ready \
 	and slide_timestamp == airborne_timestamp \
 	and Global.time - airborne_timestamp <= ledgejump_window
 
@@ -1322,10 +1322,10 @@ func can_coyote_slide() -> bool:
 	and get_speed() >= slide_start_speed
 
 
-func can_coyote_slide_jump() -> bool:
+func can_coyote_slidejump() -> bool:
 	return not ledgejump_enabled \
-	and coyote_slide_jump_enabled \
-	and coyote_slide_jump_ready \
+	and coyote_slidejump_enabled \
+	and coyote_slidejump_ready \
 	and in_coyote_time()
 
 

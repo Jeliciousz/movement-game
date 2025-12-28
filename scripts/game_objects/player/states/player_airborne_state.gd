@@ -39,17 +39,17 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.can_ledge_jump():
+		if _player.can_ledgejump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.ledge_jump_ready = false
-			_player.ledge_jump()
+			_player.ledgejump_ready = false
+			_player.ledgejump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.can_coyote_slide_jump():
+		if _player.can_coyote_slidejump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.coyote_slide_jump_ready = false
-			_player.slide_jump()
+			_player.coyote_slidejump_ready = false
+			_player.slidejump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
@@ -59,9 +59,9 @@ func _state_physics_preprocess(_delta: float) -> void:
 			state_machine.change_state_to(&"Jumping")
 			return
 
-		if _player.can_air_jump():
+		if _player.can_airjump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.air_jump()
+			_player.airjump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
@@ -103,8 +103,8 @@ func update_stance() -> void:
 				_player.stance = Player.Stances.SPRINTING
 				return
 
-			if Input.is_action_just_pressed(&"crouch") and _player.aircrouch_enabled and _player.air_crouches < _player.aircrouch_limit:
-				_player.air_crouches += 1
+			if Input.is_action_just_pressed(&"crouch") and _player.aircrouch_enabled and _player.aircrouches < _player.aircrouch_limit:
+				_player.aircrouches += 1
 				_player.crouch()
 
 		Player.Stances.CROUCHING:
