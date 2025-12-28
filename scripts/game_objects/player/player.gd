@@ -127,24 +127,6 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.05, "suffix:×") var jump_gravity_multiplier: float = 0.8
 
 
-@export_subgroup("Proportional Jump Power", "proportional_jump_")
-
-## Is proportional jump power enabled?
-@export var proportional_jump_enabled: bool = true
-
-## The base speed of proportional jump power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_base_speed: float = 4.0
-
-## The top speed of proportional jump power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_top_speed: float = 8.0
-
-## How high the player jumps at top speed.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_top_impulse: float = 10.0
-
-## How far the player jumps at top speed.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_top_horizontal_impulse: float = 0.25
-
-
 @export_subgroup("Air-Jumping", "air_jump_")
 
 ## Can the player air jump?
@@ -892,32 +874,18 @@ func jump() -> void:
 	attempt_uncrouch()
 
 	var effective_impulse: float = lerpf(jump_standing_impulse, jump_impulse, wish_direction.length())
-	var effective_horizontal_impulse: float = jump_horizontal_impulse
-
-	if proportional_jump_enabled:
-		var proportional_jump_weight: float = clampf((get_horizontal_speed() - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
-
-		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
-		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
 
 	velocity.y += effective_impulse
-	velocity += wish_direction * effective_horizontal_impulse
+	velocity += wish_direction * jump_horizontal_impulse
 
 
 func coyote_jump() -> void:
 	attempt_uncrouch()
 
 	var effective_impulse: float = lerpf(jump_standing_impulse, jump_impulse, wish_direction.length())
-	var effective_horizontal_impulse: float = jump_horizontal_impulse
-
-	if proportional_jump_enabled:
-		var proportional_jump_weight: float = clampf((get_horizontal_speed() - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
-
-		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
-		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
 
 	velocity.y = effective_impulse
-	velocity += wish_direction * effective_horizontal_impulse
+	velocity += wish_direction * jump_horizontal_impulse
 
 
 func air_jump() -> void:
