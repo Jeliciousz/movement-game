@@ -22,5 +22,6 @@ offset_top = 5.0
 offset_right = -10.0
 offset_bottom = 37.0
 grow_horizontal = 0
+text = "FPS: 999"
 horizontal_alignment = 2
 script = ExtResource("1_lutsk")
