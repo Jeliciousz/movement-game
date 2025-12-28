@@ -8,7 +8,7 @@ extends State
 
 func _state_enter(_last_state_name: StringName) -> void:
 	_player.floor_constant_speed = false
-	_player.slide_timestamp = GlobalTime.get_timestamp()
+	_player.slide_timestamp = Global.time
 	_player.coyote_slide_ready = false
 	_player.coyote_jump_ready = false
 
@@ -22,7 +22,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 
 func _state_exit() -> void:
 	_player.floor_constant_speed = true
-	_player.slide_timestamp = GlobalTime.get_timestamp()
+	_player.slide_timestamp = Global.time
 
 
 func _state_physics_preprocess(_delta: float) -> void:

@@ -7,7 +7,7 @@ extends State
 
 
 func _state_enter(_last_state_name: StringName) -> void:
-	_player.wallrun_timestamp = GlobalTime.get_timestamp()
+	_player.wallrun_timestamp = Global.time
 	_player.coyote_walljump_ready = true
 	_player.coyote_jump_ready = false
 	_player.coyote_slide_ready = false
@@ -18,7 +18,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 
 
 func _state_exit() -> void:
-	_player.wallrun_timestamp = GlobalTime.get_timestamp()
+	_player.wallrun_timestamp = Global.time
 
 
 func _state_physics_preprocess(_delta: float) -> void:
@@ -63,7 +63,7 @@ func update_stance() -> void:
 func update_physics() -> void:
 	_player.add_air_resistence()
 
-	if GlobalTime.get_timestamp() - _player.wallrun_timestamp > _player.wallrun_duration:
+	if Global.time - _player.wallrun_timestamp > _player.wallrun_duration:
 		_player.add_friction(_player.physics_friction * _player.wallrun_friction_multiplier, _player.wallrun_speed)
 		_player.add_gravity(_player.physics_gravity_multiplier * _player.wallrun_gravity_multiplier)
 	else:

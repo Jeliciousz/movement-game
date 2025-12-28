@@ -12,7 +12,7 @@ func _state_enter(last_state_name: StringName) -> void:
 		return
 
 	_player.coyote_engine_timestamp = Time.get_ticks_msec()
-	_player.airborne_timestamp = GlobalTime.get_timestamp()
+	_player.airborne_timestamp = Global.time
 
 
 func _state_physics_preprocess(_delta: float) -> void:

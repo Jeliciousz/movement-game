@@ -17,7 +17,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 
 
 func _state_exit() -> void:
-	_player.wallgrab_timestamp = GlobalTime.get_timestamp()
+	_player.wallgrab_timestamp = Global.time
 
 
 func _state_physics_preprocess(_delta: float) -> void:
