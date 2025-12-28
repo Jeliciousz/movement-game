@@ -1,83 +1,65 @@
 [gd_scene format=3 uid="uid://b6tqr4fr8ne61"]
 
+[ext_resource type="Theme" uid="uid://clnagatjwvrxt" path="res://assets/themes/secondary_ui_theme.tres" id="1_2e88g"]
 [ext_resource type="Script" uid="uid://c2du4a0usbgy8" path="res://scripts/ui/quit_confirmation_dialog.gd" id="1_f5x33"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l6cm7"]
-bg_color = Color(0.15686275, 0.15686275, 0.15686275, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l6cm7"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f5x33"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ekxnf"]
 
-[node name="QuitConfirmationDialog" type="Control" unique_id=1799117305]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_f5x33")
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l6cm7"]
 
-[node name="DarkenBackground" type="ColorRect" parent="." unique_id=1735008484]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.49803922)
-
-[node name="Dialog" type="PanelContainer" parent="." unique_id=379489077]
-layout_mode = 1
+[node name="QuitConfirmationDialog" type="PanelContainer" unique_id=83428873]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -171.0
-offset_top = -62.0
-offset_right = 171.0
-offset_bottom = 62.0
+offset_left = -146.0
+offset_top = -79.0
+offset_right = 146.0
+offset_bottom = 79.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_l6cm7")
+theme = ExtResource("1_2e88g")
+script = ExtResource("1_f5x33")
 
-[node name="MarginContainer" type="MarginContainer" parent="Dialog" unique_id=1576863330]
+[node name="Margin" type="MarginContainer" parent="." unique_id=1785949697]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Dialog/MarginContainer" unique_id=972215331]
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin" unique_id=1188291187]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Dialog/MarginContainer/VBoxContainer" unique_id=722292327]
+[node name="Label" type="Label" parent="Margin/VBoxContainer" unique_id=1132272270]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 3.12
+theme_override_styles/normal = SubResource("StyleBoxEmpty_f5x33")
 text = "Quit to desktop?"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Dialog/MarginContainer/VBoxContainer" unique_id=243690691]
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer" unique_id=202744279]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CancelQuitButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/HBoxContainer" unique_id=339338885]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxEmpty_l6cm7")
-text = "No"
-
-[node name="ConfirmQuitButton" type="Button" parent="Dialog/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1701572689]
+[node name="ConfirmQuitButton" type="Button" parent="Margin/VBoxContainer/HBoxContainer" unique_id=1879187934]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxEmpty_ekxnf")
 text = "Yes"
 
-[connection signal="pressed" from="Dialog/MarginContainer/VBoxContainer/HBoxContainer/CancelQuitButton" to="." method="_on_cancel_quit_button_pressed"]
-[connection signal="pressed" from="Dialog/MarginContainer/VBoxContainer/HBoxContainer/ConfirmQuitButton" to="." method="_on_confirm_quit_button_pressed"]
+[node name="CancelQuitButton" type="Button" parent="Margin/VBoxContainer/HBoxContainer" unique_id=231828884]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_l6cm7")
+text = "No"
+
+[connection signal="pressed" from="Margin/VBoxContainer/HBoxContainer/ConfirmQuitButton" to="." method="_on_confirm_quit_button_pressed"]
+[connection signal="pressed" from="Margin/VBoxContainer/HBoxContainer/CancelQuitButton" to="." method="_on_cancel_quit_button_pressed"]

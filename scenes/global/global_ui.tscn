@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://byrobby5lo0r7"]
 
 [ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/ui/fps_counter.gd" id="1_lutsk"]
+[ext_resource type="Theme" uid="uid://clnagatjwvrxt" path="res://assets/themes/secondary_ui_theme.tres" id="1_vrmbe"]
 
 [node name="GlobalUI" type="Control" unique_id=1961702217]
 z_index = 99
@@ -11,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("1_vrmbe")
 
 [node name="FPSDisplay" type="Label" parent="." unique_id=1763043925]
 layout_mode = 1
@@ -22,6 +24,7 @@ offset_top = 5.0
 offset_right = -10.0
 offset_bottom = 37.0
 grow_horizontal = 0
+theme_override_font_sizes/font_size = 16
 text = "FPS: 999"
 horizontal_alignment = 2
 script = ExtResource("1_lutsk")

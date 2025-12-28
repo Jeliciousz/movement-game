@@ -1,0 +1,21 @@
+[gd_resource type="Theme" format=3 uid="uid://clnagatjwvrxt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_id6vg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ftahe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l6cm7"]
+bg_color = Color(0.15686275, 0.15686275, 0.15686275, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.24705882)
+shadow_size = 8
+
+[resource]
+Button/font_sizes/font_size = 24
+Button/styles/disabled = SubResource("StyleBoxEmpty_id6vg")
+Button/styles/normal = SubResource("StyleBoxEmpty_ftahe")
+Label/font_sizes/font_size = 24
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_l6cm7")

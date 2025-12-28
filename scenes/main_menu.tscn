@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://c0v4hb2cwyekf"]
 
 [ext_resource type="Script" uid="uid://chlv02wlsswjy" path="res://scripts/main_menu.gd" id="1_ekxnf"]
+[ext_resource type="Theme" uid="uid://mhn8c60wfudp" path="res://assets/themes/main_ui_theme.tres" id="2_bqqt6"]
 [ext_resource type="PackedScene" uid="uid://b6tqr4fr8ne61" path="res://scenes/ui/quit_confirmation_dialog.tscn" id="2_ekxnf"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vue75"]
 
 [node name="MainMenu" type="Control" unique_id=1295161467 node_paths=PackedStringArray("quit_confirmation_dialog")]
 layout_mode = 3
@@ -25,7 +24,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1584723, 0.15847233, 0.15847224, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=20112551]
+[node name="Title" type="Label" parent="." unique_id=815645032]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -33,47 +32,61 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -199.5
-offset_top = -113.5
+offset_top = -220.0
 offset_right = 199.5
-offset_bottom = 113.5
+offset_bottom = -140.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=593807887]
-layout_mode = 2
-
-[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=815645032]
-layout_mode = 2
+theme = ExtResource("2_bqqt6")
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 72
 text = "Movement Game"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer" unique_id=994937853]
-layout_mode = 2
-theme_override_constants/separation = 64
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vue75")
-
-[node name="ButtonsContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=2072672620]
-layout_mode = 2
+[node name="ButtonsContainer" type="VBoxContainer" parent="." unique_id=2072672620]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -98.0
+offset_top = -67.0
+offset_right = 98.0
+offset_bottom = 67.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_bqqt6")
 alignment = 1
 
-[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=828990616]
+[node name="PlayButton" type="Button" parent="ButtonsContainer" unique_id=828990616]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
 text = "Play"
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=1236013313]
+[node name="SettingsButton" type="Button" parent="ButtonsContainer" unique_id=1236013313]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+disabled = true
 text = "Settings"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=1590689481]
+[node name="QuitButton" type="Button" parent="ButtonsContainer" unique_id=1590689481]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
 text = "Quit"
 
-[node name="QuitConfirmationDialog" parent="." unique_id=1799117305 instance=ExtResource("2_ekxnf")]
+[node name="DimBackground" type="ColorRect" parent="." unique_id=769559885]
+visible = false
 layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.24705882)
 
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" to="." method="_on_play_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[node name="QuitConfirmationDialog" parent="." unique_id=1799117305 node_paths=PackedStringArray("dim_background") instance=ExtResource("2_ekxnf")]
+visible = false
+layout_mode = 1
+dim_background = NodePath("../DimBackground")
+
+[connection signal="pressed" from="ButtonsContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="ButtonsContainer/QuitButton" to="." method="_on_quit_button_pressed"]
