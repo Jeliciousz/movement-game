@@ -33,3 +33,5 @@ collision_layer = 32
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PickupComponent" unique_id=1849251478]
 shape = SubResource("SphereShape3D_6j3e4")
+
+[connection signal="picked_up" from="PickupComponent" to="." method="_on_pickup"]
