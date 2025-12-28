@@ -254,10 +254,10 @@ func get_stance_as_text() -> String:
 @export var slide_jump_enabled: bool = true
 
 ## How high the player jumps while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_impulse: float = 18.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_impulse: float = 12.0
 
 ## How far the player jumps in the direction they're already moving while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_horizontal_impulse: float = -7.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_horizontal_impulse: float = -2.0
 
 ## How long the player must wait after starting a slide until they can slide jump.
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_jump_delay: float = 0.25
@@ -945,14 +945,14 @@ func slide() -> void:
 
 
 func slide_cancel() -> void:
-	velocity -= get_direction_of_velocity() * slide_cancel_impulse
+	velocity -= get_direction_of_horizontal_velocity() * slide_cancel_impulse
 
 
 func slide_jump() -> void:
 	attempt_uncrouch()
 
 	velocity.y += slide_jump_impulse
-	velocity += get_direction_of_velocity() * slide_jump_horizontal_impulse
+	velocity += get_direction_of_horizontal_velocity() * slide_jump_horizontal_impulse
 
 
 func ledge_jump() -> void:
