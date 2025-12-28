@@ -5,6 +5,8 @@ extends CharacterBody3D
 signal died()
 signal spawned()
 
+const MAX_INT: int = 9223372036854775807
+
 ## Different states a player can be in.
 enum Stances {
 	STANDING,
@@ -414,8 +416,8 @@ var coyote_walljump_ready: bool = false
 var ledgejump_ready: bool = false
 var is_grapplehook_point_in_range: bool = false
 
-var airjumps: int = Global.MAX_INT
-var aircrouches: int = Global.MAX_INT
+var airjumps: int = MAX_INT
+var aircrouches: int = MAX_INT
 var walljumps: int = 0
 
 var wall_normal: Vector3 = Vector3.ZERO
@@ -755,7 +757,7 @@ func crouch() -> void:
 
 	set_stance(Stances.CROUCHING)
 
-	crouch_timestamp = Global.time
+	crouch_timestamp = GlobalTime.get_timestamp()
 
 	head.start_crouch_tween(standing_head_y - standing_height * (1.0 - crouch_height_multiplier), crouch_tween_duration)
 
@@ -782,7 +784,7 @@ func _uncrouch() -> void:
 
 	set_stance(last_stance)
 
-	crouch_timestamp = Global.time
+	crouch_timestamp = GlobalTime.get_timestamp()
 
 	head.start_uncrouch_tween(standing_head_y, crouch_tween_duration)
 
@@ -1176,12 +1178,12 @@ func add_wallrun_movement() -> void:
 func can_continue_jumping() -> bool:
 	return jump_enabled \
 	and velocity.y > 0.0 \
-	and Global.time - jump_timestamp <= jump_duration
+	and GlobalTime.get_timestamp() - jump_timestamp <= jump_duration
 
 
 func can_crouchjump() -> bool:
 	return crouch_jump_enabled \
-	and (crouch_jump_window == 0.0 or Global.time - crouch_timestamp <= crouch_jump_window)
+	and (crouch_jump_window == 0.0 or GlobalTime.get_timestamp() - crouch_timestamp <= crouch_jump_window)
 
 
 func can_airjump() -> bool:
@@ -1191,7 +1193,7 @@ func can_airjump() -> bool:
 
 func can_slide() -> bool:
 	return slide_enabled \
-	and Global.time - slide_timestamp >= slide_cooldown \
+	and GlobalTime.get_timestamp() - slide_timestamp >= slide_cooldown \
 	and not wish_direction.is_zero_approx() \
 	and is_zero_approx(get_amount_moving_backwards()) \
 	and get_speed() >= slide_start_speed
@@ -1199,12 +1201,12 @@ func can_slide() -> bool:
 
 func can_slidecancel() -> bool:
 	return slidecancel_enabled \
-	and Global.time - slide_timestamp >= slidecancel_delay
+	and GlobalTime.get_timestamp() - slide_timestamp >= slidecancel_delay
 
 
 func can_slidejump() -> bool:
 	return slidejump_enabled \
-	and Global.time - slide_timestamp >= slidejump_delay
+	and GlobalTime.get_timestamp() - slide_timestamp >= slidejump_delay
 
 
 func can_continue_sliding() -> bool:
@@ -1216,17 +1218,17 @@ func can_ledgejump() -> bool:
 	return ledgejump_enabled \
 	and ledgejump_ready \
 	and slide_timestamp == airborne_timestamp \
-	and Global.time - airborne_timestamp <= ledgejump_window
+	and GlobalTime.get_timestamp() - airborne_timestamp <= ledgejump_window
 
 
 func can_start_wallrun() -> bool:
 	if not wallrun_enabled:
 		return false
 
-	if Global.time - wallrun_timestamp < wallrun_cooldown:
+	if GlobalTime.get_timestamp() - wallrun_timestamp < wallrun_cooldown:
 		return false
 
-	if Global.time - wallgrab_timestamp < wallrun_cooldown:
+	if GlobalTime.get_timestamp() - wallgrab_timestamp < wallrun_cooldown:
 		return false
 
 	if not is_on_wall():
@@ -1267,10 +1269,10 @@ func can_start_wallgrab() -> bool:
 	if not wallgrab_enabled:
 		return false
 
-	if Global.time - wallgrab_timestamp < wallgrab_cooldown:
+	if GlobalTime.get_timestamp() - wallgrab_timestamp < wallgrab_cooldown:
 		return false
 
-	if Global.time - wallrun_timestamp < wallgrab_cooldown:
+	if GlobalTime.get_timestamp() - wallrun_timestamp < wallgrab_cooldown:
 		return false
 
 	if not is_on_wall():
@@ -1367,7 +1369,7 @@ func can_coyote_slide() -> bool:
 	and coyote_slide_enabled \
 	and coyote_slide_ready \
 	and in_coyote_time() \
-	and Global.time - slide_timestamp >= slide_cooldown \
+	and GlobalTime.get_timestamp() - slide_timestamp >= slide_cooldown \
 	and not wish_direction.is_zero_approx() \
 	and is_zero_approx(get_amount_moving_backwards()) \
 	and get_speed() >= slide_start_speed

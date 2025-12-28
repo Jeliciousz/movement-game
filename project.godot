@@ -20,7 +20,7 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 [autoload]
 
-Global="*res://scripts/global/global.gd"
+GlobalTime="*res://scripts/global/global_time.gd"
 GlobalUI="*res://scenes/global/global_ui.tscn"
 InputBuffer="*res://scripts/global/input_buffer.gd"
 
