@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://c0v4hb2cwyekf"]
+
+[ext_resource type="Script" uid="uid://cq5lsjlbwd8js" path="res://scripts/ui/play_button.gd" id="1_l6cm7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vue75"]
+
+[node name="MainMenu" type="Control" unique_id=1295161467]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="." unique_id=1439331961]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.19076231, 0.19076234, 0.19076231, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=20112551]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -199.5
+offset_top = -113.5
+offset_right = 199.5
+offset_bottom = 113.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=593807887]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CenterContainer/VBoxContainer" unique_id=815645032]
+layout_mode = 2
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 48
+text = "Movement Game"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer" unique_id=994937853]
+layout_mode = 2
+theme_override_constants/separation = 64
+theme_override_styles/separator = SubResource("StyleBoxEmpty_vue75")
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=2072672620]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=828990616]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Play"
+script = ExtResource("1_l6cm7")
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=1236013313]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=1590689481]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Quit"
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" to="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" method="_on_pressed"]

@@ -14,7 +14,7 @@ config/name="Movement Game"
 config/description="A first-person game with a focus on fluid movement. Made with Godot.
 
 Originally inspired by Source games; Team Fortress 2, Titanfall 2, and other movement games like Ultrakill, and Bloodthief."
-run/main_scene="uid://dpgsmifow0gcw"
+run/main_scene="uid://c0v4hb2cwyekf"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.6", "Forward Plus")
 
@@ -34,6 +34,7 @@ gdscript/warnings/integer_division=0
 
 window/size/viewport_width=1440
 window/size/viewport_height=1080
+window/size/mode=3
 window/size/sharp_corners=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
