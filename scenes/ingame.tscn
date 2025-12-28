@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://3fgvec6qrg6y"]
+
+[ext_resource type="Script" uid="uid://bcxohmg7ejwcn" path="res://scripts/ingame.gd" id="1_lqpuv"]
+[ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/game_objects/player/player.tscn" id="2_kexic"]
+
+[node name="Ingame" type="Node3D" unique_id=328872736 node_paths=PackedStringArray("player")]
+script = ExtResource("1_lqpuv")
+player = NodePath("Player")
+
+[node name="Player" parent="." unique_id=1448995669 instance=ExtResource("2_kexic")]

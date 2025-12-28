@@ -604,6 +604,11 @@ func get_center_of_mass() -> Vector3:
 ##################################################
 
 
+func spawn() -> void:
+	health_component.revive()
+	state_machine.change_state_to(&"Spawning")
+
+
 func move() -> void:
 	velocity_before_move = velocity
 
@@ -1527,5 +1532,4 @@ func _compare_grapplehook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bo
 
 func _on_health_component_died(_damage_taken: float) -> void:
 	died.emit()
-	health_component.revive()
-	state_machine.change_state_to(&"Spawning")
+	spawn()

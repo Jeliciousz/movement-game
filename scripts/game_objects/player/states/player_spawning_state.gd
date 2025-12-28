@@ -6,7 +6,7 @@ extends State
 @export var _player: Player
 
 
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_enter(_last_state_name: StringName) -> void:
 	spawn_random()
 
 

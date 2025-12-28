@@ -41,7 +41,7 @@ rings = 2
 height = 1.8
 radius = 0.4
 
-[sub_resource type="Shader" id="Shader_31cv2"]
+[sub_resource type="Shader" id="Shader_ia45v"]
 code = "shader_type spatial;
 render_mode skip_vertex_transform;
 render_mode depth_draw_always;
@@ -146,7 +146,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pf23h"]
 render_priority = 0
-shader = SubResource("Shader_31cv2")
+shader = SubResource("Shader_ia45v")
 shader_parameter/line_width = 0.05
 shader_parameter/tangent_facing = false
 shader_parameter/rounded = true
@@ -254,9 +254,8 @@ monitorable = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CylinderShape3D_ke2ow")
 
-[node name="StateMachine" type="Node" parent="." unique_id=2130024275 node_paths=PackedStringArray("initial_state")]
+[node name="StateMachine" type="Node" parent="." unique_id=2130024275]
 script = ExtResource("3_qfm1y")
-initial_state = NodePath("Spawning")
 
 [node name="Spawning" type="Node" parent="StateMachine" unique_id=1765024397 node_paths=PackedStringArray("_player")]
 script = ExtResource("4_fulsm")
