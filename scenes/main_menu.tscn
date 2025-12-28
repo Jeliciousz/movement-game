@@ -1,7 +1,5 @@
 [gd_scene format=3 uid="uid://c0v4hb2cwyekf"]
 
-[ext_resource type="Script" uid="uid://cq5lsjlbwd8js" path="res://scripts/ui/play_button.gd" id="1_l6cm7"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vue75"]
 
 [node name="MainMenu" type="Control" unique_id=1295161467]
@@ -57,7 +55,6 @@ alignment = 1
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Play"
-script = ExtResource("1_l6cm7")
 
 [node name="SettingsButton" type="Button" parent="CenterContainer/VBoxContainer/ButtonsContainer" unique_id=1236013313]
 layout_mode = 2
@@ -68,5 +65,3 @@ text = "Settings"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Quit"
-
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" to="CenterContainer/VBoxContainer/ButtonsContainer/PlayButton" method="_on_pressed"]
