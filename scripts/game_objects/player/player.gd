@@ -370,9 +370,6 @@ func get_stance_as_text() -> String:
 ## How quickly the player mantles over a ledge.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var mantle_speed: float = 6.0
 
-## How much of the player's speed is lost when they mantle.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var mantle_speed_penalty: float = 0.1
-
 ## The angle into a ledge the player must be wishing to move at to mantle.
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var mantle_max_wish_angle: float = deg_to_rad(60.0)
 
