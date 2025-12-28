@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://byrobby5lo0r7"]
 
 [ext_resource type="Script" uid="uid://7ja6vhar3n77" path="res://scripts/ui/fps_counter.gd" id="1_lutsk"]
-[ext_resource type="Theme" uid="uid://clnagatjwvrxt" path="res://assets/themes/secondary_ui_theme.tres" id="1_vrmbe"]
+[ext_resource type="Theme" uid="uid://clnagatjwvrxt" path="res://assets/themes/ui_theme.tres" id="1_vrmbe"]
 
 [node name="GlobalUI" type="Control" unique_id=1961702217]
 z_index = 99

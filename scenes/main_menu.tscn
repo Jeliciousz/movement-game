@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://c0v4hb2cwyekf"]
 
 [ext_resource type="Script" uid="uid://chlv02wlsswjy" path="res://scripts/main_menu.gd" id="1_ekxnf"]
-[ext_resource type="Theme" uid="uid://mhn8c60wfudp" path="res://assets/themes/main_ui_theme.tres" id="2_bqqt6"]
+[ext_resource type="Theme" uid="uid://mhn8c60wfudp" path="res://assets/themes/title_theme.tres" id="2_bqqt6"]
 [ext_resource type="PackedScene" uid="uid://b6tqr4fr8ne61" path="res://scenes/ui/quit_confirmation_dialog.tscn" id="2_ekxnf"]
+[ext_resource type="Theme" uid="uid://clnagatjwvrxt" path="res://assets/themes/ui_theme.tres" id="3_wu84c"]
 
 [node name="MainMenu" type="Control" unique_id=1295161467 node_paths=PackedStringArray("quit_confirmation_dialog")]
 layout_mode = 3
@@ -38,8 +39,6 @@ offset_bottom = -140.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2_bqqt6")
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 72
 text = "Movement Game"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -57,7 +56,7 @@ offset_right = 98.0
 offset_bottom = 67.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_bqqt6")
+theme = ExtResource("3_wu84c")
 alignment = 1
 
 [node name="PlayButton" type="Button" parent="ButtonsContainer" unique_id=828990616]

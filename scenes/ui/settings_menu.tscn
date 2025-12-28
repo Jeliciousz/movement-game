@@ -1,0 +1,327 @@
+[gd_scene format=3 uid="uid://pe5hoklu677l"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ekxnf"]
+bg_color = Color(0.15686275, 0.15686275, 0.15686275, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.24705882)
+shadow_size = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bqqt6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wu84c"]
+bg_color = Color(0, 0, 0, 0.49803922)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8ln24"]
+content_margin_left = 40.0
+content_margin_top = 4.0
+content_margin_right = 40.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bqqt6"]
+content_margin_left = 40.0
+content_margin_top = 4.0
+content_margin_right = 40.0
+content_margin_bottom = 4.0
+bg_color = Color(0.15686275, 0.15686275, 0.15686275, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rtw2f"]
+content_margin_left = 40.0
+content_margin_top = 4.0
+content_margin_right = 40.0
+content_margin_bottom = 4.0
+bg_color = Color(0.15686275, 0.15686275, 0.15686275, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rtw2f"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oa1go"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wu84c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tbmy8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jk1qb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jk1qb"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.24705882)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5dd4i"]
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a8gd2"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5dd4i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lgwnu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ekxnf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_flqon"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rcqid"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iii5b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1ajci"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7b55j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5pajh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j7ex8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hstxw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oa1go"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tbmy8"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.6)
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="SettingsMenu" type="PanelContainer" unique_id=612770122]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -670.0
+offset_top = -500.0
+offset_right = 670.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ekxnf")
+
+[node name="VBox" type="VBoxContainer" parent="." unique_id=1255634059]
+layout_mode = 2
+
+[node name="SettingsTabs" type="TabContainer" parent="VBox" unique_id=2089271261]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/side_margin = 0
+theme_override_constants/tab_separation = 0
+theme_override_font_sizes/font_size = 24
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bqqt6")
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_wu84c")
+theme_override_styles/tab_unselected = SubResource("StyleBoxEmpty_8ln24")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_bqqt6")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_rtw2f")
+current_tab = 0
+
+[node name="Display" type="Button" parent="VBox/SettingsTabs" unique_id=539233509]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_rtw2f")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_oa1go")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wu84c")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_tbmy8")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jk1qb")
+metadata/_tab_index = 0
+
+[node name="Margin" type="MarginContainer" parent="VBox/SettingsTabs/Display" unique_id=1728917921]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox/SettingsTabs/Display/Margin" unique_id=1789674948]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jk1qb")
+
+[node name="Settings" type="VBoxContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer" unique_id=1537832379]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="Resolution" type="PanelContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings" unique_id=1472391018]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5dd4i")
+
+[node name="Margin" type="MarginContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/Resolution" unique_id=54569644]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBox" type="HBoxContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/Resolution/Margin" unique_id=1994597465]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/Resolution/Margin/HBox" unique_id=1624504834]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_a8gd2")
+text = "Resolution"
+
+[node name="Dropdown" type="OptionButton" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/Resolution/Margin/HBox" unique_id=131201306]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_font_sizes/font_size = 24
+theme_override_constants/arrow_margin = 8
+item_count = 3
+popup/item_0/text = "2560x1440"
+popup/item_0/id = 2
+popup/item_1/text = "1920x1080"
+popup/item_1/id = 0
+popup/item_2/text = "1280x720"
+popup/item_2/id = 1
+
+[node name="WindowMode" type="PanelContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings" unique_id=9366801]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5dd4i")
+
+[node name="Margin" type="MarginContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/WindowMode" unique_id=412091034]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBox" type="HBoxContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/WindowMode/Margin" unique_id=1136490054]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/WindowMode/Margin/HBox" unique_id=1148251450]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_a8gd2")
+text = "Window Mode"
+
+[node name="Dropdown" type="OptionButton" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/WindowMode/Margin/HBox" unique_id=2071234012]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_font_sizes/font_size = 24
+theme_override_constants/arrow_margin = 8
+item_count = 3
+popup/item_0/text = "Exclusive Fullscreen"
+popup/item_0/id = 2
+popup/item_1/text = "Fullscreen"
+popup/item_1/id = 0
+popup/item_2/text = "Windowed"
+popup/item_2/id = 1
+
+[node name="VSync" type="PanelContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings" unique_id=1998926530]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5dd4i")
+
+[node name="Margin" type="MarginContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/VSync" unique_id=291487535]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBox" type="HBoxContainer" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/VSync/Margin" unique_id=8791025]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/VSync/Margin/HBox" unique_id=1237250763]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxEmpty_a8gd2")
+text = "VSync"
+
+[node name="CheckButton" type="CheckButton" parent="VBox/SettingsTabs/Display/Margin/ScrollContainer/Settings/VSync/Margin/HBox" unique_id=1876779327]
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="Graphics" type="Button" parent="VBox/SettingsTabs" unique_id=2078647104]
+visible = false
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_5dd4i")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_lgwnu")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ekxnf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_flqon")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_rcqid")
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBox/SettingsTabs/Graphics" unique_id=337019252]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="Audio" type="Button" parent="VBox/SettingsTabs" unique_id=1408816349]
+visible = false
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_iii5b")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_1ajci")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_7b55j")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_5pajh")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_j7ex8")
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBox/SettingsTabs/Audio" unique_id=866589422]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="BackButton" type="Button" parent="VBox" unique_id=1551421708]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.05
+theme_override_styles/normal = SubResource("StyleBoxEmpty_hstxw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_oa1go")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tbmy8")
+text = "Done"
