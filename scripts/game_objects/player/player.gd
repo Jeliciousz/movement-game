@@ -307,8 +307,8 @@ func get_stance_as_text() -> String:
 ## How high the player jumps while wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
 
-## How much the player's forward speed is penalized when they jump from a wall-run.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_penalty_impulse: float = -4.5
+## How far the player jumps forward when they jump from a wall-run.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_impulse: float = -4.5
 
 ## How far the player jumps away from the wall when wall-grabbing or wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_normal_impulse: float = 10.0
@@ -985,7 +985,7 @@ func wallrun_jump() -> void:
 	var min_speed: float = get_horizontal_speed()
 
 	velocity.y = effective_impulse
-	velocity += wallrun_direction * walljump_forward_penalty_impulse + wall_normal * walljump_normal_impulse
+	velocity += wallrun_direction * walljump_forward_impulse + wall_normal * walljump_normal_impulse
 
 	if get_horizontal_speed() < min_speed:
 		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
@@ -1032,7 +1032,7 @@ func coyote_walljump() -> void:
 	var min_speed: float = get_horizontal_speed()
 
 	velocity.y = effective_impulse
-	velocity += wish_direction * walljump_forward_penalty_impulse + wall_normal * walljump_normal_impulse
+	velocity += wish_direction * walljump_forward_impulse + wall_normal * walljump_normal_impulse
 
 	if get_horizontal_speed() < min_speed:
 		var new_horizontal_vel: Vector3 = get_direction_of_horizontal_velocity() * min_speed
