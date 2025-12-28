@@ -84,7 +84,7 @@ func get_stance_as_text() -> String:
 
 @export_group("Movement", "move_")
 
-## How fast the player can move.
+## The player's top grounded move speed.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var move_speed: float = 4.0
 
 ## How quickly the player accelerates.
@@ -99,7 +99,7 @@ func get_stance_as_text() -> String:
 
 @export_subgroup("Air Control", "air_")
 
-## How fast the player can move in the air.
+## The player's top airborne move speed.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var air_speed: float = 1.0
 
 ## How quickly the player accelerates in the air.
@@ -114,53 +114,38 @@ func get_stance_as_text() -> String:
 ## How high the player jumps.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_impulse: float = 8.0
 
+## The player's top horizontal jump speed.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_horizontal_speed: float = 9.0
+
 ## How far the player jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_horizontal_impulse: float = 1.25
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_horizontal_impulse: float = 0.5
 
 ## How high the player jumps while standing still.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_standing_impulse: float = 9.0
 
 ## How long the player can jump for.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var jump_duration: float = 0.35
+@export_range(0.0, 1.0, 0.005, "suffix:s") var jump_duration: float = 0.5
 
 ## How much gravity is applied while the player is jumping.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var jump_gravity_multiplier: float = 0.8
+@export_range(0.0, 1.0, 0.05, "suffix:×") var jump_gravity_multiplier: float = 0.75
 
 
-@export_subgroup("Proportional Jump Power", "proportional_jump_")
-
-## Is proportional jump power enabled?
-@export var proportional_jump_enabled: bool = true
-
-## The base speed of proportional jump power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_base_speed: float = 4.0
-
-## The top speed of proportional jump power.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_top_speed: float = 8.0
-
-## How high the player jumps at top speed.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_top_impulse: float = 10.0
-
-## How far the player jumps at top speed.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var proportional_jump_top_horizontal_impulse: float = 0.25
-
-
-@export_subgroup("Air-Jumping", "air_jump_")
+@export_subgroup("Air-Jumping", "airjump_")
 
 ## Can the player air jump?
-@export var air_jump_enabled: bool = false
+@export var airjump_enabled: bool = false
 
 ## How high the player air jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var air_jump_impulse: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_impulse: float = 8.0
 
 ## How far the player air jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var air_jump_horizontal_impulse: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_horizontal_impulse: float = 8.0
 
 ## How high the player air jumps when not jumping in any direction.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var air_jump_standing_impulse: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_standing_impulse: float = 9.0
 
 ## How many times the player can air jump before touching the ground.
-@export_range(0, 100, 1) var air_jump_limit: int = 1
+@export_range(0, 100, 1) var airjump_limit: int = 1
 
 
 @export_group("Sprinting", "sprint_")
@@ -203,13 +188,13 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var crouch_jump_window: float = 0.2
 
 
-@export_subgroup("Air-Crouching", "air_crouch_")
+@export_subgroup("Air-Crouching", "aircrouch_")
 
 ## Can the player crouch in the air?
-@export var air_crouch_enabled: bool = false
+@export var aircrouch_enabled: bool = false
 
 ## How many times the player can crouch in the air before touching the ground.
-@export_range(0, 100, 1) var air_crouch_limit: int = 1
+@export_range(0, 100, 1) var aircrouch_limit: int = 1
 
 
 @export_group("Sliding", "slide_")
@@ -236,46 +221,52 @@ func get_stance_as_text() -> String:
 @export_range(0.0, 1.0, 0.005, "suffix:s") var slide_cooldown: float = 0.25
 
 
-@export_subgroup("Slide-Canceling", "slide_cancel_")
+@export_subgroup("Slide-Canceling", "slidecancel_")
 
 ## Can the player slide cancel?
-@export var slide_cancel_enabled: bool = true
+@export var slidecancel_enabled: bool = true
 
 ## How long the player must wait after starting to slide until they can slide cancel.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var slide_cancel_delay: float = 0.2
+@export_range(0.0, 1.0, 0.005, "suffix:s") var slidecancel_delay: float = 0.2
 
 ## How much the player is slowed when they slide cancel.
-@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slide_cancel_impulse: float = 5.0
+@export_range(0, 100, 0.05, "or_less", "or_greater", "suffix:m/s") var slidecancel_impulse: float = 5.0
 
 
-@export_subgroup("Slide-Jumping", "slide_jump_")
+@export_subgroup("Slide-Jumping", "slidejump_")
 
-## Can the player slide jump?
-@export var slide_jump_enabled: bool = true
+## Can the player slide-jump?
+@export var slidejump_enabled: bool = true
 
 ## How high the player jumps while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_impulse: float = 12.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slidejump_impulse: float = 12.0
+
+## The player's top horizontal slide-jump speed.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slidejump_horizontal_speed: float = 0.0
 
 ## How far the player jumps in the direction they're already moving while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slide_jump_horizontal_impulse: float = -2.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slidejump_horizontal_impulse: float = -2.0
 
-## How long the player must wait after starting a slide until they can slide jump.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var slide_jump_delay: float = 0.25
+## How long the player must wait after starting a slide until they can slide-jump.
+@export_range(0.0, 1.0, 0.005, "suffix:s") var slidejump_delay: float = 0.25
 
 
-@export_subgroup("Ledge-Jumping", "ledge_jump_")
+@export_subgroup("Ledge-Jumping", "ledgejump_")
 
 ## Can the player ledge jump?
-@export var ledge_jump_enabled: bool = true
+@export var ledgejump_enabled: bool = true
 
 ## How high the player ledge jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_impulse: float = 10.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledgejump_impulse: float = 10.0
+
+## The player's top horizontal ledge-jump speed.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledgejump_horizontal_speed: float = 14.0
 
 ## How far the player ledge jumps in the direction they're already moving.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledge_jump_horizontal_impulse: float = 2.5
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledgejump_horizontal_impulse: float = 2.0
 
 ## How long after sliding off a ledge can the player ledge jump.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var ledge_jump_window: float = 0.3
+@export_range(0.0, 1.0, 0.005, "suffix:s") var ledgejump_window: float = 0.3
 
 
 @export_group("Wall-Grabbing", "wallgrab_")
@@ -306,6 +297,9 @@ func get_stance_as_text() -> String:
 
 ## How high the player jumps while wall-running.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
+
+## The player's top horizontal wall-jump speed.
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_horizontal_speed: float = 14.0
 
 ## How far the player jumps forward when they jump from a wall-run.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_forward_impulse: float = -4.5
@@ -844,7 +838,7 @@ func slide_down_slopes() -> void:
 	velocity += slope_acceleration * get_physics_process_delta_time()
 
 
-func add_movement(top_speed: float, acceleration: float) -> void:
+func add_movement(speed: float, acceleration: float) -> void:
 	#	This seemingly overcomplicated movement code is the result of trying to achieve movement that doesn't feel clunky or finnicky, and has good control,
 	#	while still limiting the horizontal speed that the player can reach on their own
 	#
@@ -871,16 +865,18 @@ func add_movement(top_speed: float, acceleration: float) -> void:
 	velocity += wish_direction * acceleration * backwards_multiplier * get_physics_process_delta_time()
 	var new_horizontal_speed: float = get_horizontal_speed()
 
+	var effective_speed: float = speed * backwards_multiplier
+
 	if new_horizontal_speed <= old_horizontal_speed:
 		return
 
-	if new_horizontal_speed <= top_speed * backwards_multiplier:
+	if new_horizontal_speed <= effective_speed:
 		return
 
 	var limited_velocity: Vector3
 
-	if old_horizontal_speed <= top_speed * backwards_multiplier:
-		limited_velocity = get_horizontal_velocity().limit_length(top_speed * backwards_multiplier)
+	if old_horizontal_speed <= effective_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(effective_speed)
 	else:
 		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
 
@@ -892,32 +888,56 @@ func jump() -> void:
 	attempt_uncrouch()
 
 	var effective_impulse: float = lerpf(jump_standing_impulse, jump_impulse, wish_direction.length())
-	var effective_horizontal_impulse: float = jump_horizontal_impulse
-
-	if proportional_jump_enabled:
-		var proportional_jump_weight: float = clampf((get_horizontal_speed() - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
-
-		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
-		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
 
 	velocity.y += effective_impulse
-	velocity += wish_direction * effective_horizontal_impulse
+
+	var old_horizontal_speed: float = get_horizontal_speed()
+	velocity += wish_direction * jump_horizontal_impulse
+	var new_horizontal_speed: float = get_horizontal_speed()
+
+	if new_horizontal_speed <= old_horizontal_speed:
+		return
+
+	if new_horizontal_speed <= jump_horizontal_speed:
+		return
+
+	var limited_velocity: Vector3
+
+	if old_horizontal_speed <= jump_horizontal_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(jump_horizontal_speed)
+	else:
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
+
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.z
 
 
 func coyote_jump() -> void:
 	attempt_uncrouch()
 
 	var effective_impulse: float = lerpf(jump_standing_impulse, jump_impulse, wish_direction.length())
-	var effective_horizontal_impulse: float = jump_horizontal_impulse
-
-	if proportional_jump_enabled:
-		var proportional_jump_weight: float = clampf((get_horizontal_speed() - proportional_jump_base_speed) / (proportional_jump_top_speed - proportional_jump_base_speed), 0.0, 1.0)
-
-		effective_impulse = lerpf(effective_impulse, proportional_jump_top_impulse, proportional_jump_weight)
-		effective_horizontal_impulse = lerpf(effective_horizontal_impulse, proportional_jump_top_horizontal_impulse, proportional_jump_weight)
 
 	velocity.y = effective_impulse
-	velocity += wish_direction * effective_horizontal_impulse
+
+	var old_horizontal_speed: float = get_horizontal_speed()
+	velocity += wish_direction * jump_horizontal_impulse
+	var new_horizontal_speed: float = get_horizontal_speed()
+
+	if new_horizontal_speed <= old_horizontal_speed:
+		return
+
+	if new_horizontal_speed <= jump_horizontal_speed:
+		return
+
+	var limited_velocity: Vector3
+
+	if old_horizontal_speed <= jump_horizontal_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(jump_horizontal_speed)
+	else:
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
+
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.z
 
 
 func air_jump() -> void:
@@ -926,10 +946,10 @@ func air_jump() -> void:
 
 	velocity = Vector3.ZERO
 
-	var effective_impulse: float = lerpf(air_jump_standing_impulse, air_jump_impulse, wish_direction.length())
+	var effective_impulse: float = lerpf(airjump_standing_impulse, airjump_impulse, wish_direction.length())
 
 	velocity.y += effective_impulse
-	velocity += wish_direction * air_jump_horizontal_impulse
+	velocity += wish_direction * airjump_horizontal_impulse
 
 
 func slide() -> void:
@@ -942,21 +962,40 @@ func slide() -> void:
 
 
 func slide_cancel() -> void:
-	velocity -= get_direction_of_horizontal_velocity() * slide_cancel_impulse
+	velocity -= get_direction_of_horizontal_velocity() * slidecancel_impulse
 
 
 func slide_jump() -> void:
 	attempt_uncrouch()
 
-	velocity.y += slide_jump_impulse
-	velocity += get_direction_of_horizontal_velocity() * slide_jump_horizontal_impulse
+	velocity.y += slidejump_impulse
+	velocity += get_direction_of_horizontal_velocity() * slidejump_horizontal_impulse
 
 
 func ledge_jump() -> void:
 	attempt_uncrouch()
 
-	velocity.y = ledge_jump_impulse
-	velocity += wish_direction * ledge_jump_horizontal_impulse
+	velocity.y = ledgejump_impulse
+
+	var old_horizontal_speed: float = get_horizontal_speed()
+	velocity += wish_direction * ledgejump_horizontal_impulse
+	var new_horizontal_speed: float = get_horizontal_speed()
+
+	if new_horizontal_speed <= old_horizontal_speed:
+		return
+
+	if new_horizontal_speed <= ledgejump_horizontal_speed:
+		return
+
+	var limited_velocity: Vector3
+
+	if old_horizontal_speed <= ledgejump_horizontal_speed:
+		limited_velocity = get_horizontal_velocity().limit_length(ledgejump_horizontal_speed)
+	else:
+		limited_velocity = get_horizontal_velocity().limit_length(old_horizontal_speed)
+
+	velocity.x = limited_velocity.x
+	velocity.z = limited_velocity.z
 
 
 func coyote_slide() -> void:
@@ -1095,8 +1134,8 @@ func can_crouch_jump() -> bool:
 
 
 func can_air_jump() -> bool:
-	return air_jump_enabled \
-	and air_jumps < air_jump_limit
+	return airjump_enabled \
+	and air_jumps < airjump_limit
 
 
 func can_slide() -> bool:
@@ -1108,13 +1147,13 @@ func can_slide() -> bool:
 
 
 func can_slide_cancel() -> bool:
-	return slide_cancel_enabled \
-	and Global.time - slide_timestamp >= slide_cancel_delay
+	return slidecancel_enabled \
+	and Global.time - slide_timestamp >= slidecancel_delay
 
 
 func can_slide_jump() -> bool:
-	return slide_jump_enabled \
-	and Global.time - slide_timestamp >= slide_jump_delay
+	return slidejump_enabled \
+	and Global.time - slide_timestamp >= slidejump_delay
 
 
 func can_continue_sliding() -> bool:
@@ -1123,10 +1162,10 @@ func can_continue_sliding() -> bool:
 
 
 func can_ledge_jump() -> bool:
-	return ledge_jump_enabled \
+	return ledgejump_enabled \
 	and ledge_jump_ready \
 	and slide_timestamp == airborne_timestamp \
-	and Global.time - airborne_timestamp <= ledge_jump_window
+	and Global.time - airborne_timestamp <= ledgejump_window
 
 
 func can_start_wallrun() -> bool:
@@ -1284,7 +1323,7 @@ func can_coyote_slide() -> bool:
 
 
 func can_coyote_slide_jump() -> bool:
-	return not ledge_jump_enabled \
+	return not ledgejump_enabled \
 	and coyote_slide_jump_enabled \
 	and coyote_slide_jump_ready \
 	and in_coyote_time()
