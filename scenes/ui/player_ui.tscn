@@ -52,6 +52,8 @@ vertical_alignment = 1
 script = ExtResource("2_or0tx")
 
 [node name="DebugInfo" type="Label" parent="." unique_id=1354235376]
+process_mode = 4
+visible = false
 layout_mode = 1
 offset_left = 10.0
 offset_top = 5.0
