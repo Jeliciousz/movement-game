@@ -1220,7 +1220,6 @@ func can_continue_sliding() -> bool:
 func can_ledgejump() -> bool:
 	return ledgejump_enabled \
 	and ledgejump_ready \
-	and slide_timestamp == airborne_timestamp \
 	and Global.time - airborne_timestamp <= ledgejump_window
 
 

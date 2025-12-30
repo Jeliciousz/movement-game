@@ -8,10 +8,6 @@ extends State
 
 func _state_enter(_last_state_name: StringName) -> void:
 	_player.active_grapplehook_point.targeted = GrappleHookPoint.Target.NOT_TARGETED
-	_player.coyote_jump_ready = false
-	_player.coyote_slide_ready = false
-	_player.coyote_walljump_ready = false
-
 	_player.grapplehook_line.show()
 	_player.grapplehook_line.position = _player.head.global_position + _player.head.global_basis.x * -0.2 + _player.head.global_basis.y * -0.2
 	_player.grapplehook_line.points[1] = _player.active_grapplehook_point.position - _player.grapplehook_line.position

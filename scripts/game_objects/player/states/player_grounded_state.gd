@@ -9,7 +9,6 @@ extends State
 func _state_enter(_last_state_name: StringName) -> void:
 	_player.coyote_jump_ready = true
 	_player.coyote_slide_ready = true
-	_player.coyote_walljump_ready = false
 	_player.airjumps = 0
 	_player.aircrouches = 0
 	_player.walljumps = 0

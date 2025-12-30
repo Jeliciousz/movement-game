@@ -15,6 +15,14 @@ func _state_enter(last_state_name: StringName) -> void:
 	_player.airborne_timestamp = Global.time
 
 
+func _state_exit() -> void:
+	_player.coyote_jump_ready = false
+	_player.coyote_slide_ready = false
+	_player.coyote_slidejump_ready = false
+	_player.coyote_walljump_ready = false
+	_player.ledgejump_ready = false
+
+
 func _state_physics_preprocess(_delta: float) -> void:
 	_player.update_active_grapplehook_point()
 
@@ -34,21 +42,18 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if InputBuffer.is_action_buffered(&"jump"):
 		if _player.can_coyote_walljump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.coyote_walljump_ready = false
 			_player.coyote_walljump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
 		if _player.can_ledgejump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.ledgejump_ready = false
 			_player.ledgejump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
 		if _player.can_coyote_slidejump():
 			InputBuffer.clear_buffered_action(&"jump")
-			_player.coyote_slidejump_ready = false
 			_player.slidejump()
 			state_machine.change_state_to(&"Jumping")
 			return

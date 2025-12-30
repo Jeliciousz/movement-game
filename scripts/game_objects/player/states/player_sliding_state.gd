@@ -9,8 +9,6 @@ extends State
 func _state_enter(_last_state_name: StringName) -> void:
 	_player.floor_constant_speed = false
 	_player.slide_timestamp = Global.time
-	_player.coyote_slide_ready = false
-	_player.coyote_jump_ready = false
 
 	if _player.ledgejump_enabled:
 		_player.ledgejump_ready = true
