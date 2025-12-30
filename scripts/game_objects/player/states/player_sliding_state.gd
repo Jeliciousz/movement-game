@@ -37,6 +37,8 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"slide") and _player.can_slidecancel():
 		InputBuffer.clear_buffered_action(&"slide")
+		_player.coyote_slidejump_ready = false
+		_player.ledgejump_ready = false
 		_player.slidecancel()
 		state_machine.change_state_to(&"Grounded")
 		return
@@ -51,6 +53,8 @@ func _state_physics_process(_delta: float) -> void:
 		return
 
 	if not _player.can_continue_sliding():
+		_player.coyote_slidejump_ready = false
+		_player.ledgejump_ready = false
 		_player.attempt_uncrouch()
 		state_machine.change_state_to(&"Grounded")
 		return

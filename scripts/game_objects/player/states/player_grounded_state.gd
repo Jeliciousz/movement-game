@@ -21,6 +21,8 @@ func _state_physics_preprocess(_delta: float) -> void:
 
 	if InputBuffer.is_action_buffered(&"slide") and _player.can_slide():
 		InputBuffer.clear_buffered_action(&"slide")
+		_player.coyote_slide_ready = false
+		_player.coyote_jump_ready = false
 		_player.slide()
 		state_machine.change_state_to(&"Sliding")
 		return
@@ -28,12 +30,16 @@ func _state_physics_preprocess(_delta: float) -> void:
 	if InputBuffer.is_action_buffered(&"jump") and _player.jump_enabled:
 		if _player.stance != Player.Stances.CROUCHING:
 			InputBuffer.clear_buffered_action(&"jump")
+			_player.coyote_slide_ready = false
+			_player.coyote_jump_ready = false
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
 
 		elif _player.can_crouchjump():
 			InputBuffer.clear_buffered_action(&"jump")
+			_player.coyote_slide_ready = false
+			_player.coyote_jump_ready = false
 			_player.jump()
 			state_machine.change_state_to(&"Jumping")
 			return
