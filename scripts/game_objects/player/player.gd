@@ -13,10 +13,7 @@ enum Stances {
 }
 
 
-##################################################
-# Exports
-##################################################
-
+#region Export Variables
 
 @export_group("Physics", "physics_")
 
@@ -346,7 +343,6 @@ enum Stances {
 @export_range(0.0, 90.0, 1.0, "radians_as_degrees") var mantle_max_wish_angle: float = deg_to_rad(60.0)
 
 
-
 @export_group("Grapple Hooking", "grapplehook_")
 
 ## Can the player grapple hook?
@@ -361,10 +357,9 @@ enum Stances {
 ## How close to the grapple point the player must be to grapple to it.
 @export_range(0.0, 50.0, 0.05, "suffix:m") var grapplehook_max_distance: float = 14.0
 
+#endregion
 
-##################################################
-# State Variables
-##################################################
+#region Local Variables
 
 
 var stance: Stances = Stances.STANDING
@@ -404,11 +399,9 @@ var active_grapplehook_point: GrappleHookPoint = null
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gravity_vector")
 
+#endregion
 
-##################################################
-# Child References
-##################################################
-
+#region Child References
 
 @onready var head: Node3D = $Head
 @onready var state_machine: StateMachine = $StateMachine
@@ -432,11 +425,23 @@ var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gr
 @onready var grapplehook_fire_audio: AudioStreamPlayer3D = $GrappleHookFireAudio
 @onready var grapplehook_indicator_audio: AudioStreamPlayer = $GrappleHookIndicatorAudio
 
+#endregion
 
-##################################################
-# Getter Functions
-##################################################
+#region Inherited and Signal Functions
 
+func _physics_process(_delta: float) -> void:
+	get_input_vector()
+
+	wish_direction = basis * Vector3(input_vector.x, 0.0, input_vector.y).normalized()
+
+
+func _on_health_component_died(_damage_taken: float) -> void:
+	died.emit()
+	spawn()
+
+#endregion
+
+#region Getter Functions
 
 ## Returns how much the player is moving backwards.
 ##
@@ -497,7 +502,6 @@ func get_horizontal_velocity_before_move() -> Vector3:
 	return Vector3(velocity_before_move.x, 0.0, velocity_before_move.z)
 
 
-
 ## Returns what the speed of the player was before moving.
 func get_speed_before_move() -> float:
 	return velocity_before_move.length()
@@ -522,77 +526,9 @@ func get_direction_of_horizontal_velocity_before_move() -> Vector3:
 func get_center_of_mass() -> Vector3:
 	return collision_shape.global_position
 
+#endregion
 
-##################################################
-# Player Functions
-##################################################
-
-
-func _physics_process(_delta: float) -> void:
-	get_input_vector()
-
-	wish_direction = basis * Vector3(input_vector.x, 0.0, input_vector.y).normalized()
-
-
-## Sets the player's stance and updates the last_stance variable.
-func change_stance(new_stance: Stances) -> void:
-	if new_stance == stance:
-		return
-
-	last_stance = stance
-	stance = new_stance
-
-
-## Gets the player's stance as a string.
-func stance_to_string() -> String:
-	match stance:
-		Stances.STANDING:
-			return "Standing"
-		Stances.CROUCHING:
-			return "Crouching"
-		Stances.SPRINTING:
-			return "Sprinting"
-	return ""
-
-
-func get_input_vector() -> void:
-	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
-	#
-	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
-	#	This happens a lot in fast-paced games
-	#	But when opposing movement keys cancel each other out, it makes the player stand still in the small amount of time between pushing the new key, and releasing the old key
-	#	This is the opposite of what the player wants: to keep moving
-	#
-	#	To fix this, I wrote it so that new inputs overwrite the previous ones, instead of canceling them out
-	#	Then when the new input is released, it'll go back to the old input if it's still pressed, and only if it isn't, will it go to 0
-	#
-	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, similar to Razer's snap tap, but I designed this code myself
-	#
-	#	-Jeliciousz
-
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-		return
-
-	if Input.is_action_just_pressed(&"move_forward"):
-		input_vector.y = -1.0
-	elif Input.is_action_just_released(&"move_forward"):
-		input_vector.y = 1.0 if Input.is_action_pressed(&"move_back") else 0.0
-
-	elif Input.is_action_just_pressed(&"move_back"):
-		input_vector.y = 1.0
-	elif Input.is_action_just_released(&"move_back"):
-		input_vector.y = -1.0 if Input.is_action_pressed(&"move_forward") else 0.0
-
-	if Input.is_action_just_pressed(&"move_left"):
-		input_vector.x = -1.0
-	elif Input.is_action_just_released(&"move_left"):
-		input_vector.x = 1.0 if Input.is_action_pressed(&"move_right") else 0.0
-
-	if Input.is_action_just_pressed(&"move_right"):
-		input_vector.x = 1.0
-	elif Input.is_action_just_released(&"move_right"):
-		input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
-
+#region Player Functions
 
 ## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
 func check_surface(direction: Vector3) -> bool:
@@ -644,6 +580,45 @@ func spawn() -> void:
 		state_machine.change_state_to(&"Airborne")
 
 
+func get_input_vector() -> void:
+	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
+	#
+	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
+	#	This happens a lot in fast-paced games
+	#	But when opposing movement keys cancel each other out, it makes the player stand still in the small amount of time between pushing the new key, and releasing the old key
+	#	This is the opposite of what the player wants: to keep moving
+	#
+	#	To fix this, I wrote it so that new inputs overwrite the previous ones, instead of canceling them out
+	#	Then when the new input is released, it'll go back to the old input if it's still pressed, and only if it isn't, will it go to 0
+	#
+	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, similar to Razer's snap tap, but I designed this code myself
+	#
+	#	-Jeliciousz
+
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
+	if Input.is_action_just_pressed(&"move_forward"):
+		input_vector.y = -1.0
+	elif Input.is_action_just_released(&"move_forward"):
+		input_vector.y = 1.0 if Input.is_action_pressed(&"move_back") else 0.0
+
+	elif Input.is_action_just_pressed(&"move_back"):
+		input_vector.y = 1.0
+	elif Input.is_action_just_released(&"move_back"):
+		input_vector.y = -1.0 if Input.is_action_pressed(&"move_forward") else 0.0
+
+	if Input.is_action_just_pressed(&"move_left"):
+		input_vector.x = -1.0
+	elif Input.is_action_just_released(&"move_left"):
+		input_vector.x = 1.0 if Input.is_action_pressed(&"move_right") else 0.0
+
+	if Input.is_action_just_pressed(&"move_right"):
+		input_vector.x = 1.0
+	elif Input.is_action_just_released(&"move_right"):
+		input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
+
+
 func move() -> void:
 	velocity_before_move = velocity
 
@@ -652,6 +627,33 @@ func move() -> void:
 	# floor_snap_length is set to 0.0 when stepping up, so setting it back to 0.5 is necessary
 	floor_snap_length = 0.5
 
+#endregion
+
+#region Stance Functions
+
+## Sets the player's stance and updates the last_stance variable.
+func change_stance(new_stance: Stances) -> void:
+	if new_stance == stance:
+		return
+
+	last_stance = stance
+	stance = new_stance
+
+
+## Gets the player's stance as a string.
+func stance_to_string() -> String:
+	match stance:
+		Stances.STANDING:
+			return "Standing"
+		Stances.CROUCHING:
+			return "Crouching"
+		Stances.SPRINTING:
+			return "Sprinting"
+	return ""
+
+#endregion
+
+#region Stair-Stepping Functions
 
 func stair_step_down() -> bool:
 	if not step_enabled:
@@ -747,6 +749,9 @@ func _check_step_up(motion: Vector3) -> void:
 	# Recurse to step up many steps at once
 	_check_step_up(remainder)
 
+#endregion
+
+#region Crouch Functions
 
 func attempt_uncrouch() -> bool:
 	if stance != Stances.CROUCHING:
@@ -821,6 +826,9 @@ func _uncrouch() -> void:
 	mantle_ledge_raycast.position.y = mantle_hand_raycast.position.y
 	mantle_ledge_raycast.target_position.y = -mantle_hand_raycast.position.y
 
+#endregion
+
+#region Movement Functions
 
 func add_air_resistence() -> void:
 	velocity = velocity.move_toward(Vector3.ZERO, physics_air_resistence * get_speed() * get_physics_process_delta_time())
@@ -1483,6 +1491,9 @@ func try_stick_to_wallrun() -> bool:
 
 	return true
 
+#endregion
+
+#region Grapplehook Functions
 
 func update_active_grapplehook_point() -> void:
 	if not grapplehook_enabled:
@@ -1548,7 +1559,4 @@ func _compare_grapplehook_points(a: GrappleHookPoint, b: GrappleHookPoint) -> bo
 	var proximity_to_crosshair_b: float = head.global_position.direction_to(b.position).dot(get_looking_direction())
 	return proximity_to_crosshair_a > proximity_to_crosshair_b
 
-
-func _on_health_component_died(_damage_taken: float) -> void:
-	died.emit()
-	spawn()
+#endregion
