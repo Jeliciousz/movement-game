@@ -63,10 +63,10 @@ alignment = 1
 layout_mode = 2
 text = "Play"
 
-[node name="SettingsButton" type="Button" parent="ButtonsContainer" unique_id=1236013313]
+[node name="OptionsButton" type="Button" parent="ButtonsContainer" unique_id=1236013313]
 layout_mode = 2
 disabled = true
-text = "Settings"
+text = "Options"
 
 [node name="QuitButton" type="Button" parent="ButtonsContainer" unique_id=1590689481]
 layout_mode = 2
