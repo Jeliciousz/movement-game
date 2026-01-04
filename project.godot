@@ -158,5 +158,3 @@ anti_aliasing/quality/use_debanding=true
 textures/default_filters/texture_mipmap_bias=-1.0
 textures/decals/filter=5
 textures/light_projectors/filter=5
-occlusion_culling/occlusion_rays_per_thread=2048
-occlusion_culling/use_occlusion_culling=true
