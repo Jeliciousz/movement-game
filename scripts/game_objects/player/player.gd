@@ -13,28 +13,6 @@ enum Stances {
 }
 
 
-## Sets the player's stance and updates the last_stance variable.
-func set_stance(value: Stances) -> void:
-	if value != stance:
-		last_stance = stance
-		stance = value
-
-
-## Gets the player's stance as a string.
-func get_stance_as_text() -> String:
-	match stance:
-		Stances.STANDING:
-			return "Standing"
-
-		Stances.CROUCHING:
-			return "Crouching"
-
-		Stances.SPRINTING:
-			return "Sprinting"
-
-	return ""
-
-
 ##################################################
 # Exports
 ##################################################
@@ -389,8 +367,7 @@ func get_stance_as_text() -> String:
 ##################################################
 
 
-var stance: Stances = Stances.STANDING:
-	set = set_stance
+var stance: Stances = Stances.STANDING
 
 var last_stance: Stances = Stances.STANDING
 
@@ -556,6 +533,28 @@ func _physics_process(_delta: float) -> void:
 	get_input_vector()
 
 	wish_direction = basis * Vector3(input_vector.x, 0.0, input_vector.y).normalized()
+
+
+## Sets the player's stance and updates the last_stance variable.
+func change_stance(value: Stances) -> void:
+	if value != stance:
+		last_stance = stance
+		stance = value
+
+
+## Gets the player's stance as a string.
+func stance_to_string() -> String:
+	match stance:
+		Stances.STANDING:
+			return "Standing"
+
+		Stances.CROUCHING:
+			return "Crouching"
+
+		Stances.SPRINTING:
+			return "Sprinting"
+
+	return ""
 
 
 func get_input_vector() -> void:
@@ -751,7 +750,7 @@ func crouch() -> void:
 	if stance == Stances.CROUCHING:
 		return
 
-	set_stance(Stances.CROUCHING)
+	change_stance(Stances.CROUCHING)
 
 	crouch_timestamp = Global.time
 
@@ -778,7 +777,7 @@ func _uncrouch() -> void:
 	if stance != Stances.CROUCHING:
 		return
 
-	set_stance(last_stance)
+	change_stance(last_stance)
 
 	crouch_timestamp = Global.time
 
