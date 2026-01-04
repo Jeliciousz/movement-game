@@ -2,7 +2,6 @@
 
 [ext_resource type="Material" uid="uid://cjrvw5ba544e" path="res://assets/materials/block.tres" id="1_6eu43"]
 [ext_resource type="Environment" uid="uid://djf1eie3ckyjs" path="res://assets/environments/indoor_environment.tres" id="1_myrex"]
-[ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/game_objects/player/player.tscn" id="3_myrex"]
 [ext_resource type="PackedScene" uid="uid://bfxvtov6w54ia" path="res://scenes/game_objects/player_spawn_point.tscn" id="4_5cda3"]
 [ext_resource type="PackedScene" uid="uid://6ph2i46tp68q" path="res://scenes/game_objects/dodgeball.tscn" id="5_myrex"]
 
@@ -10,8 +9,6 @@
 
 [node name="Environment" type="WorldEnvironment" parent="." unique_id=1274241344]
 environment = ExtResource("1_myrex")
-
-[node name="Player" parent="." unique_id=562360367 instance=ExtResource("3_myrex")]
 
 [node name="PlayerSpawnPoint" parent="." unique_id=1571995852 instance=ExtResource("4_5cda3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
