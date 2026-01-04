@@ -17,4 +17,6 @@ sky = SubResource("Sky_7bk1c")
 ambient_light_source = 1
 reflected_light_source = 1
 tonemap_mode = 4
-ssao_enabled = true
+tonemap_exposure = 1.6
+tonemap_agx_white = 6.0
+tonemap_agx_contrast = 1.5
