@@ -458,58 +458,6 @@ var gravity_vector: Vector3 = ProjectSettings.get_setting("physics/3d/default_gr
 
 
 ##################################################
-# Inherited Functions
-##################################################
-
-
-func _physics_process(_delta: float) -> void:
-	wish_direction = basis * Vector3(input_vector.x, 0.0, input_vector.y).normalized()
-
-
-func _unhandled_key_input(event: InputEvent) -> void:
-	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
-	#
-	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
-	#	This happens a lot in fast-paced games
-	#	But when opposing movement keys cancel each other out, it makes the player stand still in the small amount of time between pushing the new key, and releasing the old key
-	#	This is the opposite of what the player wants: to keep moving
-	#
-	#	To fix this, I wrote it so that new inputs overwrite the previous ones, instead of canceling them out
-	#	Then when the new input is released, it'll go back to the old input if it's still pressed, and only if it isn't, will it go to 0
-	#
-	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, similar to Razer's snap tap, but I designed this code myself
-	#
-	#	-Jeliciousz
-
-	if event.echo:
-		return
-
-	if event.is_action(&"move_forward"):
-		if event.pressed:
-			input_vector.y = -1.0
-		else:
-			input_vector.y = 1.0 if Input.is_action_pressed(&"move_back") else 0.0
-
-	elif event.is_action(&"move_back"):
-		if event.pressed:
-			input_vector.y = 1.0
-		else:
-			input_vector.y = -1.0 if Input.is_action_pressed(&"move_forward") else 0.0
-
-	elif event.is_action(&"move_left"):
-		if event.pressed:
-			input_vector.x = -1.0
-		else:
-			input_vector.x = 1.0 if Input.is_action_pressed(&"move_right") else 0.0
-
-	elif event.is_action(&"move_right"):
-		if event.pressed:
-			input_vector.x = 1.0
-		else:
-			input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
-
-
-##################################################
 # Getter Functions
 ##################################################
 
@@ -604,6 +552,51 @@ func get_center_of_mass() -> Vector3:
 ##################################################
 
 
+func _physics_process(_delta: float) -> void:
+	get_input_vector()
+
+	wish_direction = basis * Vector3(input_vector.x, 0.0, input_vector.y).normalized()
+
+
+func get_input_vector() -> void:
+	#	I didn't want to use Input.get_vector(...), because when opposing movement keys are pressed at the same time, it treats it as if the player hasn't pressed anything at all
+	#
+	#	What usually is happening when opposing movement keys are pressed at the same time, is that the player is switching between either key rapidly
+	#	This happens a lot in fast-paced games
+	#	But when opposing movement keys cancel each other out, it makes the player stand still in the small amount of time between pushing the new key, and releasing the old key
+	#	This is the opposite of what the player wants: to keep moving
+	#
+	#	To fix this, I wrote it so that new inputs overwrite the previous ones, instead of canceling them out
+	#	Then when the new input is released, it'll go back to the old input if it's still pressed, and only if it isn't, will it go to 0
+	#
+	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, similar to Razer's snap tap, but I designed this code myself
+	#
+	#	-Jeliciousz
+
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
+	if Input.is_action_just_pressed(&"move_forward"):
+		input_vector.y = -1.0
+	elif Input.is_action_just_released(&"move_forward"):
+		input_vector.y = 1.0 if Input.is_action_pressed(&"move_back") else 0.0
+
+	elif Input.is_action_just_pressed(&"move_back"):
+		input_vector.y = 1.0
+	elif Input.is_action_just_released(&"move_back"):
+		input_vector.y = -1.0 if Input.is_action_pressed(&"move_forward") else 0.0
+
+	if Input.is_action_just_pressed(&"move_left"):
+		input_vector.x = -1.0
+	elif Input.is_action_just_released(&"move_left"):
+		input_vector.x = 1.0 if Input.is_action_pressed(&"move_right") else 0.0
+
+	if Input.is_action_just_pressed(&"move_right"):
+		input_vector.x = 1.0
+	elif Input.is_action_just_released(&"move_right"):
+		input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
+
+
 func spawn() -> void:
 	health_component.revive()
 	state_machine.change_state_to(&"Spawning")
@@ -614,7 +607,7 @@ func move() -> void:
 
 	move_and_slide()
 
-	# Is set to 0.0 when stepping up, so resetting after moving is necessary
+	# floor_snap_length is set to 0.0 when stepping up, so setting it back to 0.5 is necessary
 	floor_snap_length = 0.5
 
 
