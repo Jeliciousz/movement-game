@@ -536,9 +536,11 @@ func _physics_process(_delta: float) -> void:
 
 ## Sets the player's stance and updates the last_stance variable.
 func change_stance(new_stance: Stances) -> void:
-	if new_stance != stance:
-		last_stance = stance
-		stance = new_stance
+	if new_stance == stance:
+		return
+
+	last_stance = stance
+	stance = new_stance
 
 
 ## Gets the player's stance as a string.
