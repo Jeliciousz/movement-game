@@ -7,7 +7,7 @@
 top_level = true
 script = ExtResource("1_g6wl4")
 
-[node name="Sprite3D" type="Sprite3D" parent="." unique_id=661569045]
+[node name="EditorSprite" type="Sprite3D" parent="." unique_id=661569045]
 layers = 8
 cast_shadow = 0
 gi_mode = 0
