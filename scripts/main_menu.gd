@@ -15,8 +15,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_play_button_pressed() -> void:
-	Global.game_manager.unload_ui_scene()
-	Global.game_manager.change_3d_scene(play_scene_path)
+	Global.scene_manager.unload_ui_scene()
+	Global.scene_manager.change_3d_scene(play_scene_path)
 
 
 func _on_quit_button_pressed() -> void:

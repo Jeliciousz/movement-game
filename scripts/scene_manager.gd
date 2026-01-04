@@ -1,4 +1,4 @@
-class_name GameManager
+class_name SceneManager
 extends Node
 
 @export_file("*.tscn") var initial_3d_scene: String
@@ -9,7 +9,7 @@ var current_ui_scene: Node
 
 
 func _ready() -> void:
-	Global.game_manager = self
+	Global.scene_manager = self
 
 	if initial_3d_scene:
 		var new_scene: Node = load(initial_3d_scene).instantiate()
