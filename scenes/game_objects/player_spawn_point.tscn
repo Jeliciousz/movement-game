@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bfxvtov6w54ia"]
 
 [ext_resource type="Script" uid="uid://dsvssjokslbat" path="res://scripts/game_objects/player_spawn_point.gd" id="1_g6wl4"]
-[ext_resource type="Texture2D" uid="uid://fckq2n5twsue" path="res://assets/textures/ui/player_spawn_point.png" id="2_rm2f0"]
+[ext_resource type="Texture2D" uid="uid://fckq2n5twsue" path="res://assets/textures/ui/character.png" id="2_rm2f0"]
 
 [node name="PlayerSpawnPoint" type="Node3D" unique_id=71077226 groups=["PlayerSpawnPoints"]]
 top_level = true

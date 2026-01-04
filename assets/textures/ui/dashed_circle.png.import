@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ccjhtl5n10o32"
-path.s3tc="res://.godot/imported/grapplehook_point_target_invalid.png-f6a7689aa44b0e1385abbdd2248ca537.s3tc.ctex"
+path.s3tc="res://.godot/imported/dashed_circle.png-9f573fa99285eb5b357e4b40246d1a9b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/textures/ui/grapplehook_point_target_invalid.png"
-dest_files=["res://.godot/imported/grapplehook_point_target_invalid.png-f6a7689aa44b0e1385abbdd2248ca537.s3tc.ctex"]
+source_file="res://assets/textures/ui/dashed_circle.png"
+dest_files=["res://.godot/imported/dashed_circle.png-9f573fa99285eb5b357e4b40246d1a9b.s3tc.ctex"]
 
 [params]
 
