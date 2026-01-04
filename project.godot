@@ -14,7 +14,7 @@ config/name="Movement Game"
 config/description="A first-person game with a focus on fluid movement. Made with Godot.
 
 Originally inspired by Source games; Team Fortress 2, Titanfall 2, and other movement games like Ultrakill, and Bloodthief."
-run/main_scene="uid://3lonbftxvkmw"
+run/main_scene="uid://da5i01cp0f6ou"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.6", "Forward Plus")
 
@@ -43,6 +43,16 @@ window/vsync/vsync_mode=0
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot-polyliner/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://addons/": "red",
+"res://assets/": "purple",
+"res://exports/": "gray",
+"res://scenes/": "green",
+"res://scripts/": "blue"
+}
 
 [global_group]
 
