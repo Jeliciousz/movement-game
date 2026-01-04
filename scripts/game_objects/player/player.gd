@@ -546,13 +546,10 @@ func stance_to_string() -> String:
 	match stance:
 		Stances.STANDING:
 			return "Standing"
-
 		Stances.CROUCHING:
 			return "Crouching"
-
 		Stances.SPRINTING:
 			return "Sprinting"
-
 	return ""
 
 
