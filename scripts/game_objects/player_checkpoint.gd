@@ -17,8 +17,6 @@ func _init() -> void:
 
 
 func _on_body_entered(body: Node3D) -> void:
-	print("fucker")
-
 	if not enabled:
 		return
 
