@@ -11,7 +11,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 
 
 func spawn_random() -> void:
-	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint and node.enabled)
+	var spawn_nodes: Array[PlayerSpawnPoint] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(spawn_point: PlayerSpawnPoint) -> bool: return spawn_point.enabled)
 
 	if not spawn_nodes.is_empty():
 		var spawn_node: PlayerSpawnPoint = spawn_nodes.pick_random()
