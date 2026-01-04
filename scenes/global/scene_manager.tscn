@@ -4,4 +4,4 @@
 
 [node name="SceneManager" type="Node" unique_id=2075410027]
 script = ExtResource("1_qb4hu")
-initial_ui_scene = "uid://c0v4hb2cwyekf"
+initial_scene = "uid://c0v4hb2cwyekf"

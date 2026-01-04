@@ -17,5 +17,4 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_action(&"ui_cancel") and event.pressed and not event.echo:
-		Global.scene_manager.unload_3d_scene()
-		Global.scene_manager.change_ui_scene(menu_scene_path)
+		Global.scene_manager.change_scene(menu_scene_path)
