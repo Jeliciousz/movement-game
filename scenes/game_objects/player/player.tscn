@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://d656537yxmwb" path="res://scripts/components/state_machine.gd" id="3_qfm1y"]
 [ext_resource type="Script" uid="uid://dn58b3xgqy5be" path="res://addons/godot-polyliner/Line3D/Line3D.gd" id="3_ujl30"]
 [ext_resource type="AudioStream" uid="uid://dlq6qvxih1f56" path="res://assets/sounds/player/footsteps/tile3.wav" id="4_a38lo"]
-[ext_resource type="Script" uid="uid://c1t06x3s1bb2f" path="res://scripts/game_objects/player/states/player_spawning_state.gd" id="4_fulsm"]
 [ext_resource type="AudioStream" uid="uid://nixfol2hcs07" path="res://assets/sounds/player/footsteps/tile4.wav" id="5_4ni07"]
 [ext_resource type="Script" uid="uid://bvgfehgumdbw3" path="res://scripts/game_objects/player/states/player_grounded_state.gd" id="5_fulsm"]
 [ext_resource type="Script" uid="uid://dgraslf5y2wop" path="res://scripts/game_objects/player/states/player_airborne_state.gd" id="6_4r5pv"]
@@ -256,10 +255,6 @@ shape = SubResource("CylinderShape3D_ke2ow")
 
 [node name="StateMachine" type="Node" parent="." unique_id=2130024275]
 script = ExtResource("3_qfm1y")
-
-[node name="Spawning" type="Node" parent="StateMachine" unique_id=1765024397 node_paths=PackedStringArray("_player")]
-script = ExtResource("4_fulsm")
-_player = NodePath("../..")
 
 [node name="Grounded" type="Node" parent="StateMachine" unique_id=1867071282 node_paths=PackedStringArray("_player")]
 script = ExtResource("5_fulsm")

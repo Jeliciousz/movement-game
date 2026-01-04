@@ -368,7 +368,6 @@ enum Stances {
 
 
 var stance: Stances = Stances.STANDING
-
 var last_stance: Stances = Stances.STANDING
 
 var wish_direction: Vector3 = Vector3.ZERO
@@ -598,7 +597,37 @@ func get_input_vector() -> void:
 
 func spawn() -> void:
 	health_component.revive()
-	state_machine.change_state_to(&"Spawning")
+
+	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint and node.enabled)
+
+	if not spawn_nodes.is_empty():
+		var spawn_node: PlayerSpawnPoint = spawn_nodes.pick_random()
+
+		position = spawn_node.position
+		rotation.y = spawn_node.rotation.y
+		head.rotation.x = spawn_node.rotation.x
+	else:
+		position = Vector3.ZERO
+		rotation.y = 0.0
+		head.rotation.x = 0.0
+
+	velocity = Vector3.ZERO
+	reset_physics_interpolation()
+
+	if active_grapplehook_point:
+		clear_grapplehook_point()
+
+	InputBuffer.clear_buffered_action("jump")
+	InputBuffer.clear_buffered_action("sprint")
+	InputBuffer.clear_buffered_action("slide")
+	InputBuffer.clear_buffered_action("grapplehook")
+
+	spawned.emit()
+
+	if check_surface(Vector3.DOWN):
+		state_machine.change_state_to(&"Grounded")
+	else:
+		state_machine.change_state_to(&"Airborne")
 
 
 func move() -> void:
