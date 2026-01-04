@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bwby1lrkq05ni"]
+
+[ext_resource type="Texture2D" uid="uid://bkjho8bohqo8s" path="res://assets/textures/ui/flag_triangle.png" id="1_egcwp"]
+[ext_resource type="Script" uid="uid://cqp1ll1mr34hj" path="res://scripts/game_objects/player_checkpoint.gd" id="1_j4ila"]
+
+[node name="PlayerCheckpoint" type="Area3D" unique_id=95519120]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_j4ila")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1552938538]
+layers = 8
+cast_shadow = 0
+gi_mode = 0
+pixel_size = 0.001
+billboard = 1
+double_sided = false
+fixed_size = true
+texture = ExtResource("1_egcwp")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
