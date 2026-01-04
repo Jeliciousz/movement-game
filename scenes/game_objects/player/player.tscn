@@ -154,7 +154,7 @@ shader_parameter/uv_matches_width = true
 shader_parameter/tex_scale = Vector2(1, 1)
 shader_parameter/tex_stretch = true
 shader_parameter/color = Color(0, 0, 0, 1)
-shader_parameter/metallic = 1.0
+shader_parameter/metallic = 0.0
 shader_parameter/specular = 0.5
 shader_parameter/roughness = 0.5
 
