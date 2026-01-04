@@ -535,10 +535,10 @@ func _physics_process(_delta: float) -> void:
 
 
 ## Sets the player's stance and updates the last_stance variable.
-func change_stance(value: Stances) -> void:
-	if value != stance:
+func change_stance(new_stance: Stances) -> void:
+	if new_stance != stance:
 		last_stance = stance
-		stance = value
+		stance = new_stance
 
 
 ## Gets the player's stance as a string.
@@ -593,6 +593,21 @@ func get_input_vector() -> void:
 		input_vector.x = 1.0
 	elif Input.is_action_just_released(&"move_right"):
 		input_vector.x = -1.0 if Input.is_action_pressed(&"move_left") else 0.0
+
+
+## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
+func check_surface(direction: Vector3) -> bool:
+	var position_before_check: Vector3 = position
+	var velocity_before_check: Vector3 = velocity
+
+	velocity = direction.normalized() * safe_margin * 2.0 / get_physics_process_delta_time()
+
+	var collided: bool = move_and_slide()
+
+	position = position_before_check
+	velocity = velocity_before_check
+
+	return collided
 
 
 func spawn() -> void:
@@ -732,21 +747,6 @@ func _check_step_up(motion: Vector3) -> void:
 
 	# Recurse to step up many steps at once
 	_check_step_up(remainder)
-
-
-## Check if the player's next to (nearly colliding with) a surface in [param direction]. (Updates the player's [method CharacterBody3D.is_on_floor], [method CharacterBody3D.is_on_wall], and [method CharacterBody3D.is_on_ceiling] checks)
-func check_surface(direction: Vector3) -> bool:
-	var position_before_check: Vector3 = position
-	var velocity_before_check: Vector3 = velocity
-
-	velocity = direction.normalized() * safe_margin * 2.0 / get_physics_process_delta_time()
-
-	var collided: bool = move_and_slide()
-
-	position = position_before_check
-	velocity = velocity_before_check
-
-	return collided
 
 
 func attempt_uncrouch() -> bool:
