@@ -5,7 +5,7 @@ extends CharacterBody3D
 signal died()
 signal spawned()
 
-## Different states a player can be in.
+## Different stances a player can be in.
 enum Stances {
 	STANDING,
 	CROUCHING,
