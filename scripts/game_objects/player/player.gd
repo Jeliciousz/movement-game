@@ -591,8 +591,6 @@ func get_input_vector() -> void:
 	#	To fix this, I wrote it so that new inputs overwrite the previous ones, instead of canceling them out
 	#	Then when the new input is released, it'll go back to the old input if it's still pressed, and only if it isn't, will it go to 0
 	#
-	#	This is called "Null-Canceling Movement", a concept I borrowed from a TF2 script, similar to Razer's snap tap, but I designed this code myself
-	#
 	#	-Jeliciousz
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
