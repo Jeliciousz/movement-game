@@ -5,6 +5,19 @@ extends CharacterBody3D
 signal died()
 signal spawned()
 
+## Different states a player can be in.
+enum States {
+	NOTSPAWNED,
+	GROUNDED,
+	AIRBORNE,
+	JUMPING,
+	SLIDING,
+	WALLGRABBING,
+	WALLRUNNING,
+	GRAPPLEHOOKING,
+	MANTLING,
+}
+
 ## Different stances a player can be in.
 enum Stances {
 	STANDING,
@@ -87,7 +100,7 @@ enum Stances {
 @export var jump_enabled: bool = true
 
 ## How high the player jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_impulse: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_impulse: float = 10.0
 
 ## The player's top horizontal jump speed.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_horizontal_speed: float = 9.0
@@ -96,13 +109,7 @@ enum Stances {
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_horizontal_impulse: float = 0.5
 
 ## How high the player jumps while standing still.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_standing_impulse: float = 9.0
-
-## How long the player can jump for.
-@export_range(0.0, 1.0, 0.005, "suffix:s") var jump_duration: float = 0.5
-
-## How much gravity is applied while the player is jumping.
-@export_range(0.0, 1.0, 0.05, "suffix:×") var jump_gravity_multiplier: float = 0.75
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var jump_standing_impulse: float = 11.0
 
 
 @export_subgroup("Air-Jumping", "airjump_")
@@ -111,13 +118,13 @@ enum Stances {
 @export var airjump_enabled: bool = false
 
 ## How high the player air jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_impulse: float = 8.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_impulse: float = 10.0
 
 ## How far the player air jumps.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_horizontal_impulse: float = 8.0
 
 ## How high the player air jumps when not jumping in any direction.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_standing_impulse: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var airjump_standing_impulse: float = 11.0
 
 ## How many times the player can air jump before touching the ground.
 @export_range(0, 100, 1) var airjump_limit: int = 1
@@ -214,7 +221,7 @@ enum Stances {
 @export var slidejump_enabled: bool = true
 
 ## How high the player jumps while sliding.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slidejump_impulse: float = 12.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var slidejump_impulse: float = 15.0
 
 ## The player's top horizontal slide-jump speed.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var slidejump_horizontal_speed: float = 0.0
@@ -232,7 +239,7 @@ enum Stances {
 @export var ledgejump_enabled: bool = true
 
 ## How high the player ledge jumps.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledgejump_impulse: float = 10.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledgejump_impulse: float = 12.5
 
 ## The player's top horizontal ledge-jump speed.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var ledgejump_horizontal_speed: float = 14.0
@@ -271,7 +278,7 @@ enum Stances {
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_max_limit: int = 8
 
 ## How high the player jumps while wall-running.
-@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 9.0
+@export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_impulse: float = 11.0
 
 ## The player's top horizontal wall-jump speed.
 @export_range(0.0, 100.0, 0.05, "suffix:m/s") var walljump_horizontal_speed: float = 14.0
@@ -361,6 +368,8 @@ enum Stances {
 
 #region Local Variables
 
+var state: States = States.NOTSPAWNED
+var last_state: States = States.NOTSPAWNED
 
 var stance: Stances = Stances.STANDING
 var last_stance: Stances = Stances.STANDING
@@ -626,6 +635,40 @@ func move() -> void:
 	floor_snap_length = 0.5
 
 #endregion
+
+
+## Sets the player's state, updates the last_state variable, and does any state transition code
+func change_state(new_state: States) -> void:
+	if new_state == state:
+		return
+
+	last_state = state
+	state = new_state
+
+
+## Gets the player's state as a string.
+func state_to_string() -> String:
+	match state:
+		States.NOTSPAWNED:
+			return "Not Spawned"
+		States.GROUNDED:
+			return "Grounded"
+		States.AIRBORNE:
+			return "Airborne"
+		States.JUMPING:
+			return "Jumping"
+		States.SLIDING:
+			return "Sliding"
+		States.WALLGRABBING:
+			return "Wall-Grabbing"
+		States.WALLRUNNING:
+			return "Wall-Running"
+		States.GRAPPLEHOOKING:
+			return "Grapple-Hooking"
+		States.MANTLING:
+			return "Mantling"
+	return ""
+
 
 #region Stance Functions
 
@@ -1207,7 +1250,7 @@ func add_wallrun_movement() -> void:
 func can_continue_jumping() -> bool:
 	return jump_enabled \
 	and velocity.y > 0.0 \
-	and Global.time - jump_timestamp <= jump_duration
+	and Input.is_action_pressed("jump")
 
 
 func can_crouchjump() -> bool:

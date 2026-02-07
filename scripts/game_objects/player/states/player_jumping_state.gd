@@ -11,6 +11,10 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.footstep_audio.play()
 
 
+func _state_exit() -> void:
+	_player.velocity.y *= 0.5
+
+
 func _state_physics_preprocess(_delta: float) -> void:
 	_player.update_active_grapplehook_point()
 
@@ -90,5 +94,5 @@ func update_stance() -> void:
 
 func update_physics() -> void:
 	_player.add_air_resistence()
-	_player.add_gravity(_player.physics_gravity_multiplier * _player.jump_gravity_multiplier)
+	_player.add_gravity(_player.physics_gravity_multiplier)
 	_player.add_movement(_player.air_speed, _player.air_acceleration)
