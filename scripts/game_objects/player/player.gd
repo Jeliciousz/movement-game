@@ -5,19 +5,6 @@ extends CharacterBody3D
 signal died()
 signal spawned()
 
-## Different states a player can be in.
-enum States {
-	NOTSPAWNED,
-	GROUNDED,
-	AIRBORNE,
-	JUMPING,
-	SLIDING,
-	WALLGRABBING,
-	WALLRUNNING,
-	GRAPPLEHOOKING,
-	MANTLING,
-}
-
 ## Different stances a player can be in.
 enum Stances {
 	STANDING,
@@ -368,9 +355,6 @@ enum Stances {
 
 #region Local Variables
 
-var state: States = States.NOTSPAWNED
-var last_state: States = States.NOTSPAWNED
-
 var stance: Stances = Stances.STANDING
 var last_stance: Stances = Stances.STANDING
 
@@ -635,40 +619,6 @@ func move() -> void:
 	floor_snap_length = 0.5
 
 #endregion
-
-
-## Sets the player's state, updates the last_state variable, and does any state transition code
-func change_state(new_state: States) -> void:
-	if new_state == state:
-		return
-
-	last_state = state
-	state = new_state
-
-
-## Gets the player's state as a string.
-func state_to_string() -> String:
-	match state:
-		States.NOTSPAWNED:
-			return "Not Spawned"
-		States.GROUNDED:
-			return "Grounded"
-		States.AIRBORNE:
-			return "Airborne"
-		States.JUMPING:
-			return "Jumping"
-		States.SLIDING:
-			return "Sliding"
-		States.WALLGRABBING:
-			return "Wall-Grabbing"
-		States.WALLRUNNING:
-			return "Wall-Running"
-		States.GRAPPLEHOOKING:
-			return "Grapple-Hooking"
-		States.MANTLING:
-			return "Mantling"
-	return ""
-
 
 #region Stance Functions
 
