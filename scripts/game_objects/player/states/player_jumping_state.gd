@@ -11,10 +11,6 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.footstep_audio.play()
 
 
-func _state_exit() -> void:
-	_player.velocity.y *= 0.5
-
-
 func _state_physics_preprocess(_delta: float) -> void:
 	_player.update_active_grapplehook_point()
 
@@ -28,6 +24,7 @@ func _state_physics_preprocess(_delta: float) -> void:
 		return
 
 	if not Input.is_action_pressed(&"jump"):
+		_player.velocity.y *= 0.5
 		state_machine.change_state_to(&"Airborne")
 		return
 

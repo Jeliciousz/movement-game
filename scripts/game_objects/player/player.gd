@@ -1199,8 +1199,7 @@ func add_wallrun_movement() -> void:
 
 func can_continue_jumping() -> bool:
 	return jump_enabled \
-	and velocity.y > 0.0 \
-	and Input.is_action_pressed("jump")
+	and velocity.y > 0.0
 
 
 func can_crouchjump() -> bool:
