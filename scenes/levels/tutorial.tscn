@@ -40,6 +40,15 @@ size = Vector3(5, 5, 6)
 [sub_resource type="BoxShape3D" id="BoxShape3D_im2du"]
 size = Vector3(10, 9, 8)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_iig34"]
+size = Vector3(8, 9, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3e81p"]
+size = Vector3(14, 7, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g7bfq"]
+size = Vector3(6, 7, 8)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_kw13u"]
 size = Vector3(8, 9, 8)
 
@@ -794,7 +803,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6.5, -59)
 spawn_points = [NodePath("../SpawnPoint2")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint2" unique_id=2131601755]
-shape = SubResource("BoxShape3D_kw13u")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_iig34")
 
 [node name="SpawnPoint2" parent="." unique_id=1326523914 instance=ExtResource("2_kw13u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -65)
@@ -805,7 +815,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6.5, -93)
 spawn_points = [NodePath("../SpawnPoint3")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint3" unique_id=495222929]
-shape = SubResource("BoxShape3D_kw13u")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+shape = SubResource("BoxShape3D_3e81p")
 
 [node name="SpawnPoint3" parent="." unique_id=696396309 instance=ExtResource("2_kw13u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -93)
@@ -816,7 +827,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 4.5, -158)
 spawn_points = [NodePath("../SpawnPoint4")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint4" unique_id=954054155]
-shape = SubResource("BoxShape3D_kw13u")
+shape = SubResource("BoxShape3D_g7bfq")
 
 [node name="SpawnPoint4" parent="." unique_id=760139282 instance=ExtResource("2_kw13u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -158)
