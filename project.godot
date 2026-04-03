@@ -17,6 +17,7 @@ Originally inspired by Source games; Team Fortress 2, Titanfall 2, and other mov
 run/main_scene="uid://da5i01cp0f6ou"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.6", "Forward Plus")
+run/max_fps=120
 
 [autoload]
 
