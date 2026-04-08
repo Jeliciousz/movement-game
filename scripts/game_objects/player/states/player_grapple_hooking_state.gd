@@ -26,8 +26,8 @@ func _state_physics_actions(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"grapplehook"):
-		InputBuffer.clear_buffered_action(&"grapplehook")
+	if InputBuffer.is_action_buffered(&"grapple_hook"):
+		InputBuffer.clear_buffered_action(&"grapple_hook")
 		state_machine.change_state_to(&"Airborne")
 		return
 

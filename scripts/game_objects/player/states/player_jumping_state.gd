@@ -17,8 +17,8 @@ func _state_physics_actions(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
-	if InputBuffer.is_action_buffered(&"grapplehook") and _player.can_grapplehook():
-		InputBuffer.clear_buffered_action(&"grapplehook")
+	if InputBuffer.is_action_buffered(&"grapple_hook") and _player.can_grapplehook():
+		InputBuffer.clear_buffered_action(&"grapple_hook")
 		_player.grapplehook_fire_audio.play()
 		state_machine.change_state_to(&"GrappleHooking")
 		return
