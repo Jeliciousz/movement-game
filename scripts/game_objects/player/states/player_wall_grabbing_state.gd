@@ -34,6 +34,10 @@ func _state_physics_actions(_delta: float) -> void:
 		_player.coyote_walljump_ready = false
 		_player.stop_wallgrab()
 		state_machine.change_state_to(&"Airborne")
+		return
+
+	if Input.is_action_just_pressed(&"no_clip"):
+		state_machine.change_state_to(&"NoClip")
 
 
 func _state_physics_process(_delta: float) -> void:

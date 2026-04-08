@@ -17,6 +17,14 @@ func _state_enter(_last_state_name: StringName) -> void:
 	mantle_position = _player.mantle_ledge_raycast.get_collision_point()
 
 
+func _state_actions(_delta: float) -> void:
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+		return
+
+	if Input.is_action_just_pressed(&"no_clip"):
+		state_machine.change_state_to(&"NoClip")
+
+
 func _state_physics_process(delta: float) -> void:
 	mantle_t = clampf(mantle_t + delta * _player.mantle_speed, 0.0, 1.0)
 

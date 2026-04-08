@@ -43,6 +43,9 @@ func _state_physics_actions(_delta: float) -> void:
 		state_machine.change_state_to(&"Grounded")
 		return
 
+	if Input.is_action_just_pressed(&"no_clip"):
+		state_machine.change_state_to(&"NoClip")
+
 
 func _state_physics_process(_delta: float) -> void:
 	update_physics()
