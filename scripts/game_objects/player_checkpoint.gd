@@ -8,6 +8,9 @@ extends Area3D
 ## Should this checkpoint disable itself once the player reaches it?
 @export var disable_on_reach: bool = true
 
+## Should this checkpoint disable all other spawn points once the player reaches it?
+@export var disable_other_spawn_points: bool = true
+
 ## The [PlayerSpawnPoint]s this checkpoint should enable after disable all enabled checkpoints.
 @export var spawn_points: Array[PlayerSpawnPoint]
 
@@ -23,10 +26,11 @@ func _on_body_entered(body: Node3D) -> void:
 	if not body is Player:
 		return
 
-	var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint and node.enabled)
+	if disable_other_spawn_points:
+		var spawn_nodes: Array[Node] = get_tree().get_nodes_in_group(&"PlayerSpawnPoints").filter(func(node: Node) -> bool: return node is PlayerSpawnPoint and node.enabled)
 
-	for spawn_node in spawn_nodes:
-		spawn_node.enabled = false
+		for spawn_node in spawn_nodes:
+			spawn_node.enabled = false
 
 	for spawn_point in spawn_points:
 		spawn_point.enabled = true
