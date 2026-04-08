@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://3fgvec6qrg6y"]
+
+[ext_resource type="Script" uid="uid://bcxohmg7ejwcn" path="res://scripts/game_states/in_game.gd" id="1_8fyok"]
+[ext_resource type="PackedScene" uid="uid://doauiwrabhqsc" path="res://scenes/game_objects/player/player.tscn" id="2_dr0h8"]
+
+[node name="Ingame" type="Node3D" unique_id=328872736 node_paths=PackedStringArray("player")]
+script = ExtResource("1_8fyok")
+player = NodePath("Player")
+menu_scene_path = "uid://c0v4hb2cwyekf"
+first_level_path = "uid://dpgsmifow0gcw"
+
+[node name="Player" parent="." unique_id=1448995669 instance=ExtResource("2_dr0h8")]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cqkeqglbsx1tw"]
 
-[ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/game_objects/grapplehook_point.gd" id="1_v2vg0"]
+[ext_resource type="Script" uid="uid://13pnofkjidbm" path="res://scripts/game_objects/grapple_hook_point.gd" id="1_v2vg0"]
 [ext_resource type="Texture2D" uid="uid://d3uxd2k6nc4er" path="res://assets/textures/ui/bow.png" id="2_15a6m"]
 [ext_resource type="Texture2D" uid="uid://c7yqxl0eho0vt" path="res://assets/textures/ui/target_reticle.png" id="2_wc45q"]
 [ext_resource type="Texture2D" uid="uid://ccjhtl5n10o32" path="res://assets/textures/ui/dashed_circle.png" id="3_ejye6"]
