@@ -11,7 +11,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.footstep_audio.play()
 
 
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_physics_actions(_delta: float) -> void:
 	_player.update_active_grapplehook_point()
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:

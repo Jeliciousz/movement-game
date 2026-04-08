@@ -19,7 +19,7 @@ func _state_exit() -> void:
 
 
 ## Called during [method StateMachine._process] before [method _state_process]. Use this to change the state based on user input. [method _state_process] will then be called on the new state.
-func _state_preprocess(_delta: float) -> void:
+func _state_actions(_delta: float) -> void:
 	pass
 
 
@@ -29,7 +29,7 @@ func _state_process(_delta: float) -> void:
 
 
 ## Called during [method StateMachine._physics_process] before [method _state_physics_process]. Use this to change the state based on user input. [method _state_physics_process] will then be called on the new state.
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_physics_actions(_delta: float) -> void:
 	pass
 
 

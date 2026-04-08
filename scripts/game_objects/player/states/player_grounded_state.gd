@@ -15,7 +15,7 @@ func _state_enter(_last_state_name: StringName) -> void:
 	_player.clear_grapplehook_point()
 
 
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_physics_actions(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 

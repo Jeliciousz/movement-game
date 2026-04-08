@@ -22,7 +22,7 @@ func _state_process(_delta: float) -> void:
 	_player.grapplehook_line.points[1] = _player.active_grapplehook_point.position - _player.grapplehook_line.position
 
 
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_physics_actions(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 

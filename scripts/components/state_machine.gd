@@ -24,7 +24,7 @@ func _process(delta: float) -> void:
 	if state == null:
 		return
 
-	state._state_preprocess(delta)
+	state._state_actions(delta)
 
 	state._state_process(delta)
 
@@ -33,7 +33,7 @@ func _physics_process(delta: float) -> void:
 	if state == null:
 		return
 
-	state._state_physics_preprocess(delta)
+	state._state_physics_actions(delta)
 
 	state._state_physics_process(delta)
 

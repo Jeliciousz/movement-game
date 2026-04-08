@@ -23,7 +23,7 @@ func _state_exit() -> void:
 	_player.ledgejump_ready = false
 
 
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_physics_actions(_delta: float) -> void:
 	_player.update_active_grapplehook_point()
 
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:

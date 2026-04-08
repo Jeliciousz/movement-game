@@ -23,7 +23,7 @@ func _state_exit() -> void:
 	_player.slide_timestamp = Global.time
 
 
-func _state_physics_preprocess(_delta: float) -> void:
+func _state_physics_actions(_delta: float) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		return
 
