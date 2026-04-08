@@ -57,29 +57,101 @@ size = Vector3(71, 35, 187)
 
 [node name="World" type="Node3D" unique_id=1681030941]
 
-[node name="Environment" type="WorldEnvironment" parent="." unique_id=1875633723]
+[node name="Environment" type="WorldEnvironment" parent="." unique_id=204716146]
 environment = ExtResource("3_kw13u")
 
-[node name="LightmapGI" type="LightmapGI" parent="." unique_id=1162415408]
+[node name="LightmapGI" type="LightmapGI" parent="." unique_id=111739383]
 light_data = ExtResource("4_kw13u")
 
-[node name="Static" type="StaticBody3D" parent="." unique_id=1117810536]
+[node name="Static" type="StaticBody3D" parent="." unique_id=1872837642]
 collision_mask = 0
 
-[node name="LevelCollisionShape" type="CollisionShape3D" parent="Static" unique_id=1032813571]
+[node name="LevelCollisionShape" type="CollisionShape3D" parent="Static" unique_id=1741985939]
 shape = SubResource("ConcavePolygonShape3D_kw13u")
 
-[node name="RampCollisionShape" type="CollisionShape3D" parent="Static" unique_id=1460262459]
+[node name="RampCollisionShape" type="CollisionShape3D" parent="Static" unique_id=1322596683]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56, 1, -204)
 shape = SubResource("ConvexPolygonShape3D_7ac3l")
 
-[node name="LevelMeshInstance" type="MeshInstance3D" parent="Static" unique_id=273821103]
+[node name="LevelMeshInstance" type="MeshInstance3D" parent="Static" unique_id=1596390797]
 mesh = SubResource("ArrayMesh_kw13u")
 
-[node name="RampMeshInstance" type="MeshInstance3D" parent="Static" unique_id=780858956]
+[node name="RampMeshInstance" type="MeshInstance3D" parent="Static" unique_id=1335094406]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.5, 3.5, -207)
 mesh = SubResource("PrismMesh_kw13u")
-skeleton = NodePath("../../CSG")
+skeleton = NodePath("../../../../CSG")
+
+[node name="StartSpawnPoint" parent="." unique_id=71077226 instance=ExtResource("2_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="PlayerCheckpoint1" parent="." unique_id=95519120 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, -53)
+spawn_points = [NodePath("../StartSpawnPoint")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint1" unique_id=131225307]
+shape = SubResource("BoxShape3D_im2du")
+
+[node name="SpawnPoint1" parent="." unique_id=1284476318 instance=ExtResource("2_kw13u")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.5, -53)
+enabled = false
+
+[node name="PlayerCheckpoint2" parent="." unique_id=919810000 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6.5, -59)
+spawn_points = [NodePath("../SpawnPoint1")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint2" unique_id=1169220146]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_iig34")
+
+[node name="SpawnPoint2" parent="." unique_id=1589866213 instance=ExtResource("2_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -65)
+enabled = false
+
+[node name="PlayerCheckpoint3" parent="." unique_id=1738276381 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6.5, -93)
+spawn_points = [NodePath("../SpawnPoint2")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint3" unique_id=752843077]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+shape = SubResource("BoxShape3D_3e81p")
+
+[node name="SpawnPoint3" parent="." unique_id=515946026 instance=ExtResource("2_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -93)
+enabled = false
+
+[node name="PlayerCheckpoint4" parent="." unique_id=1835361233 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 4.5, -158)
+spawn_points = [NodePath("../SpawnPoint3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint4" unique_id=1426069069]
+shape = SubResource("BoxShape3D_g7bfq")
+
+[node name="SpawnPoint4" parent="." unique_id=1877379476 instance=ExtResource("2_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -158)
+enabled = false
+
+[node name="PlayerCheckpoint5" parent="." unique_id=2056206138 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 5.5, -194)
+spawn_points = [NodePath("../SpawnPoint4")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint5" unique_id=2063034122]
+shape = SubResource("BoxShape3D_kw13u")
+
+[node name="SpawnPoint5" parent="." unique_id=898618619 instance=ExtResource("2_kw13u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 1.5, -194)
+enabled = false
+
+[node name="KillBox" parent="." unique_id=647635840 instance=ExtResource("7_im2du")]
+collision_layer = 1
+kills = true
+ignore_invulnerability = true
+
+[node name="CollisionShape" type="CollisionShape3D" parent="KillBox" unique_id=1661010246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.5, -32.5, -98.5)
+shape = SubResource("BoxShape3D_7ac3l")
+
+[node name="GrappleHookPoint" parent="." unique_id=782577365 instance=ExtResource("4_f5esd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 10, -80)
 
 [node name="CSG" type="Node3D" parent="." unique_id=707197959]
 process_mode = 4
@@ -783,75 +855,3 @@ light_energy = 5.0
 light_bake_mode = 1
 omni_range = 20.0
 omni_attenuation = 0.5
-
-[node name="StartSpawnPoint" parent="." unique_id=177247782 instance=ExtResource("2_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-
-[node name="PlayerCheckpoint1" parent="." unique_id=95519120 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, -53)
-spawn_points = [NodePath("../SpawnPoint1")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint1" unique_id=1591125633]
-shape = SubResource("BoxShape3D_im2du")
-
-[node name="SpawnPoint1" parent="." unique_id=71077226 instance=ExtResource("2_kw13u")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1.5, -53)
-enabled = false
-
-[node name="PlayerCheckpoint2" parent="." unique_id=1426767515 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6.5, -59)
-spawn_points = [NodePath("../SpawnPoint2")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint2" unique_id=2131601755]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-shape = SubResource("BoxShape3D_iig34")
-
-[node name="SpawnPoint2" parent="." unique_id=1326523914 instance=ExtResource("2_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -65)
-enabled = false
-
-[node name="PlayerCheckpoint3" parent="." unique_id=1694372376 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 6.5, -93)
-spawn_points = [NodePath("../SpawnPoint3")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint3" unique_id=495222929]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
-shape = SubResource("BoxShape3D_3e81p")
-
-[node name="SpawnPoint3" parent="." unique_id=696396309 instance=ExtResource("2_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -93)
-enabled = false
-
-[node name="PlayerCheckpoint4" parent="." unique_id=444646996 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 4.5, -158)
-spawn_points = [NodePath("../SpawnPoint4")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint4" unique_id=954054155]
-shape = SubResource("BoxShape3D_g7bfq")
-
-[node name="SpawnPoint4" parent="." unique_id=760139282 instance=ExtResource("2_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 1.5, -158)
-enabled = false
-
-[node name="PlayerCheckpoint5" parent="." unique_id=1875716564 node_paths=PackedStringArray("spawn_points") instance=ExtResource("5_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 5.5, -194)
-spawn_points = [NodePath("../SpawnPoint5")]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerCheckpoint5" unique_id=95274104]
-shape = SubResource("BoxShape3D_kw13u")
-
-[node name="SpawnPoint5" parent="." unique_id=90010199 instance=ExtResource("2_kw13u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60, 1.5, -194)
-enabled = false
-
-[node name="KillBox" parent="." unique_id=1489400250 instance=ExtResource("7_im2du")]
-collision_layer = 1
-kills = true
-ignore_invulnerability = true
-
-[node name="CollisionShape" type="CollisionShape3D" parent="KillBox" unique_id=227446258]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.5, -32.5, -98.5)
-shape = SubResource("BoxShape3D_7ac3l")
-
-[node name="GrappleHookPoint" parent="." unique_id=411174666 instance=ExtResource("4_f5esd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 10, -80)
