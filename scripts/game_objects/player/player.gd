@@ -836,7 +836,7 @@ func add_friction(friction: float, top_speed: float) -> void:
 	if get_speed() > top_speed:
 		var scaled_friction_product: float = lerpf(move_friction_multiplier, 1, friction_product)
 
-		velocity = velocity.move_toward(velocity.limit_length(top_speed), friction * get_physics_process_delta_time() * scaled_friction_product)
+		velocity = velocity.move_toward(Vector3.ZERO, friction * get_physics_process_delta_time() * scaled_friction_product)
 		return
 
 	# Otherwise, it only applies friction if it doesn't go against the movement direction
