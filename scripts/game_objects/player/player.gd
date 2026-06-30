@@ -563,7 +563,7 @@ func spawn() -> void:
 	InputBuffer.clear_buffered_action("jump")
 	InputBuffer.clear_buffered_action("sprint")
 	InputBuffer.clear_buffered_action("slide")
-	InputBuffer.clear_buffered_action("grapplehook")
+	InputBuffer.clear_buffered_action("grapple_hook")
 
 	spawned.emit()
 
